@@ -52,7 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MapInitializer.cs" />
+    <Compile Include="MapAdjacencyStrings.cs" />
+    <Compile Include="Maps.cs" />
     <Compile Include="MapNodes.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Game.cs" />

@@ -25,5 +25,22 @@ namespace DiplomacyLib.Models
             HomeSupplyPower = homePower;
             TerritoryType = territoryType;
         }
+
+        public override bool Equals(object obj)
+        {
+            Territory t = obj as Territory;
+            if (null == t) return false;
+            return Equals(t);
+        }
+
+        public bool Equals(Territory other)
+        {
+            return Name == other.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

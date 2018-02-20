@@ -11,7 +11,7 @@ namespace DiplomacyLib
     {
         public static IReadOnlyList<MapNode> AsReadOnlyList => _mapNodes.Values.ToList().AsReadOnly();
 
-        private static Dictionary<string, MapNode> _mapNodes;
+        private static Dictionary<string, MapNode> _mapNodes = new Dictionary<string, MapNode>();
 
         public static MapNode Get(string shortName)
         {

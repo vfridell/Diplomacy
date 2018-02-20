@@ -8,5 +8,6 @@ namespace DiplomacyLib.Models
 {
     public class Board
     {
+
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomacyLib", "DiplomacyLib\DiplomacyLib.csproj", "{F6C46A6E-DED4-4987-AD8F-16759AF9BD0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomacyTests", "DiplomacyTests\DiplomacyTests.csproj", "{C08192EE-B5B1-41E4-8020-258DDCABC376}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F6C46A6E-DED4-4987-AD8F-16759AF9BD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6C46A6E-DED4-4987-AD8F-16759AF9BD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6C46A6E-DED4-4987-AD8F-16759AF9BD0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
