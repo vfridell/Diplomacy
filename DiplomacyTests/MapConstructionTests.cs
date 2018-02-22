@@ -89,5 +89,6 @@ namespace DiplomacyTests
             Assert.AreEqual(14, Territories.AsReadOnlyList.Count(t => t.TerritoryType == TerritoryType.Inland));
             Assert.AreEqual(42, Territories.AsReadOnlyList.Count(t => t.TerritoryType == TerritoryType.Coast));
         }
+
     }
 }

@@ -10,6 +10,7 @@ namespace DiplomacyLib.Models
     {
         public readonly Powers Power;
 
+
         internal Unit(Powers power)
         {
             Power = power;
