@@ -10,6 +10,10 @@ namespace DiplomacyLib.Models
     {
         protected Board() { }
 
+        public int Year { get; protected set; }
+        public Season Season { get; protected set; }
+        public int Turn => ((Year - 1901) * 3) + Season.Ordinal;
+
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
 
         public bool IsOccupied(Territory t)
@@ -26,9 +30,36 @@ namespace DiplomacyLib.Models
         public bool IsUnoccupied(Territory t) => !IsOccupied(t);
         public IEnumerable<Unit> Units(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value);
 
+        public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
+
+        public void MoveUnit(UnitMove move)
+        {
+            if(OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
+            if (move.IsHold) return;
+            if (!move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
+            //todo how to deal with intermediateness?
+        }
+
+        public void EndTurn()
+        {
+            Season = Season.NextSeason;
+            if (Season is Spring) Year++;
+        }
+
+        public Board Clone()
+        {
+            Board clone = new Board();
+            clone.OccupiedMapNodes = new Dictionary<MapNode, Unit>(OccupiedMapNodes);
+            clone.Year = Year;
+            clone.Season = Season;
+            return clone;
+        }
+
         public static Board GetInitialBoard()
         {
             var board = new Board();
+            board.Year = 1901;
+            board.Season = new Spring();
             board.OccupiedMapNodes = new Dictionary<MapNode, Unit>()
             {
                 { MapNodes.Get("edi"), new Fleet(Powers.England) },

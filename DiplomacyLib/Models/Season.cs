@@ -6,7 +6,36 @@ using System.Threading.Tasks;
 
 namespace DiplomacyLib.Models
 {
-    public class Season
+    public abstract class Season
     {
+        public abstract Season NextSeason { get; }
+        public abstract int Ordinal { get; }
+
+        public abstract IEnumerable<Board> GetFutures(Board board);
+    }
+
+    public abstract class FallSpring : Season
+    {
+        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetMoves(board);
+    }
+
+    public class Fall : FallSpring
+    {
+        public override Season NextSeason => Seasons.Winter;
+        public override int Ordinal => 2;
+    }
+
+    public class Spring : FallSpring
+    {
+        public override Season NextSeason => Seasons.Fall;
+        public override int Ordinal => 1;
+    }
+
+    public class Winter : Season
+    {
+        public override Season NextSeason => Seasons.Spring;
+        public override int Ordinal => 3;
+
+        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetBuilds(board);
     }
 }

@@ -17,24 +17,27 @@ namespace DiplomacyLib.Models
         }
 
         public abstract bool TerritoryCompatible(Territory t);
+        public abstract Map MyMap { get; }
     }
 
     public class Army : Unit
     {
-        internal Army(Powers power) : base(power) {}
+        public Army(Powers power) : base(power) {}
         public override UnitType UnitType => UnitType.Army; 
         public override string ToString() => $"{Power} Army";
 
         public override bool TerritoryCompatible(Territory t) => t.TerritoryType == TerritoryType.Inland || t.TerritoryType == TerritoryType.Coast;
+        public override Map MyMap => Maps.Army;
     }
 
     public class Fleet : Unit
     {
-        internal Fleet(Powers power) : base(power) { }
+        public Fleet(Powers power) : base(power) { }
         public override UnitType UnitType => UnitType.Fleet; 
         public override string ToString() => $"{Power} Fleet";
             
         public override bool TerritoryCompatible(Territory t) => t.TerritoryType == TerritoryType.Sea || t.TerritoryType == TerritoryType.Coast;
+        public override Map MyMap => Maps.Fleet;
 
     }
 

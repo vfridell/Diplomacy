@@ -10,9 +10,9 @@ namespace DiplomacyLib
 {
     public static class Maps
     {
-        public static readonly UndirectedGraph<MapNode, UndirectedEdge<MapNode>> Full;
-        public static readonly UndirectedGraph<MapNode, UndirectedEdge<MapNode>> Fleet;
-        public static readonly UndirectedGraph<MapNode, UndirectedEdge<MapNode>> Army;
+        public static readonly Map Full;
+        public static readonly Map Fleet;
+        public static readonly Map Army;
 
         static Maps()
         {
@@ -21,9 +21,9 @@ namespace DiplomacyLib
             Army = CreateGraph(MapAdjacencyStrings.ArmyMap);
         }
 
-        private static UndirectedGraph<MapNode, UndirectedEdge<MapNode>> CreateGraph(Dictionary<string, List<string>> adjacencyDict)
+        private static Map CreateGraph(Dictionary<string, List<string>> adjacencyDict)
         {
-            var graph = new UndirectedGraph<MapNode, UndirectedEdge<MapNode>>();
+            var graph = new Map();
             foreach (var kvp in adjacencyDict)
             {
                 foreach (string targetNodeName in kvp.Value)
@@ -39,8 +39,8 @@ namespace DiplomacyLib
             return graph;
         }
 
-        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentOutEdges(this UndirectedGraph<MapNode, UndirectedEdge<MapNode>> graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Source == mapNode);
-        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentInEdges(this UndirectedGraph<MapNode, UndirectedEdge<MapNode>> graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Target == mapNode);
+        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentOutEdges(this Map graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Source == mapNode);
+        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentInEdges(this Map graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Target == mapNode);
     }
 
 }

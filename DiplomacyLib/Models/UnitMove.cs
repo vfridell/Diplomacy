@@ -24,5 +24,7 @@ namespace DiplomacyLib.Models
             Unit = unit;
             Edge = new UndirectedEdge<MapNode>(mapNode, mapNode);
         }
+
+        public override string ToString() => IsHold ? $"{Unit}: {Edge.Source} H" : $"{Unit}: {Edge}";
     }
 }
