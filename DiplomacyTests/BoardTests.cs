@@ -43,5 +43,6 @@ namespace DiplomacyTests
             Assert.IsTrue(board.IsUnoccupied(Territories.Get("spa")));
             Assert.IsTrue(board.IsUnoccupied(Territories.Get("gre")));
         }
+
     }
 }

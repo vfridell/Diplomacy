@@ -89,6 +89,15 @@ namespace DiplomacyTests
             Assert.AreEqual(14, Territories.AsReadOnlyList.Count(t => t.TerritoryType == TerritoryType.Inland));
             Assert.AreEqual(42, Territories.AsReadOnlyList.Count(t => t.TerritoryType == TerritoryType.Coast));
         }
+        
+        [TestMethod]
+        public void MapNodeNeighbors()
+        {
+            var edges = Maps.Fleet.AdjacentEdges(MapNodes.Get("nth"));
+            // there are 22 edges, 11 in and 11 out
+            Assert.AreEqual(11, edges.Count(e => e.Source.ToString() == "nth"));
+            Assert.AreEqual(11, edges.Count(e => e.Target.ToString() == "nth"));
+        }
 
     }
 }

@@ -9,7 +9,7 @@ namespace DiplomacyLib.Models
     public abstract class Unit
     {
         public readonly Powers Power;
-
+        public abstract UnitType UnitType { get; }
 
         internal Unit(Powers power)
         {
@@ -21,7 +21,9 @@ namespace DiplomacyLib.Models
 
     public class Army : Unit
     {
-        internal Army(Powers power) : base(power) { }
+        internal Army(Powers power) : base(power) {}
+        public override UnitType UnitType => UnitType.Army; 
+        public override string ToString() => $"{Power} Army";
 
         public override bool TerritoryCompatible(Territory t) => t.TerritoryType == TerritoryType.Inland || t.TerritoryType == TerritoryType.Coast;
     }
@@ -29,7 +31,11 @@ namespace DiplomacyLib.Models
     public class Fleet : Unit
     {
         internal Fleet(Powers power) : base(power) { }
-
+        public override UnitType UnitType => UnitType.Fleet; 
+        public override string ToString() => $"{Power} Fleet";
+            
         public override bool TerritoryCompatible(Territory t) => t.TerritoryType == TerritoryType.Sea || t.TerritoryType == TerritoryType.Coast;
+
     }
+
 }

@@ -38,5 +38,9 @@ namespace DiplomacyLib
             
             return graph;
         }
+
+        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentOutEdges(this UndirectedGraph<MapNode, UndirectedEdge<MapNode>> graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Source == mapNode);
+        public static IEnumerable<UndirectedEdge<MapNode>> AdjacentInEdges(this UndirectedGraph<MapNode, UndirectedEdge<MapNode>> graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Target == mapNode);
     }
+
 }

@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiplomacyLib.Models
 {
-    public enum Powers { None, Germany, Russia, Austria, England, France, Turkey, Italy }
-    public enum TerritoryType { Sea, Coast, Inland }
-
+ 
     public class Territory
     {
         public readonly string Name;
@@ -41,6 +39,11 @@ namespace DiplomacyLib.Models
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return ShortName;
         }
     }
 }
