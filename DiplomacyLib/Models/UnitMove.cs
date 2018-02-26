@@ -11,6 +11,7 @@ namespace DiplomacyLib.Models
     {
         public readonly Unit Unit;
         public readonly UndirectedEdge<MapNode> Edge;
+        public readonly List<MapNode> ConvoyRoute;
         public bool IsHold => Edge.Source == Edge.Target;
 
         public UnitMove(Unit unit, UndirectedEdge<MapNode> edge)
@@ -23,6 +24,13 @@ namespace DiplomacyLib.Models
         {
             Unit = unit;
             Edge = new UndirectedEdge<MapNode>(mapNode, mapNode);
+        }
+
+        public UnitMove(Unit unit, UndirectedEdge<MapNode> edge, List<MapNode> convoyRoute)
+        {
+            Unit = unit;
+            Edge = edge;
+            ConvoyRoute = convoyRoute;
         }
 
         public override string ToString() => IsHold ? $"{Unit}: {Edge.Source} H" : $"{Unit}: {Edge}";

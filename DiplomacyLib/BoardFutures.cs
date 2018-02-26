@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.Models;
+using QuickGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,29 @@ namespace DiplomacyLib
         public static IEnumerable<Board> GetMoves(Board board)
         {
             throw new NotImplementedException();
+        }
+
+        private static IEnumerable<UnitMove> GetUnitMoves(Board board)
+        {
+            List<UnitMove> allMoves = new List<UnitMove>();
+            foreach(var kvp in board.OccupiedMapNodes)
+            {
+                foreach(UndirectedEdge<MapNode> edge in kvp.Value.MyMap.AdjacentOutEdges(kvp.Key))
+                {
+                    allMoves.Add(new UnitMove(kvp.Value, edge));
+                }
+                allMoves.Add(new UnitMove(kvp.Value, kvp.Key));
+                allMoves.AddRange(GetConvoyMoves(board, kvp));
+            }
+            return allMoves;
+        }
+
+        private static IEnumerable<UnitMove> GetConvoyMoves(Board board, KeyValuePair<MapNode, Unit> kvp)
+        {
+            List<UnitMove> convoyMoves = new List<UnitMove>();
+            if (kvp.Key.Territory.TerritoryType != TerritoryType.Coast) return convoyMoves;
+
+            
         }
     }
 }

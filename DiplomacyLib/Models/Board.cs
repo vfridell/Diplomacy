@@ -32,12 +32,12 @@ namespace DiplomacyLib.Models
 
         public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
 
-        public void MoveUnit(UnitMove move)
+        public void ApplyMoves(List<UnitMove> moves)
         {
-            if(OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
-            if (move.IsHold) return;
-            if (!move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
-            //todo how to deal with intermediateness?
+            //if(OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
+            //if (move.IsHold) return;
+            //if (!move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
+            
         }
 
         public void EndTurn()
