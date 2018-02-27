@@ -12,7 +12,8 @@ namespace DiplomacyLib.Models
         public readonly Unit Unit;
         public readonly UndirectedEdge<MapNode> Edge;
         public readonly List<MapNode> ConvoyRoute;
-        public bool IsHold => Edge.Source == Edge.Target;
+        public bool IsHold => !IsDisband && Edge.Source == Edge.Target;
+        public bool IsDisband => Edge == null;
 
         public UnitMove(Unit unit, UndirectedEdge<MapNode> edge)
         {
@@ -20,10 +21,10 @@ namespace DiplomacyLib.Models
             Edge = edge;
         }
 
-        public UnitMove(Unit unit, MapNode mapNode)
+        public UnitMove(Unit unit, MapNode mapNode, bool disband = false)
         {
             Unit = unit;
-            Edge = new UndirectedEdge<MapNode>(mapNode, mapNode);
+            if(!disband) Edge = new UndirectedEdge<MapNode>(mapNode, mapNode);
         }
 
         public UnitMove(Unit unit, UndirectedEdge<MapNode> edge, List<MapNode> convoyRoute)
@@ -33,6 +34,11 @@ namespace DiplomacyLib.Models
             ConvoyRoute = convoyRoute;
         }
 
-        public override string ToString() => IsHold ? $"{Unit}: {Edge.Source} H" : $"{Unit}: {Edge}";
+        public override string ToString()
+        {
+            if (IsHold) return $"{Unit}: {Edge.Source} H";
+            if (IsDisband) return $"{Unit}: {Edge.Source} D";
+            else return $"{Unit}: {Edge}";
+        }
     }
 }

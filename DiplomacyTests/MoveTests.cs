@@ -18,6 +18,12 @@ namespace DiplomacyTests
         }
 
         [TestMethod]
+        public void InitialConvoyMap()
+        {
+            Assert.AreEqual(56, initialBoard.GetCurrentConvoyMap().VertexCount);
+        }
+
+        [TestMethod]
         public void UnitMoveConstruction()
         {
             MapNode munich = MapNodes.Get("mun");
@@ -39,6 +45,52 @@ namespace DiplomacyTests
 
             UnitBuild uBuild = new UnitBuild(germanUnit, munich);
             Assert.IsNotNull(uBuild);
+        }
+
+        [TestMethod]
+        public void AllHoldsFilled()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            Assert.AreEqual(0, moves.Count);
+
+            moves.FillHolds(board);
+
+            Assert.AreEqual(board.OccupiedMapNodes.Count, moves.Count);
+            Assert.IsFalse(moves.Any(m => !m.IsHold));
+        }
+
+        [TestMethod]
+        public void UnitMove()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            Unit fleet = board.OccupiedMapNodes[MapNodes.Get("edi")];
+            var edge = fleet.MyMap.GetEdge("edi", "nth");
+            moves.Add(new UnitMove(fleet, edge));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+
+            Assert.IsTrue(board.OccupiedMapNodes.ContainsKey(MapNodes.Get("nth")));
+            Assert.IsFalse(board.OccupiedMapNodes.ContainsKey(MapNodes.Get("edi")));
+            Assert.AreEqual(board.OccupiedMapNodes.Count, moves.Count);
+        }
+
+        [TestMethod]
+        public void ConvoyUnitMove()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            Unit fleet = board.OccupiedMapNodes[MapNodes.Get("edi")];
+            var edge = fleet.MyMap.GetEdge("edi", "nth");
+            moves.Add(new UnitMove(fleet, edge));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+
+
+            Map map = board.GetCurrentConvoyMap();
+            Assert.AreEqual(7, map.Edges.Count());
+
         }
     }
 }

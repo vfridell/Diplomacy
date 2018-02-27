@@ -16,28 +16,48 @@ namespace DiplomacyLib.Models
 
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
 
-        public bool IsOccupied(Territory t)
+        public bool IsOccupied(Territory t) => IsOccupied(t, OccupiedMapNodes);
+        public bool IsUnoccupied(Territory t) => !IsOccupied(t, OccupiedMapNodes);
+
+        protected bool IsOccupied(Territory t, Dictionary<MapNode, Unit> occupiedMapNodes)
         {
             int occupiedCount = 0;
-            foreach(var mapNode in MapNodes.GetMapNodes(t))
+            foreach (var mapNode in MapNodes.GetMapNodes(t))
             {
-                if (OccupiedMapNodes.ContainsKey(mapNode)) occupiedCount++;
+                if (occupiedMapNodes.ContainsKey(mapNode)) occupiedCount++;
             }
             if (occupiedCount > 1) throw new Exception($"Multiple units cannot occupy multiple map nodes for a single territory: {t}");
             return 1 == occupiedCount;
         }
 
-        public bool IsUnoccupied(Territory t) => !IsOccupied(t);
         public IEnumerable<Unit> Units(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value);
 
         public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
 
-        public void ApplyMoves(List<UnitMove> moves)
+        public void ApplyMoves(BoardMove boardMove)
         {
-            //if(OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
-            //if (move.IsHold) return;
-            //if (!move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
-            
+            foreach (UnitMove move in boardMove)
+            {
+                if (move.IsDisband || move.IsHold) continue;
+                if (OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
+                if (move.ConvoyRoute == null && !move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
+                // todo add convoy check here
+            }
+
+            OccupiedMapNodes.Clear();
+            foreach (UnitMove move in boardMove)
+            {
+                if (move.IsDisband) continue;
+                if (IsOccupied(move.Edge.Target.Territory, OccupiedMapNodes)) throw new Exception($"Territory {move.Edge.Target} has already been moved into during this BoardMove");
+                OccupiedMapNodes.Add(move.Edge.Target, move.Unit);
+            }
+        }
+
+        public Map GetCurrentConvoyMap()
+        {
+            Map convoy = Maps.ConvoyMap.Clone();
+            convoy.RemoveVertexIf(v => !OccupiedMapNodes.Keys.Select(mn => mn.Territory).Contains(v.Territory) );
+            return convoy;
         }
 
         public void EndTurn()

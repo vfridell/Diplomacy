@@ -13,12 +13,14 @@ namespace DiplomacyLib
         public static readonly Map Full;
         public static readonly Map Fleet;
         public static readonly Map Army;
+        public static readonly Map ConvoyMap;
 
         static Maps()
         {
             Full = CreateGraph(MapAdjacencyStrings.FullMap);
             Fleet = CreateGraph(MapAdjacencyStrings.FleetMap);
             Army = CreateGraph(MapAdjacencyStrings.ArmyMap);
+            ConvoyMap = CreateGraph(MapAdjacencyStrings.ConvoyMap);
         }
 
         private static Map CreateGraph(Dictionary<string, List<string>> adjacencyDict)
@@ -41,6 +43,12 @@ namespace DiplomacyLib
 
         public static IEnumerable<UndirectedEdge<MapNode>> AdjacentOutEdges(this Map graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Source == mapNode);
         public static IEnumerable<UndirectedEdge<MapNode>> AdjacentInEdges(this Map graph, MapNode mapNode) => graph.AdjacentEdges(mapNode).Where(e => e.Target == mapNode);
+        public static Map Clone(this Map graph)
+        {
+            Map cloneMap = new Map();
+            cloneMap.AddVerticesAndEdgeRange(graph.Edges);
+            return cloneMap;
+        }
     }
 
 }

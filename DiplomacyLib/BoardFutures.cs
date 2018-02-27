@@ -1,5 +1,6 @@
 ﻿using DiplomacyLib.Models;
 using QuickGraph;
+using QuickGraph.Algorithms.RankedShortestPath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,8 +40,14 @@ namespace DiplomacyLib
         {
             List<UnitMove> convoyMoves = new List<UnitMove>();
             if (kvp.Key.Territory.TerritoryType != TerritoryType.Coast) return convoyMoves;
+            var currentConvoyMap = QuickGraph.GraphExtensions.ToBidirectionalGraph<MapNode,UndirectedEdge<MapNode>>(board.GetCurrentConvoyMap().Edges);
+            var alg = new HoffmanPavleyRankedShortestPathAlgorithm<MapNode, UndirectedEdge<MapNode>>( currentConvoyMap, n => 1);
+            alg.SetRootVertex(kvp.Key);
+            alg.Compute();
+            // todo get the moves
 
-            
+
+            return convoyMoves;
         }
     }
 }

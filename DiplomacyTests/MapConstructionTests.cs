@@ -13,7 +13,7 @@ namespace DiplomacyTests
         [TestMethod]
         public void CountMapNodes()
         {
-            Assert.AreEqual(81, MapNodes.AsReadOnlyList.Count);
+            Assert.AreEqual(156, MapNodes.AsReadOnlyList.Count);
         }
 
         [TestMethod]

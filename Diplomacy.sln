@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomacyLib", "DiplomacyLib\DiplomacyLib.csproj", "{F6C46A6E-DED4-4987-AD8F-16759AF9BD0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomacyTests", "DiplomacyTests\DiplomacyTests.csproj", "{C08192EE-B5B1-41E4-8020-258DDCABC376}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvoyMap", "ConvoyMap\ConvoyMap.csproj", "{9AAE71D5-8380-4B53-A238-F42276BCAEB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C08192EE-B5B1-41E4-8020-258DDCABC376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AAE71D5-8380-4B53-A238-F42276BCAEB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AAE71D5-8380-4B53-A238-F42276BCAEB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AAE71D5-8380-4B53-A238-F42276BCAEB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AAE71D5-8380-4B53-A238-F42276BCAEB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A15BC9E0-41D5-4B2A-A442-E44DEB8BA2CA}
 	EndGlobalSection
 EndGlobal

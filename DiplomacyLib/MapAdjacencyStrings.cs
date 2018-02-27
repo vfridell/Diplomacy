@@ -214,5 +214,28 @@ namespace DiplomacyLib
             { "ser", new List<string>() {"tri", "bud", "rum", "bul", "gre", "alb"} },
             { "vie", new List<string>() {"boh", "gal", "bud", "tri", "tyr"} },
         };
+
+        public static Dictionary<string, List<string>> ConvoyMap = new Dictionary<string, List<string>>()
+        {            { "nao", new List<string>() {"nwg", "cly_1", "lvp_1", "mao", "iri", } },
+            { "iri", new List<string>() {"lvp_2", "wal_2", "eng", "mao", "nao", } },
+            { "nwg", new List<string>() {"bar", "nwy_3", "nth", "edi_3", "cly_3", } },
+            { "bar", new List<string>() {"stp_nc_4", "nwy_4", "nwg", } },
+            { "mao", new List<string>() {"nao", "iri", "eng", "bre_5", "gas_5", "spa_nc_5", "spa_sc_5", "por_5", "wes", "naf_5", } },
+            { "lyo", new List<string>() {"spa_sc_6", "mar_6", "pie_6", "tus_6", "tys", "wes", } },
+            { "wes", new List<string>() {"mao", "spa_sc_7", "lyo", "tys", "tun_7", "naf_7", } },
+            { "tys", new List<string>() {"lyo", "tus_8", "rom_8", "nap_8", "ion", "tun_8", "wes", } },
+            { "ion", new List<string>() {"tun_9", "tys", "nap_9", "apu_9", "adr", "alb_9", "gre_9", "aeg", "eas", } },
+            { "adr", new List<string>() {"ven_10", "tri_10", "alb_10", "ion", "apu_10", } },
+            { "aeg", new List<string>() {"gre_11", "bul_sc_11", "con_11", "smy_11", "eas", "ion", } },
+            { "bla", new List<string>() {"rum_12", "sev_12", "arm_12", "ank_12", "con_12", "bul_ec_12", } },
+            { "eas", new List<string>() {"ion", "aeg", "smy_13", "syr_13", } },
+            { "nth", new List<string>() {"edi_14", "nwg", "nwy_14", "ska", "den_14", "hel", "hol_14", "bel_14", "eng", "lon_14", "yor_14", } },
+            { "hel", new List<string>() {"nth", "den_15", "kie_15", "hol_15", } },
+            { "ska", new List<string>() {"nth", "nwy_16", "swe_16", "den_16", } },
+            { "bal", new List<string>() {"den_17", "swe_17", "bot", "lvn_17", "pru_17", "ber_17", "kie_17", } },
+            { "bot", new List<string>() {"swe_18", "fin_18", "stp_sc_18", "lvn_18", "bal", } },
+            { "eng", new List<string>() {"iri", "wal_19", "lon_19", "nth", "bel_19", "pic_19", "bre_19", "mao", } },
+        };
+
     }
 }
