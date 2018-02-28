@@ -12,7 +12,12 @@ namespace DiplomacyLib.Models
         public IEnumerable<UndirectedEdge<MapNode>> AdjacentOutEdges(MapNode mapNode) => AdjacentEdges(mapNode).Where(e => e.Source == mapNode);
         public IEnumerable<UndirectedEdge<MapNode>> AdjacentInEdges(MapNode mapNode) => AdjacentEdges(mapNode).Where(e => e.Target == mapNode);
 
-        public UndirectedEdge<MapNode> GetEdge(MapNode source, MapNode target) => AdjacentOutEdges(source).Where(mn => mn.Target == target).Single();
+        public UndirectedEdge<MapNode> GetEdge(MapNode source, MapNode target)
+        {
+            UndirectedEdge<MapNode> edge = AdjacentOutEdges(source).Where(mn => mn.Target == target).SingleOrDefault();
+            if (edge == null) throw new ArgumentException($"No such edge {source} <-> {target}");
+            return edge;
+        }
 
         public UndirectedEdge<MapNode> GetEdge(string shortNameSource, string shortNameTarget) => GetEdge(MapNodes.Get(shortNameSource), MapNodes.Get(shortNameTarget));
 

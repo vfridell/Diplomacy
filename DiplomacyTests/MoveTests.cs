@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DiplomacyLib;
 using DiplomacyLib.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QuickGraph;
+using QuickGraph.Algorithms.RankedShortestPath;
 
 namespace DiplomacyTests
 {
@@ -20,7 +23,8 @@ namespace DiplomacyTests
         [TestMethod]
         public void InitialConvoyMap()
         {
-            Assert.AreEqual(56, initialBoard.GetCurrentConvoyMap().VertexCount);
+            Assert.AreEqual(0, initialBoard.GetCurrentConvoyMap().EdgeCount);
+            Assert.AreEqual(94-19, initialBoard.GetCurrentConvoyMap().VertexCount);
         }
 
         [TestMethod]
@@ -77,20 +81,87 @@ namespace DiplomacyTests
         }
 
         [TestMethod]
-        public void ConvoyUnitMove()
+        public void PreConvoyUnitMove()
         {
             Board board = Board.GetInitialBoard();
             BoardMove moves = new BoardMove();
-            Unit fleet = board.OccupiedMapNodes[MapNodes.Get("edi")];
-            var edge = fleet.MyMap.GetEdge("edi", "nth");
-            moves.Add(new UnitMove(fleet, edge));
+            moves.Add(board.GetMove("edi", "nth"));
             moves.FillHolds(board);
             board.ApplyMoves(moves);
 
-
             Map map = board.GetCurrentConvoyMap();
-            Assert.AreEqual(7, map.Edges.Count());
+            Assert.AreEqual(7, map.EdgeCount);
+            Assert.AreEqual(94-18, map.VertexCount);
+        }
 
+        [TestMethod]
+        public void ErrorBadMapNode()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            // edu is not a mapnode
+            Helpers.AssertThrows<ArgumentException>(() => moves.Add(board.GetMove("edu", "nth")));
+        }
+
+        [TestMethod]
+        public void ErrorBadPath()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            // edi <-> bla does not exist
+            Helpers.AssertThrows<ArgumentException>(() => moves.Add(board.GetMove("edi", "bla")));
+        }
+
+        [TestMethod]
+        public void ErrorNoUnit()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            // there is no unit in yor
+            Helpers.AssertThrows<ArgumentException>(() => moves.Add(board.GetMove("yor", "nth")));
+        }
+
+        [TestMethod]
+        public void ConvoyUnitMoveCount()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves1 = new BoardMove();
+            moves1.Add(board.GetMove("edi", "nwg"));
+            moves1.Add(board.GetMove("lon", "nth"));
+            moves1.Add(board.GetMove("lvp", "yor"));
+            moves1.FillHolds(board);
+            board.ApplyMoves(moves1);
+
+            var moves = BoardFutures.GetUnitMoves(board);
+            Assert.AreEqual(9, moves.Count(m => m.IsConvoy));
+        }
+
+        [TestMethod]
+        public void NoInitialConvoyUnitMoves()
+        {
+            var moves = BoardFutures.GetUnitMoves(initialBoard);
+            Assert.AreEqual(0, moves.Count(m => m.IsConvoy));
+        }
+
+        [TestMethod]
+        public void NoInitialDisbandUnitMoves()
+        {
+            var moves = BoardFutures.GetUnitMoves(initialBoard);
+            Assert.AreEqual(0, moves.Count(m => m.IsDisband));
+        }
+
+        [TestMethod]
+        public void DisbandUnitMoveCount()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves1 = new BoardMove();
+            moves1.Add(board.GetMove("ven", "tyr"));
+            moves1.Add(board.GetMove("vie", "boh"));
+            moves1.FillHolds(board);
+            board.ApplyMoves(moves1);
+
+            var moves = BoardFutures.GetUnitMoves(board);
+            Assert.AreEqual(3, moves.Count(m => m.IsDisband));
         }
     }
 }

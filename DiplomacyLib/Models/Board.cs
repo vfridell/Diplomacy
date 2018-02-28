@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuickGraph;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,14 @@ namespace DiplomacyLib.Models
 
         public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
 
+        public UnitMove GetMove(string sourceMapNodeName, string targetMapNodeName)
+        {
+            Unit unit;
+            OccupiedMapNodes.TryGetValue(MapNodes.Get(sourceMapNodeName), out unit);
+            if (unit == null) throw new ArgumentException($"No unit occupies {sourceMapNodeName} ");
+            return unit.GetMove(sourceMapNodeName, targetMapNodeName);
+        }
+
         public void ApplyMoves(BoardMove boardMove)
         {
             foreach (UnitMove move in boardMove)
@@ -56,8 +65,15 @@ namespace DiplomacyLib.Models
         public Map GetCurrentConvoyMap()
         {
             Map convoy = Maps.ConvoyMap.Clone();
-            convoy.RemoveVertexIf(v => !OccupiedMapNodes.Keys.Select(mn => mn.Territory).Contains(v.Territory) );
+            convoy.RemoveVertexIf(v => v.Territory.TerritoryType == TerritoryType.Sea && !OccupiedMapNodes.Keys.Select(mn => mn.Territory).Contains(v.Territory) );
             return convoy;
+        }
+
+        public QuickGraph.BidirectionalGraph<MapNode, UndirectedEdge<MapNode>> GetCurrentConvoyMapBidirectional()
+        {
+            var graph = GraphExtensions.ToBidirectionalGraph<MapNode, UndirectedEdge<MapNode>>(GetCurrentConvoyMap().Edges);
+            graph.AddEdgeRange(graph.Edges.Select(e => new UndirectedEdge<MapNode>(e.Target, e.Source)));
+            return graph;
         }
 
         public void EndTurn()

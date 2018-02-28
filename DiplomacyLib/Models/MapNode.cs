@@ -40,5 +40,6 @@ namespace DiplomacyLib.Models
         {
             return ShortName;
         }
+
     }
 }

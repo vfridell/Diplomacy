@@ -18,6 +18,8 @@ namespace DiplomacyLib.Models
 
         public abstract bool TerritoryCompatible(Territory t);
         public abstract Map MyMap { get; }
+
+        public UnitMove GetMove(string sourceMapNodeName, string targetMapNodeName ) =>  new UnitMove(this, MyMap.GetEdge(sourceMapNodeName, targetMapNodeName));
     }
 
     public class Army : Unit

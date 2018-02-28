@@ -15,6 +15,8 @@ namespace DiplomacyLib.Models
         public bool IsHold => !IsDisband && Edge.Source == Edge.Target;
         public bool IsDisband => Edge == null;
 
+        public bool IsConvoy => ConvoyRoute?.Count > 0;
+
         public UnitMove(Unit unit, UndirectedEdge<MapNode> edge)
         {
             Unit = unit;

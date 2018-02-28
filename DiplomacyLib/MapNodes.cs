@@ -129,5 +129,10 @@ namespace DiplomacyLib
             _territoryToMapNodeDictionary[t].Add(mapNode);
         }
 
+        public static MapNode ConvoyParent(this MapNode mapNode)
+        {
+            if (mapNode.ShortName.Count(c => c == '_') == 0) return mapNode;
+            return Get(mapNode.ShortName.Substring(0, mapNode.ShortName.LastIndexOf('_')));
+        }
     }
 }
