@@ -11,11 +11,11 @@ namespace DiplomacyTests
     {
 
 
-        [TestMethod]
-        public void GenerateAllInitialMoves()
-        {
-            Board board = Board.GetInitialBoard();
-            List<Board> futureBoards = board.GetFutures().ToList();
-        }
+        //[TestMethod]
+        //public void GenerateAllInitialMoves()
+        //{
+        //    Board board = Board.GetInitialBoard();
+        //    List<Board> futureBoards = board.GetFutures().ToList();
+        //}
     }
 }
