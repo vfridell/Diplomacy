@@ -237,8 +237,10 @@ namespace DiplomacyLib
 { "bot", new List<string>() {"swe_18", "fin_18", "stp_sc_18", "lvn_18", "bal", } },
 { "eng", new List<string>() {"iri", "wal_19", "lon_19", "nth", "bel_19", "pic_19", "bre_19", "mao", } },
 };
-
-
+
+
+
+
 
     }
 }
