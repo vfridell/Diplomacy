@@ -57,7 +57,6 @@
     <Compile Include="MapNodes.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="BoardFutures.cs" />
-    <Compile Include="Models\BoardFuture.cs" />
     <Compile Include="Models\BoardMove.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Game.cs" />

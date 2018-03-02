@@ -145,8 +145,6 @@ namespace DiplomacyLib.Models
                 { MapNodes.Get("ber"), new Army(Powers.Germany) },
                 { MapNodes.Get("mun"), new Army(Powers.Germany) },
 
-                { MapNodes.Get("nap"), new Fleet(Powers.Italy) },
-
                 { MapNodes.Get("stp_sc"), new Fleet(Powers.Russia) },
                 { MapNodes.Get("sev"), new Fleet(Powers.Russia) },
                 { MapNodes.Get("mos"), new Army(Powers.Russia) },
