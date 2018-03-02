@@ -23,44 +23,34 @@ namespace DiplomacyLib
 
             List<BoardMove> completedBoardMoves = new List<BoardMove>();
             int depth = 0;
-            var alreadyPicked = new Stack<MapNode>();
-            foreach (MapNode node in board.OccupiedMapNodes.Keys)
+            foreach (UnitMove move in sourceNodeGroups.First())
             {
-                alreadyPicked.Push(node);
-                foreach (UnitMove move in sourceNodeGroups[node])
-                {
-                    if (move.IsConvoy || move.IsDisband) continue;
-                    BoardMove workingBoardMove = new BoardMove();
-                    workingBoardMove.Add(move);
-                    GetMovesRecursive(board, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves, depth + 1);
-                }
-                alreadyPicked.Pop();
+                if (move.IsConvoy || move.IsDisband) continue;
+                BoardMove workingBoardMove = new BoardMove();
+                workingBoardMove.Add(move);
+                GetMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
             }
 
             return ApplyAllBoardMoves(board, completedBoardMoves);
         }
 
-        public static void GetMovesRecursive(Board originalBoard, BoardMove workingBoardMove, Stack<MapNode> alreadyPicked, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
+        public static void GetMovesRecursive(Board originalBoard, BoardMove workingBoardMove, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
         {
-            if (alreadyPicked.Count == sourceNodeGroups.Count)
+            if (workingBoardMove.Count == sourceNodeGroups.Count)
             {
                 completedBoardMoves.Add(workingBoardMove.Clone());
                 return;
             }
 
-            foreach (MapNode node in originalBoard.OccupiedMapNodes.Keys.Where(n => !alreadyPicked.Contains(n)))
+            MapNode node = originalBoard.OccupiedMapNodes.Keys.First(n => !workingBoardMove.Sources.Contains(n));
+            foreach (UnitMove move in sourceNodeGroups[node])
             {
-                alreadyPicked.Push(node);
-                foreach (UnitMove move in sourceNodeGroups[node])
+                if (workingBoardMove.CurrentlyAllows(move))
                 {
-                    if (workingBoardMove.CurrentlyAllows(move))
-                    {
-                        workingBoardMove.Add(move);
-                        GetMovesRecursive(originalBoard, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves, depth + 1);
-                        workingBoardMove.Remove(move);
-                    }
+                    workingBoardMove.Add(move);
+                    GetMovesRecursive(originalBoard, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                    workingBoardMove.Remove(move);
                 }
-                alreadyPicked.Pop();
             }
         }
 

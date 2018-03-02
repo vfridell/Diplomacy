@@ -17,5 +17,12 @@ namespace DiplomacyTests
         //    Board board = Board.GetInitialBoard();
         //    List<Board> futureBoards = board.GetFutures().ToList();
         //}
+
+        [TestMethod]
+        public void GenerateAllInitialMovesTiny()
+        {
+            Board board = Board.GetTinyInitialBoard();
+            List<Board> futureBoards = board.GetFutures().ToList();
+        }
     }
 }

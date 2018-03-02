@@ -43,21 +43,24 @@ namespace DiplomacyLib.Models
             return unit.GetMove(sourceMapNodeName, targetMapNodeName);
         }
 
-        public void ApplyMoves(BoardMove boardMove)
+        public void ApplyMoves(BoardMove boardMove, bool validate = false)
         {
-            foreach (UnitMove move in boardMove)
+            if (validate)
             {
-                if (move.IsDisband || move.IsHold) continue;
-                if (OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
-                if (move.ConvoyRoute == null && !move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
-                // todo add convoy check here
+                foreach (UnitMove move in boardMove)
+                {
+                    if (move.IsDisband || move.IsHold) continue;
+                    if (OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
+                    if (move.ConvoyRoute == null && !move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
+                    // todo add convoy check here
+                }
             }
 
             OccupiedMapNodes.Clear();
             foreach (UnitMove move in boardMove)
             {
                 if (move.IsDisband) continue;
-                if (IsOccupied(move.Edge.Target.Territory, OccupiedMapNodes)) throw new Exception($"Territory {move.Edge.Target} has already been moved into during this BoardMove");
+                if (validate && IsOccupied(move.Edge.Target.Territory, OccupiedMapNodes)) throw new Exception($"Territory {move.Edge.Target} has already been moved into during this BoardMove");
                 OccupiedMapNodes.Add(move.Edge.Target, move.Unit);
             }
         }
@@ -131,6 +134,34 @@ namespace DiplomacyLib.Models
             return board;
         }
 
+        public static Board GetTinyInitialBoard()
+        {
+            var board = new Board();
+            board.Year = 1901;
+            board.Season = new Spring();
+            board.OccupiedMapNodes = new Dictionary<MapNode, Unit>()
+            {
+                { MapNodes.Get("kie"), new Fleet(Powers.Germany) },
+                { MapNodes.Get("ber"), new Army(Powers.Germany) },
+                { MapNodes.Get("mun"), new Army(Powers.Germany) },
+
+                { MapNodes.Get("nap"), new Fleet(Powers.Italy) },
+
+                { MapNodes.Get("stp_sc"), new Fleet(Powers.Russia) },
+                { MapNodes.Get("sev"), new Fleet(Powers.Russia) },
+                { MapNodes.Get("mos"), new Army(Powers.Russia) },
+                { MapNodes.Get("war"), new Army(Powers.Russia) },
+            };
+
+            return board;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var kvp in OccupiedMapNodes) sb.Append($"[{kvp.Key}, {kvp.Value}] ");
+            return sb.ToString();
+        }
 
     }
 }
