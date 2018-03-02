@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace DiplomacyLib.Models
 {
-    public class MapNode
+    public class MapNode : IEquatable<MapNode>
     {
         public readonly string Name;
         public readonly string ShortName;
         public readonly Territory Territory;
+        public readonly int SequenceNumber;
 
-        internal MapNode(string name, string shortName, Territory territory)
+        internal MapNode(string name, string shortName, Territory territory, int sequenceNumber)
         {
             Name = name;
             ShortName = shortName;
             Territory = territory;
+            SequenceNumber = sequenceNumber;
         }
 
         public override bool Equals(object obj)
@@ -28,7 +30,7 @@ namespace DiplomacyLib.Models
 
         public bool Equals(MapNode other)
         {
-            return other.Name == Name;
+            return other?.Name == Name;
         }
 
         public override int GetHashCode()

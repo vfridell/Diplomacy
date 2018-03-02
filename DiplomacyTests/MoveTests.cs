@@ -151,6 +151,13 @@ namespace DiplomacyTests
         }
 
         [TestMethod]
+        public void UnitMovesSort()
+        {
+            var moves = BoardFutures.GetUnitMoves(initialBoard).ToList();
+            moves.Sort();
+        }
+
+        [TestMethod]
         public void DisbandUnitMoveCount()
         {
             Board board = Board.GetInitialBoard();

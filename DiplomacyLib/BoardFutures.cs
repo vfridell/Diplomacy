@@ -22,27 +22,29 @@ namespace DiplomacyLib
             ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.ToLookup(um => um.Edge.Source);
 
             List<BoardMove> completedBoardMoves = new List<BoardMove>();
+            int depth = 0;
+            var alreadyPicked = new Stack<MapNode>();
             foreach (MapNode node in board.OccupiedMapNodes.Keys)
             {
-                var alreadyPicked = new Stack<MapNode>();
                 alreadyPicked.Push(node);
                 foreach (UnitMove move in sourceNodeGroups[node])
                 {
+                    if (move.IsConvoy || move.IsDisband) continue;
                     BoardMove workingBoardMove = new BoardMove();
                     workingBoardMove.Add(move);
-                    GetMovesRecursive(board, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves);
+                    GetMovesRecursive(board, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves, depth + 1);
                 }
-
+                alreadyPicked.Pop();
             }
 
             return ApplyAllBoardMoves(board, completedBoardMoves);
         }
 
-        public static void GetMovesRecursive(Board originalBoard, BoardMove workingBoardMove, Stack<MapNode> alreadyPicked, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves)
+        public static void GetMovesRecursive(Board originalBoard, BoardMove workingBoardMove, Stack<MapNode> alreadyPicked, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
         {
             if (alreadyPicked.Count == sourceNodeGroups.Count)
             {
-                completedBoardMoves.Add(workingBoardMove);
+                completedBoardMoves.Add(workingBoardMove.Clone());
                 return;
             }
 
@@ -54,7 +56,8 @@ namespace DiplomacyLib
                     if (workingBoardMove.CurrentlyAllows(move))
                     {
                         workingBoardMove.Add(move);
-                        GetMovesRecursive(originalBoard, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves);
+                        GetMovesRecursive(originalBoard, workingBoardMove, alreadyPicked, sourceNodeGroups, completedBoardMoves, depth + 1);
+                        workingBoardMove.Remove(move);
                     }
                 }
                 alreadyPicked.Pop();

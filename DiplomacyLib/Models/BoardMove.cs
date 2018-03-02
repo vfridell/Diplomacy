@@ -16,7 +16,6 @@ namespace DiplomacyLib.Models
         public IEnumerable<Territory> HoldTerritories => Holds.Select(u => u.Edge.Target.Territory);
         public IEnumerable<MapNode> MissingSources(Board board) => board.OccupiedMapNodes.Keys.Except(Sources);
 
-
         public void FillHolds(Board board)
         {
             foreach(MapNode mapNode in MissingSources(board))
@@ -58,6 +57,32 @@ namespace DiplomacyLib.Models
                 bool targetTerritoryEmpty = !TargetTerritories.Contains(move.Edge.Target.Territory);
                 return targetTerritoryEmpty;
             }
+        }
+
+        public BoardMove Clone()
+        {
+            var clone = new BoardMove();
+            clone.AddRange(this);
+            return clone;
+        }
+
+        public override bool Equals(object obj)
+        {
+            BoardMove other = obj as BoardMove;
+            if (other == null) return false;
+            return Equals(other);
+        }
+
+        public bool Equals(BoardMove other)
+        {
+            Sort();
+            other.Sort();
+            return this.SequenceEqual(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="BoardTests.cs" />
     <Compile Include="MoveTests.cs" />
     <Compile Include="BoardMoveTests.cs" />
+    <Compile Include="ModelCompareTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

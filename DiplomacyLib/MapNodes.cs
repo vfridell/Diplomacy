@@ -14,6 +14,7 @@ namespace DiplomacyLib
 
         private static Dictionary<string, MapNode> _mapNodes = new Dictionary<string, MapNode>();
         private static Dictionary<Territory, List<MapNode>> _territoryToMapNodeDictionary = new Dictionary<Territory, List<MapNode>>();
+        private static int MapNodeSequenceNumber = 0;
 
         public static MapNode Get(string shortName)
         {
@@ -28,7 +29,7 @@ namespace DiplomacyLib
 
             foreach (Territory t in Territories.AsReadOnlyList)
             {
-                mapNode = new MapNode(t.Name, t.ShortName, t);
+                mapNode = new MapNode(t.Name, t.ShortName, t, MapNodeSequenceNumber++);
                 _mapNodes.Add(t.ShortName, mapNode);
                 _territoryToMapNodeDictionary.Add(t, new List<MapNode>() { mapNode });
             }
@@ -124,7 +125,7 @@ namespace DiplomacyLib
         {
             string territoryShortName = shortName.Substring(0, shortName.IndexOf("_") );
             Territory t = Territories.Get(territoryShortName);
-            MapNode mapNode = new MapNode(name, shortName, t);
+            MapNode mapNode = new MapNode(name, shortName, t, MapNodeSequenceNumber++);
             _mapNodes.Add(shortName, mapNode);
             _territoryToMapNodeDictionary[t].Add(mapNode);
         }
