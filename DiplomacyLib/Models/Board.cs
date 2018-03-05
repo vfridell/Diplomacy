@@ -142,13 +142,13 @@ namespace DiplomacyLib.Models
             board.OccupiedMapNodes = new Dictionary<MapNode, Unit>()
             {
                 { MapNodes.Get("kie"), new Fleet(Powers.Germany) },
-                { MapNodes.Get("ber"), new Army(Powers.Germany) },
-                { MapNodes.Get("mun"), new Army(Powers.Germany) },
+                //{ MapNodes.Get("ber"), new Army(Powers.Germany) },
+                //{ MapNodes.Get("mun"), new Army(Powers.Germany) },
 
-                { MapNodes.Get("stp_sc"), new Fleet(Powers.Russia) },
-                { MapNodes.Get("sev"), new Fleet(Powers.Russia) },
-                { MapNodes.Get("mos"), new Army(Powers.Russia) },
-                { MapNodes.Get("war"), new Army(Powers.Russia) },
+                //{ MapNodes.Get("stp_sc"), new Fleet(Powers.Russia) },
+                //{ MapNodes.Get("sev"), new Fleet(Powers.Russia) },
+                //{ MapNodes.Get("mos"), new Army(Powers.Russia) },
+                //{ MapNodes.Get("war"), new Army(Powers.Russia) },
             };
 
             return board;
