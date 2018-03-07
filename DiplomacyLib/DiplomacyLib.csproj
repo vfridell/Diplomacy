@@ -52,7 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Alliance.cs" />
+    <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />
+    <Compile Include="MapAlgorithms\IMapAlgorithm.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="MapNodes.cs" />
     <Compile Include="Models\Board.cs" />
@@ -75,8 +78,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

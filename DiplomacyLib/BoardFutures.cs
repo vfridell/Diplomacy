@@ -28,30 +28,10 @@ namespace DiplomacyLib
                 if (move.IsConvoy || move.IsDisband) continue;
                 BoardMove workingBoardMove = new BoardMove();
                 workingBoardMove.Add(move);
-                GetMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                GetBoardMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
             }
 
             return ApplyAllBoardMoves(board, completedBoardMoves);
-        }
-
-        public static void GetMovesRecursive(Board originalBoard, BoardMove workingBoardMove, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
-        {
-            if (workingBoardMove.Count == sourceNodeGroups.Count)
-            {
-                completedBoardMoves.Add(workingBoardMove.Clone());
-                return;
-            }
-
-            MapNode node = originalBoard.OccupiedMapNodes.Keys.First(n => !workingBoardMove.Sources.Contains(n));
-            foreach (UnitMove move in sourceNodeGroups[node])
-            {
-                if (workingBoardMove.CurrentlyAllows(move))
-                {
-                    workingBoardMove.Add(move);
-                    GetMovesRecursive(originalBoard, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
-                    workingBoardMove.Remove(move);
-                }
-            }
         }
 
         public static IEnumerable<Board> ApplyAllBoardMoves(Board board, List<BoardMove> boardMoves)
@@ -64,6 +44,44 @@ namespace DiplomacyLib
                 futureBoards.Add(newBoard);
             }
             return futureBoards;
+        }
+
+        public static IEnumerable<BoardMove> GetBoardMoves(Board board, IEnumerable<MapNode> mapNodeSources)
+        {
+            IEnumerable<UnitMove> allUnitMoves = GetUnitMoves(board);
+            ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.Where(um => mapNodeSources.Contains(um.Edge.Source)).ToLookup(um => um.Edge.Source);
+
+            List<BoardMove> completedBoardMoves = new List<BoardMove>();
+            int depth = 0;
+            foreach (UnitMove move in sourceNodeGroups.First())
+            {
+                if (move.IsConvoy || move.IsDisband) continue;
+                BoardMove workingBoardMove = new BoardMove();
+                workingBoardMove.Add(move);
+                GetBoardMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+            }
+
+            return completedBoardMoves;
+        }
+
+        private static void GetBoardMovesRecursive(Board originalBoard, BoardMove workingBoardMove, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
+        {
+            if (workingBoardMove.Count == sourceNodeGroups.Count)
+            {
+                completedBoardMoves.Add(workingBoardMove.Clone());
+                return;
+            }
+
+            MapNode node = sourceNodeGroups.First(n => !workingBoardMove.Sources.Contains(n.Key)).Key;
+            foreach (UnitMove move in sourceNodeGroups[node])
+            {
+                if (workingBoardMove.CurrentlyAllows(move))
+                {
+                    workingBoardMove.Add(move);
+                    GetBoardMovesRecursive(originalBoard, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                    workingBoardMove.Remove(move);
+                }
+            }
         }
 
         public static IEnumerable<UnitMove> GetUnitMoves(Board board)
