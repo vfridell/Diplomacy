@@ -97,58 +97,6 @@ namespace DiplomacyTests
             Assert.AreNotEqual(clone.OwnedSupplyCenters[Powers.Germany].Count, board.OwnedSupplyCenters[Powers.Germany].Count);
         }
 
-        [TestMethod]
-        public void OwnedSupplyCentersNoneToOwned()
-        {
-            Board board = Board.GetInitialBoard();
-            BoardMove moves = new BoardMove();
-            moves.Add(board.GetMove("kie", "den"));
-            moves.Add(board.GetMove("ber", "kie"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-            board.EndTurn();
-
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-
-            moves.Clear();
-            moves.Add(board.GetMove("kie", "hol"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-            board.EndTurn();
-
-            Assert.AreEqual(5, board.OwnedSupplyCenters[Powers.Germany].Count);
-            Assert.AreEqual(24, board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None).SelectMany(kvp => kvp.Value).Count());
-        }
-
-        [TestMethod]
-        public void OwnedSupplyCentersOwnershipSwitch()
-        {
-            Board board = Board.GetInitialBoard();
-            BoardMove moves = new BoardMove();
-            moves.Add(board.GetMove("par", "pic"));
-            moves.Add(board.GetMove("mun", "bur"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.France].Count);
-            board.EndTurn();
-
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.France].Count);
-
-            moves.Clear();
-            moves.Add(board.GetMove("bur", "par"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
-            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.France].Count);
-            board.EndTurn();
-
-            Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Germany].Count);
-            Assert.AreEqual(2, board.OwnedSupplyCenters[Powers.France].Count);
-            Assert.AreEqual(22, board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None).SelectMany(kvp => kvp.Value).Count());
-        }
+        
     }
 }

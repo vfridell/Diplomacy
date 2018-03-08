@@ -11,7 +11,7 @@ namespace DiplomacyLib
 {
     public static class BoardFutures
     {
-        public static IEnumerable<Board> GetBuilds(Board board)
+        public static IEnumerable<Board> GetBuildsAndDisbands(Board board)
         {
             throw new NotImplementedException();
         }

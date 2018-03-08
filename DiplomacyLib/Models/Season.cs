@@ -36,6 +36,6 @@ namespace DiplomacyLib.Models
         public override Season NextSeason => Seasons.Spring;
         public override int Ordinal => 3;
 
-        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetBuilds(board);
+        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetBuildsAndDisbands(board);
     }
 }
