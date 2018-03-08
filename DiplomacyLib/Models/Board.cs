@@ -16,6 +16,7 @@ namespace DiplomacyLib.Models
         public int Turn => ((Year - 1901) * 3) + Season.Ordinal;
 
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
+        public Dictionary<Powers, ISet<MapNode>> OwnedSupplyCenters { get; protected set; }
 
         public bool IsOccupied(Territory t) => IsOccupied(t, OccupiedMapNodes);
         public bool IsUnoccupied(Territory t) => !IsOccupied(t, OccupiedMapNodes);
@@ -83,12 +84,28 @@ namespace DiplomacyLib.Models
         {
             Season = Season.NextSeason;
             if (Season is Spring) Year++;
+            if (Season is Winter) UpdateOwnedSupplyCenters();
+        }
+
+        protected void UpdateOwnedSupplyCenters()
+        {
+            foreach (var kvp in OccupiedMapNodes.Where(kvp => kvp.Key.Territory.IsSupplyCenter))
+            {
+                Powers currentOwner = OwnedSupplyCenters.Single(o => o.Value.Contains(kvp.Key)).Key;
+                if(currentOwner == kvp.Value.Power) continue;
+
+                OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key);
+                OwnedSupplyCenters[currentOwner].Remove(kvp.Key);
+            }
         }
 
         public Board Clone()
         {
             Board clone = new Board();
             clone.OccupiedMapNodes = new Dictionary<MapNode, Unit>(OccupiedMapNodes);
+            clone.OwnedSupplyCenters = new Dictionary<Powers, ISet<MapNode>>();
+            foreach(var kvp in OwnedSupplyCenters) clone.OwnedSupplyCenters[kvp.Key] = new HashSet<MapNode>(kvp.Value);
+
             clone.Year = Year;
             clone.Season = Season;
             return clone;
@@ -131,25 +148,26 @@ namespace DiplomacyLib.Models
                 { MapNodes.Get("war"), new Army(Powers.Russia) },
             };
 
-            return board;
-        }
-
-        public static Board GetTinyInitialBoard()
-        {
-            var board = new Board();
-            board.Year = 1901;
-            board.Season = new Spring();
-            board.OccupiedMapNodes = new Dictionary<MapNode, Unit>()
+            board.OwnedSupplyCenters = new Dictionary<Powers, ISet<MapNode>>()
             {
-                { MapNodes.Get("kie"), new Fleet(Powers.Germany) },
-                //{ MapNodes.Get("ber"), new Army(Powers.Germany) },
-                //{ MapNodes.Get("mun"), new Army(Powers.Germany) },
-
-                //{ MapNodes.Get("stp_sc"), new Fleet(Powers.Russia) },
-                //{ MapNodes.Get("sev"), new Fleet(Powers.Russia) },
-                //{ MapNodes.Get("mos"), new Army(Powers.Russia) },
-                //{ MapNodes.Get("war"), new Army(Powers.Russia) },
+                { Powers.England, new HashSet<MapNode>() },
+                { Powers.Germany, new HashSet<MapNode>() },
+                { Powers.France, new HashSet<MapNode>() },
+                { Powers.Italy, new HashSet<MapNode>() },
+                { Powers.Austria, new HashSet<MapNode>() },
+                { Powers.Turkey, new HashSet<MapNode>() },
+                { Powers.Russia, new HashSet<MapNode>() },
+                { Powers.None, new HashSet<MapNode>() },
             };
+
+            foreach(var kvp in board.OccupiedMapNodes)
+                board.OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key);
+
+            foreach (var mapNode in Maps.Full.Vertices)
+            {
+                if (board.OccupiedMapNodes.Keys.Contains(mapNode)) continue;
+                if (mapNode.Territory.IsSupplyCenter) board.OwnedSupplyCenters[Powers.None].Add(mapNode);
+            }
 
             return board;
         }
