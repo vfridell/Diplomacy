@@ -34,13 +34,13 @@ namespace DiplomacyTests
         [TestMethod]
         public void InitialBoardPowersUnitCount()
         {
-            Assert.AreEqual(3, initialBoard.Units(Powers.Austria).Count());
-            Assert.AreEqual(3, initialBoard.Units(Powers.France).Count());
-            Assert.AreEqual(3, initialBoard.Units(Powers.Germany).Count());
-            Assert.AreEqual(3, initialBoard.Units(Powers.Italy).Count());
-            Assert.AreEqual(3, initialBoard.Units(Powers.England).Count());
-            Assert.AreEqual(3, initialBoard.Units(Powers.Turkey).Count());
-            Assert.AreEqual(4, initialBoard.Units(Powers.Russia).Count());
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.Austria));
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.France));
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.Germany));
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.Italy));
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.England));
+            Assert.AreEqual(3, initialBoard.UnitCount(Powers.Turkey));
+            Assert.AreEqual(4, initialBoard.UnitCount(Powers.Russia));
         }
 
         [TestMethod]
