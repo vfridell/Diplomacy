@@ -11,7 +11,7 @@ namespace DiplomacyLib.Models
         public readonly Powers Power;
         public abstract UnitType UnitType { get; }
 
-        internal Unit(Powers power)
+        protected internal Unit(Powers power)
         {
             Power = power;
         }
@@ -28,7 +28,7 @@ namespace DiplomacyLib.Models
 
     public class Army : Unit
     {
-        public Army(Powers power) : base(power) {}
+        protected internal Army(Powers power) : base(power) {}
         public override UnitType UnitType => UnitType.Army; 
         public override string ToString() => $"{Power} Army";
 
@@ -48,7 +48,7 @@ namespace DiplomacyLib.Models
 
     public class Fleet : Unit
     {
-        public Fleet(Powers power) : base(power) { }
+        protected internal Fleet(Powers power) : base(power) { }
         public override UnitType UnitType => UnitType.Fleet; 
         public override string ToString() => $"{Power} Fleet";
             

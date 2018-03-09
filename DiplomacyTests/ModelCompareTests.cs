@@ -16,12 +16,12 @@ namespace DiplomacyTests
         {
             List<Unit> units = new List<Unit>()
             {
-                new Army(Powers.Austria),
-                new Army(Powers.Austria),
-                new Fleet(Powers.Austria),
-                new Fleet(Powers.Austria),
-                new Fleet(Powers.England),
-                new Army(Powers.England),
+                Units.GetArmy(Powers.Austria),
+                Units.GetArmy(Powers.Austria),
+                Units.GetFleet(Powers.Austria),
+                Units.GetFleet(Powers.Austria),
+                Units.GetFleet(Powers.England),
+                Units.GetArmy(Powers.England),
             };
 
             Assert.AreEqual(units[0], units[1]);
@@ -37,20 +37,20 @@ namespace DiplomacyTests
         {
             List<UnitMove> mv = new List<UnitMove>()
             {
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("nth")), //0
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("nth")), //1
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("edi")), //2
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("nth"), true), //3
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("nth"), true), //4
-                new UnitMove(new Army(Powers.England), MapNodes.Get("nth"), true), //5
-                new UnitMove(new Army(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //6
-                new UnitMove(new Army(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //7
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //8
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nth"))), //9
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwy"), }), //10
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwy"), }), //11
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwg"),MapNodes.Get("nwy"), }), //12
-                new UnitMove(new Fleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //13
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("nth")), //0
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("nth")), //1
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("edi")), //2
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("nth"), true), //3
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("nth"), true), //4
+                new UnitMove(Units.GetArmy(Powers.England), MapNodes.Get("nth"), true), //5
+                new UnitMove(Units.GetArmy(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //6
+                new UnitMove(Units.GetArmy(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //7
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //8
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nth"))), //9
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwy"), }), //10
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwy"), }), //11
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("yor"), MapNodes.Get("nwy")), new List<MapNode> {MapNodes.Get("nth"),MapNodes.Get("nwg"),MapNodes.Get("nwy"), }), //12
+                new UnitMove(Units.GetFleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nth"), MapNodes.Get("yor"))), //13
             };
             Assert.AreEqual(mv[0], mv[1]);
             Assert.AreEqual(mv[3], mv[4]);
@@ -86,36 +86,36 @@ namespace DiplomacyTests
         {
             List<UnitMove> mv = new List<UnitMove>()
             {
-                new UnitMove(new Fleet(Powers.Austria), MapNodes.Get("nao")), //0
-                new UnitMove(new Fleet(Powers.Austria), MapNodes.Get("nth")), //1
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("edi")), //2
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("mun"), true), //3
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("stp"), true), //4
-                new UnitMove(new Army(Powers.England), MapNodes.Get("eng"), true), //5
-                new UnitMove(new Fleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nwy"), MapNodes.Get("bar"))), //6
-                new UnitMove(new Fleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mao"), MapNodes.Get("wes"))), //7
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mun"), MapNodes.Get("boh"))), //8
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sil"), MapNodes.Get("war"))), //9
-                new UnitMove(new Army(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("stp"), MapNodes.Get("swe")), new List<MapNode> {MapNodes.Get("bot"), }), //10
-                new UnitMove(new Army(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sev"), MapNodes.Get("ank")), new List<MapNode> {MapNodes.Get("bla"), }), //11
-                new UnitMove(new Army(Powers.France), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> {MapNodes.Get("lyo"),MapNodes.Get("wes"),MapNodes.Get("tys"), }), //12
+                new UnitMove(Units.GetFleet(Powers.Austria), MapNodes.Get("nao")), //0
+                new UnitMove(Units.GetFleet(Powers.Austria), MapNodes.Get("nth")), //1
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("edi")), //2
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("mun"), true), //3
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("stp"), true), //4
+                new UnitMove(Units.GetArmy(Powers.England), MapNodes.Get("eng"), true), //5
+                new UnitMove(Units.GetFleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nwy"), MapNodes.Get("bar"))), //6
+                new UnitMove(Units.GetFleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mao"), MapNodes.Get("wes"))), //7
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mun"), MapNodes.Get("boh"))), //8
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sil"), MapNodes.Get("war"))), //9
+                new UnitMove(Units.GetArmy(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("stp"), MapNodes.Get("swe")), new List<MapNode> {MapNodes.Get("bot"), }), //10
+                new UnitMove(Units.GetArmy(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sev"), MapNodes.Get("ank")), new List<MapNode> {MapNodes.Get("bla"), }), //11
+                new UnitMove(Units.GetArmy(Powers.France), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> {MapNodes.Get("lyo"),MapNodes.Get("wes"),MapNodes.Get("tys"), }), //12
             };
 
             List<UnitMove> mv2 = new List<UnitMove>()
             {
-                new UnitMove(new Fleet(Powers.Austria), MapNodes.Get("nao")), //0
-                new UnitMove(new Fleet(Powers.Austria), MapNodes.Get("nth")), //1
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("edi")), //2
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("mun"), true), //3
-                new UnitMove(new Army(Powers.Austria), MapNodes.Get("stp"), true), //4
-                new UnitMove(new Army(Powers.England), MapNodes.Get("eng"), true), //5
-                new UnitMove(new Fleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nwy"), MapNodes.Get("bar"))), //6
-                new UnitMove(new Fleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mao"), MapNodes.Get("wes"))), //7
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mun"), MapNodes.Get("boh"))), //8
-                new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sil"), MapNodes.Get("war"))), //9
-                new UnitMove(new Army(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("stp"), MapNodes.Get("swe")), new List<MapNode> {MapNodes.Get("bot"), }), //10
-                new UnitMove(new Army(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sev"), MapNodes.Get("ank")), new List<MapNode> {MapNodes.Get("bla"), }), //11
-                new UnitMove(new Army(Powers.France), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> {MapNodes.Get("lyo"),MapNodes.Get("wes"),MapNodes.Get("tys"), }), //12
+                new UnitMove(Units.GetFleet(Powers.Austria), MapNodes.Get("nao")), //0
+                new UnitMove(Units.GetFleet(Powers.Austria), MapNodes.Get("nth")), //1
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("edi")), //2
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("mun"), true), //3
+                new UnitMove(Units.GetArmy(Powers.Austria), MapNodes.Get("stp"), true), //4
+                new UnitMove(Units.GetArmy(Powers.England), MapNodes.Get("eng"), true), //5
+                new UnitMove(Units.GetFleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("nwy"), MapNodes.Get("bar"))), //6
+                new UnitMove(Units.GetFleet(Powers.England), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mao"), MapNodes.Get("wes"))), //7
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mun"), MapNodes.Get("boh"))), //8
+                new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sil"), MapNodes.Get("war"))), //9
+                new UnitMove(Units.GetArmy(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("stp"), MapNodes.Get("swe")), new List<MapNode> {MapNodes.Get("bot"), }), //10
+                new UnitMove(Units.GetArmy(Powers.Russia), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("sev"), MapNodes.Get("ank")), new List<MapNode> {MapNodes.Get("bla"), }), //11
+                new UnitMove(Units.GetArmy(Powers.France), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> {MapNodes.Get("lyo"),MapNodes.Get("wes"),MapNodes.Get("tys"), }), //12
             };
 
             BoardMove boardMove1 = new BoardMove();
@@ -127,7 +127,7 @@ namespace DiplomacyTests
             Assert.AreNotEqual(boardMove1, boardMove3);
             BoardMove boardMove4 = new BoardMove();
             boardMove4.AddRange(mv.Take(12));
-            boardMove4.Add(new UnitMove(new Army(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> { MapNodes.Get("lyo"), MapNodes.Get("wes"), MapNodes.Get("tys"), }));
+            boardMove4.Add(new UnitMove(Units.GetArmy(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> { MapNodes.Get("lyo"), MapNodes.Get("wes"), MapNodes.Get("tys"), }));
             Assert.AreNotEqual(boardMove1, boardMove4);
         }
     }
