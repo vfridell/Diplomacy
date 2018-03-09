@@ -45,7 +45,7 @@ namespace DiplomacyTests
         public void UnitBuildConstruction()
         {
             MapNode munich = MapNodes.Get("mun");
-            Unit germanUnit = Units.GetArmy(Powers.Germany);
+            Unit germanUnit = Army.Get(Powers.Germany);
 
             UnitBuild uBuild = new UnitBuild(germanUnit, munich);
             Assert.IsNotNull(uBuild);

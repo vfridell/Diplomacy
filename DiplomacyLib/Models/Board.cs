@@ -118,34 +118,34 @@ namespace DiplomacyLib.Models
             board.Season = new Spring();
             board.OccupiedMapNodes = new Dictionary<MapNode, Unit>()
             {
-                { MapNodes.Get("edi"), Units.GetFleet(Powers.England) },
-                { MapNodes.Get("lon"), Units.GetFleet(Powers.England) },
-                { MapNodes.Get("lvp"), Units.GetArmy(Powers.England) },
+                { MapNodes.Get("edi"), Fleet.Get(Powers.England) },
+                { MapNodes.Get("lon"), Fleet.Get(Powers.England) },
+                { MapNodes.Get("lvp"), Army.Get(Powers.England) },
 
-                { MapNodes.Get("kie"), Units.GetFleet(Powers.Germany) },
-                { MapNodes.Get("ber"), Units.GetArmy(Powers.Germany) },
-                { MapNodes.Get("mun"), Units.GetArmy(Powers.Germany) },
+                { MapNodes.Get("kie"), Fleet.Get(Powers.Germany) },
+                { MapNodes.Get("ber"), Army.Get(Powers.Germany) },
+                { MapNodes.Get("mun"), Army.Get(Powers.Germany) },
 
-                { MapNodes.Get("bre"), Units.GetFleet(Powers.France) },
-                { MapNodes.Get("par"), Units.GetArmy(Powers.France) },
-                { MapNodes.Get("mar"), Units.GetArmy(Powers.France) },
+                { MapNodes.Get("bre"), Fleet.Get(Powers.France) },
+                { MapNodes.Get("par"), Army.Get(Powers.France) },
+                { MapNodes.Get("mar"), Army.Get(Powers.France) },
 
-                { MapNodes.Get("nap"), Units.GetFleet(Powers.Italy) },
-                { MapNodes.Get("rom"), Units.GetArmy(Powers.Italy) },
-                { MapNodes.Get("ven"), Units.GetArmy(Powers.Italy) },
+                { MapNodes.Get("nap"), Fleet.Get(Powers.Italy) },
+                { MapNodes.Get("rom"), Army.Get(Powers.Italy) },
+                { MapNodes.Get("ven"), Army.Get(Powers.Italy) },
 
-                { MapNodes.Get("tri"), Units.GetFleet(Powers.Austria) },
-                { MapNodes.Get("bud"), Units.GetArmy(Powers.Austria) },
-                { MapNodes.Get("vie"), Units.GetArmy(Powers.Austria) },
+                { MapNodes.Get("tri"), Fleet.Get(Powers.Austria) },
+                { MapNodes.Get("bud"), Army.Get(Powers.Austria) },
+                { MapNodes.Get("vie"), Army.Get(Powers.Austria) },
 
-                { MapNodes.Get("ank"), Units.GetFleet(Powers.Turkey) },
-                { MapNodes.Get("con"), Units.GetArmy(Powers.Turkey) },
-                { MapNodes.Get("smy"), Units.GetArmy(Powers.Turkey) },
+                { MapNodes.Get("ank"), Fleet.Get(Powers.Turkey) },
+                { MapNodes.Get("con"), Army.Get(Powers.Turkey) },
+                { MapNodes.Get("smy"), Army.Get(Powers.Turkey) },
 
-                { MapNodes.Get("stp_sc"), Units.GetFleet(Powers.Russia) },
-                { MapNodes.Get("sev"), Units.GetFleet(Powers.Russia) },
-                { MapNodes.Get("mos"), Units.GetArmy(Powers.Russia) },
-                { MapNodes.Get("war"), Units.GetArmy(Powers.Russia) },
+                { MapNodes.Get("stp_sc"), Fleet.Get(Powers.Russia) },
+                { MapNodes.Get("sev"), Fleet.Get(Powers.Russia) },
+                { MapNodes.Get("mos"), Army.Get(Powers.Russia) },
+                { MapNodes.Get("war"), Army.Get(Powers.Russia) },
             };
 
             board.OwnedSupplyCenters = new Dictionary<Powers, ISet<MapNode>>()

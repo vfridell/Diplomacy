@@ -28,7 +28,7 @@ namespace DiplomacyLib.Models
 
     public class Army : Unit
     {
-        protected internal Army(Powers power) : base(power) {}
+        protected Army(Powers power) : base(power) {}
         public override UnitType UnitType => UnitType.Army; 
         public override string ToString() => $"{Power} Army";
 
@@ -44,11 +44,23 @@ namespace DiplomacyLib.Models
 
         public override int GetHashCode() => base.GetHashCode();
 
+        public static Army Get(Powers power) => _armyUnits[power];
+
+        private static Dictionary<Powers, Army> _armyUnits = new Dictionary<Powers, Army>()
+        {
+            {Powers.Austria, new Army(Powers.Austria) },
+            {Powers.England, new Army(Powers.England) },
+            {Powers.France, new Army(Powers.France) },
+            {Powers.Germany, new Army(Powers.Germany) },
+            {Powers.Italy, new Army(Powers.Italy) },
+            {Powers.Russia, new Army(Powers.Russia) },
+            {Powers.Turkey, new Army(Powers.Turkey) },
+        };
     }
 
     public class Fleet : Unit
     {
-        protected internal Fleet(Powers power) : base(power) { }
+        protected Fleet(Powers power) : base(power) { }
         public override UnitType UnitType => UnitType.Fleet; 
         public override string ToString() => $"{Power} Fleet";
             
@@ -63,6 +75,18 @@ namespace DiplomacyLib.Models
         }
 
         public override int GetHashCode() => base.GetHashCode();
+
+        public static Fleet Get(Powers power) => _fleetUnits[power];
+        private static Dictionary<Powers, Fleet> _fleetUnits = new Dictionary<Powers, Fleet>()
+        {
+            {Powers.Austria, new Fleet(Powers.Austria) },
+            {Powers.England, new Fleet(Powers.England) },
+            {Powers.France, new Fleet(Powers.France) },
+            {Powers.Germany, new Fleet(Powers.Germany) },
+            {Powers.Italy, new Fleet(Powers.Italy) },
+            {Powers.Russia, new Fleet(Powers.Russia) },
+            {Powers.Turkey, new Fleet(Powers.Turkey) },
+        };
     }
 
 }
