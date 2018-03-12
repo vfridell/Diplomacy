@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
@@ -55,6 +56,7 @@
     <Compile Include="AI\Alliance.cs" />
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />
+    <Compile Include="Visualize\MapNodeStyles.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="MapNodes.cs" />
     <Compile Include="Models\Board.cs" />
@@ -71,8 +73,9 @@
     <Compile Include="Models\Unit.cs" />
     <Compile Include="Models\UnitBuild.cs" />
     <Compile Include="Models\UnitMove.cs" />
-    <Compile Include="Models\Units.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Visualize\MapNodeRenderStyle.cs" />
+    <Compile Include="Visualize\Renderer.cs" />
     <Compile Include="Territories.cs" />
   </ItemGroup>
   <ItemGroup>

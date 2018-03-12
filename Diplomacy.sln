@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvoyMap", "ConvoyMap\Conv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler", "Profiler\Profiler.csproj", "{02A09696-017A-4E97-B9AA-65A514DE52C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graphviz", "Graphviz\Graphviz.csproj", "{433D3CEA-030B-41F1-ADB6-116DED280A69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{02A09696-017A-4E97-B9AA-65A514DE52C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A09696-017A-4E97-B9AA-65A514DE52C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A09696-017A-4E97-B9AA-65A514DE52C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{433D3CEA-030B-41F1-ADB6-116DED280A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{433D3CEA-030B-41F1-ADB6-116DED280A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{433D3CEA-030B-41F1-ADB6-116DED280A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{433D3CEA-030B-41F1-ADB6-116DED280A69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
