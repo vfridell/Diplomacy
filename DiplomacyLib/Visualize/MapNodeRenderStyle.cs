@@ -11,24 +11,22 @@ namespace DiplomacyLib.Visualize
 {
     public class MapNodeRenderStyle
     {
-        public Color Color;
-        public GraphvizColor GVColor;
-        public GraphvizVertexShape Shape;
-        public GraphvizPoint Point;
+        public readonly Color Color;
+        public readonly GraphvizVertexShape Shape;
+        public readonly double X;
+        public readonly double Y;
 
-        private MapNodeRenderStyle(Color color, GraphvizVertexShape shape, int x, int y)
+        private MapNodeRenderStyle(Color color, GraphvizVertexShape shape, double x, double y)
         {
             Shape = shape;
             Color = color;
-            GVColor = new GraphvizColor(color.A, color.R, color.G, color.B);
-            Point = new GraphvizPoint(x, y);
+            X = x;
+            Y = y;
         }
 
-        public static MapNodeRenderStyle Get(string mapNodeShortName, double xd, double yd)
+        public static MapNodeRenderStyle Get(string mapNodeShortName, double x, double y)
         {
             MapNode node = MapNodes.Get(mapNodeShortName);
-            int x = (int)xd;
-            int y = (int)yd;
             switch (node.Territory.TerritoryType)
             {
                 case TerritoryType.Sea:

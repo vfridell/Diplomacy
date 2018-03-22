@@ -30,7 +30,7 @@ namespace DiplomacyLib.Models
 
         public bool Equals(MapNode other)
         {
-            return other?.Name == Name;
+            return other?.ShortName == ShortName;
         }
 
         public override int GetHashCode()
