@@ -32,13 +32,13 @@ namespace DiplomacyWpfControls
             InitializeComponent();
         }
 
-        public void Draw(Map map)
+        public void Draw(Board board)
         {
             try
             {
                 _executing = true;
                 DrawnMap drawnMap = new DrawnMap();
-                drawnMap.Populate(map);
+                drawnMap.Populate(board);
 
                 var logicCore = new DiplomacyGXLogicCore();
                 logicCore.Graph = drawnMap;

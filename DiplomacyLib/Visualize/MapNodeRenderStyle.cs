@@ -9,14 +9,24 @@ using DiplomacyLib.Models;
 
 namespace DiplomacyLib.Visualize
 {
+    public enum VertexShape
+    {
+        Rectangle = 0,
+        Diamond = 1,
+        Triangle = 2,
+        Circle = 3,
+        None = 4,
+        Ellipse = 5
+    }
+
     public class MapNodeRenderStyle
     {
         public readonly Color Color;
-        public readonly GraphvizVertexShape Shape;
+        public readonly VertexShape Shape;
         public readonly double X;
         public readonly double Y;
 
-        private MapNodeRenderStyle(Color color, GraphvizVertexShape shape, double x, double y)
+        private MapNodeRenderStyle(Color color, VertexShape shape, double x, double y)
         {
             Shape = shape;
             Color = color;
@@ -30,11 +40,11 @@ namespace DiplomacyLib.Visualize
             switch (node.Territory.TerritoryType)
             {
                 case TerritoryType.Sea:
-                    return new MapNodeRenderStyle(Colors.Blue, GraphvizVertexShape.Ellipse, x, y);
+                    return new MapNodeRenderStyle(Colors.Blue, VertexShape.Ellipse, x, y);
                 case TerritoryType.Coast:
-                    return new MapNodeRenderStyle(Colors.Green, GraphvizVertexShape.Box, x, y);
+                    return new MapNodeRenderStyle(Colors.Green, VertexShape.Rectangle, x, y);
                 case TerritoryType.Inland:
-                    return new MapNodeRenderStyle(Colors.Brown, GraphvizVertexShape.Box, x, y);
+                    return new MapNodeRenderStyle(Colors.Brown, VertexShape.Rectangle, x, y);
                 default:
                     throw new Exception($"Unknown TerritoryType: {node.Territory.TerritoryType}");
             }

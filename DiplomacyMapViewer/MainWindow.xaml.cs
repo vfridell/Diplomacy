@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib;
+using DiplomacyLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,8 @@ namespace DiplomacyMapViewer
         public MainWindow()
         {
             InitializeComponent();
-            BoardViewer.Draw(Maps.Full);
+            Board initialBoard = Board.GetInitialBoard();
+            BoardViewer.Draw(initialBoard);
         }
     }
 }
