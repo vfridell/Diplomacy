@@ -74,7 +74,6 @@
     <Compile Include="Drawing\DrawnEdge.cs" />
     <Compile Include="Drawing\DrawnMap.cs" />
     <Compile Include="Drawing\DrawnMapNode.cs" />
-    <Compile Include="Drawing\NodeTemplateSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

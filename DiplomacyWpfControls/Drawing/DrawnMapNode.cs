@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace DiplomacyWpfControls.Drawing
 {
@@ -16,6 +18,8 @@ namespace DiplomacyWpfControls.Drawing
         public readonly MapNode MapNode;
         public readonly MapNodeRenderStyle RenderStyle;
         public readonly GraphX.PCL.Common.Enums.VertexShape Shape;
+        public Shape GeometryShape { get; protected set; }
+        public string Text { get; protected set; }
 
         public DrawnMapNode(MapNode source)
         {
@@ -23,6 +27,7 @@ namespace DiplomacyWpfControls.Drawing
             RenderStyle = MapNodeStyles.Get(source);
             ID = MapNode.SequenceNumber;
             Shape = (GraphX.PCL.Common.Enums.VertexShape)RenderStyle.Shape;
+            Text = MapNode.ShortName;
         }
 
         public override bool Equals(object obj)
@@ -51,16 +56,17 @@ namespace DiplomacyWpfControls.Drawing
 
     public class DrawnSeaNode : DrawnMapNode
     {
-        public DrawnSeaNode(MapNode source) : base(source) { }
+        public DrawnSeaNode(MapNode source) : base(source) { GeometryShape = new Ellipse() { Width = 100, Height = 50, Fill = Brushes.AliceBlue, Stroke = Brushes.Black };
+    }
     }
 
     public class DrawnInlandNode : DrawnMapNode
     {
-        public DrawnInlandNode(MapNode source) : base(source) { }
+        public DrawnInlandNode(MapNode source) : base(source) { GeometryShape = new Rectangle() { Width=100, Height=50, Fill=Brushes.LightPink, Stroke=Brushes.Black }; }
     }
 
     public class DrawnCoastNode : DrawnMapNode
     {
-        public DrawnCoastNode(MapNode source) : base(source) { }
+        public DrawnCoastNode(MapNode source) : base(source) { GeometryShape = new Rectangle() { Width = 100, Height = 50, Fill = Brushes.LightSeaGreen, Stroke = Brushes.Black }; }
     }
 }

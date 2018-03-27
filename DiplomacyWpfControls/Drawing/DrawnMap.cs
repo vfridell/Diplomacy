@@ -14,10 +14,13 @@ namespace DiplomacyWpfControls.Drawing
                 DrawnMapNode from = GetDrawnMapNode(edge.Source);
                 DrawnMapNode to = GetDrawnMapNode(edge.Target);
                 DrawnEdge drawnEdge = new DrawnEdge(from, to);
+                DrawnEdge drawnEdgeInverse = new DrawnEdge(to, from);
                 if (!ContainsVertex(from)) AddVertex(from);
                 if (!ContainsVertex(to)) AddVertex(to);
-                if (!ContainsEdge(drawnEdge)) AddEdge(drawnEdge);
+                if (!ContainsEdge(drawnEdge) && !ContainsEdge(drawnEdgeInverse)) AddEdge(drawnEdge);
+
             }
+
         }
 
         private DrawnMapNode GetDrawnMapNode(MapNode mapNode)
