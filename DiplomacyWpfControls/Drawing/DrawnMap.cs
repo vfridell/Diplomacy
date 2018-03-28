@@ -2,6 +2,7 @@
 using DiplomacyLib.Models;
 using QuickGraph;
 using System;
+using System.Linq;
 
 namespace DiplomacyWpfControls.Drawing
 {
@@ -11,8 +12,12 @@ namespace DiplomacyWpfControls.Drawing
         {
             foreach(var edge in Maps.Full.Edges)
             {
-                DrawnMapNode from = GetDrawnMapNode(edge.Source);
-                DrawnMapNode to = GetDrawnMapNode(edge.Target);
+                Unit unit1 = board.OccupiedMapNodes.FirstOrDefault(kvp => kvp.Key.Territory.ShortName == edge.Source.ShortName).Value;
+                Powers owningPower1 = board.OwnedSupplyCenters.Where(kvp => kvp.Value.Any(mn => mn.Territory.ShortName == edge.Source.Territory.ShortName)).FirstOrDefault().Key;
+                DrawnMapNode from = GetDrawnMapNode(edge.Source, unit1, owningPower1);
+                Unit unit2 = board.OccupiedMapNodes.FirstOrDefault(kvp => kvp.Key.Territory.ShortName == edge.Target.ShortName).Value;
+                Powers owningPower2 = board.OwnedSupplyCenters.Where(kvp => kvp.Value.Any(mn => mn.Territory.ShortName == edge.Target.Territory.ShortName)).FirstOrDefault().Key;
+                DrawnMapNode to = GetDrawnMapNode(edge.Target, unit2, owningPower2);
                 DrawnEdge drawnEdge = new DrawnEdge(from, to);
                 DrawnEdge drawnEdgeInverse = new DrawnEdge(to, from);
                 if (!ContainsVertex(from)) AddVertex(from);
@@ -20,19 +25,18 @@ namespace DiplomacyWpfControls.Drawing
                 if (!ContainsEdge(drawnEdge) && !ContainsEdge(drawnEdgeInverse)) AddEdge(drawnEdge);
 
             }
-
         }
 
-        private DrawnMapNode GetDrawnMapNode(MapNode mapNode)
+        private DrawnMapNode GetDrawnMapNode(MapNode mapNode, Unit unit, Powers owningPower)
         {
             switch(mapNode.Territory.TerritoryType)
             {
                 case TerritoryType.Coast:
-                    return new DrawnCoastNode(mapNode);
+                    return new DrawnCoastNode(mapNode, unit, owningPower);
                 case TerritoryType.Inland:
-                    return new DrawnInlandNode(mapNode);
+                    return new DrawnInlandNode(mapNode, unit, owningPower);
                 case TerritoryType.Sea:
-                    return new DrawnSeaNode(mapNode);
+                    return new DrawnSeaNode(mapNode, unit, owningPower);
                 default:
                     throw new ArgumentException($"Unknown TerritoryType: {mapNode.Territory.TerritoryType}");
             }

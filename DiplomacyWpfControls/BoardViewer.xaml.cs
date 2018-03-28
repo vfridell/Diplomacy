@@ -63,7 +63,7 @@ namespace DiplomacyWpfControls
 
                 //Finally assign logic core to GraphArea object
                 GraphArea.LogicCore = logicCore;
-                GraphArea.SetVerticesDrag(false);
+                GraphArea.SetVerticesDrag(true);
                 GraphArea.GenerateGraph();
 
                 ZoomControl.ZoomToFill();
