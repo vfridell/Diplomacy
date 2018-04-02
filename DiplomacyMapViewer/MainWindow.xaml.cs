@@ -28,5 +28,12 @@ namespace DiplomacyMapViewer
             Board initialBoard = Board.GetInitialBoard();
             BoardViewer.Draw(initialBoard);
         }
+
+
+        private void SaveGraphButton_Click(object sender, RoutedEventArgs e)
+        {
+            BoardViewer.SaveGraph();
+
+        }
     }
 }

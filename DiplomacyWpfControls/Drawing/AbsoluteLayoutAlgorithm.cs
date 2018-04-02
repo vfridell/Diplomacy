@@ -24,7 +24,7 @@ namespace DiplomacyWpfControls.Drawing
         {
             foreach (var mapNode in _map.Vertices)
             {
-                _vertexPositions[mapNode] = new Point(mapNode.RenderStyle.X, 1000 - mapNode.RenderStyle.Y);
+                _vertexPositions[mapNode] = new Point(mapNode.RenderStyle.X, mapNode.RenderStyle.Y);
             }
         }
 

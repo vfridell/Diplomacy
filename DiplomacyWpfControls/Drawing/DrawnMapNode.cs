@@ -1,5 +1,4 @@
 ﻿using DiplomacyLib.Models;
-using DiplomacyLib.Visualize;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Common.Models;
@@ -18,7 +17,7 @@ namespace DiplomacyWpfControls.Drawing
     {
         public readonly MapNode MapNode;
         public readonly MapNodeRenderStyle RenderStyle;
-        public readonly GraphX.PCL.Common.Enums.VertexShape Shape;
+        public readonly VertexShape Shape;
         public Shape GeometryShape { get; protected set; }
         public Shape OccupationShape { get; protected set; }
         public string Text { get; protected set; }
@@ -32,7 +31,7 @@ namespace DiplomacyWpfControls.Drawing
             MapNode = source;
             RenderStyle = MapNodeStyles.Get(source);
             ID = MapNode.SequenceNumber;
-            Shape = (GraphX.PCL.Common.Enums.VertexShape)RenderStyle.Shape;
+            Shape = RenderStyle.Shape;
             Text = MapNode.ShortName;
             if(occupyingUnit != null)
             {

@@ -9,5 +9,6 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <diplomacyWpf:BoardViewer Name="BoardViewer"></diplomacyWpf:BoardViewer>
+        <Button Name="SaveGraphButton" Content="Save Graph" Click="SaveGraphButton_Click" Margin="10,0,0,10" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="82"/>
     </Grid>
 </Window>

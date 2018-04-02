@@ -2,6 +2,7 @@
 using DiplomacyLib.Models;
 using DiplomacyWpfControls.Drawing;
 using GraphX.PCL.Common.Enums;
+using GraphX.PCL.Common.Models;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,39 @@ namespace DiplomacyWpfControls
             {
                 _executing = false;
             }
+        }
+
+        public void SaveGraph()
+        {
+            List<GraphSerializationData> serializationData = GraphArea.ExtractSerializationData();
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter($"DrawnMapNodePositions_{DateTime.Now.ToString("MMddyyyyhhmmss")}.txt"))
+            {
+                foreach(GraphSerializationData graphPiece in serializationData)
+                {
+                    if(graphPiece.Data is DrawnMapNode)
+                    {
+                        DrawnMapNode node = (DrawnMapNode)graphPiece.Data;
+                        writer.WriteLine(
+                            "{ MapNodes.Get(\"" + 
+                            node.MapNode.ShortName + 
+                            "\"), MapNodeRenderStyle.Get(\"" + 
+                            node.MapNode.ShortName + 
+                            $"\",{graphPiece.Position.X},{graphPiece.Position.Y}" + 
+                            ")},"
+                        );
+                    }
+                    else if (graphPiece.Data is DrawnEdge)
+                    {
+                        DrawnEdge edge = (DrawnEdge)graphPiece.Data;
+                    }
+                }
+                
+
+            }
+        }
+
+        public void LoadGraph(string filename)
+        {
         }
     }
 }

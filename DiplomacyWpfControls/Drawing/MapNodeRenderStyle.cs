@@ -3,33 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using QuickGraph.Graphviz.Dot;
 using System.Windows.Media;
 using DiplomacyLib.Models;
+using DiplomacyLib;
+using GraphX.PCL.Common.Enums;
 
-namespace DiplomacyLib.Visualize
+namespace DiplomacyWpfControls.Drawing
 {
-    public enum VertexShape
-    {
-        Rectangle = 0,
-        Diamond = 1,
-        Triangle = 2,
-        Circle = 3,
-        None = 4,
-        Ellipse = 5
-    }
 
     public class MapNodeRenderStyle
     {
-        public readonly Color Color;
         public readonly VertexShape Shape;
         public readonly double X;
         public readonly double Y;
 
-        private MapNodeRenderStyle(Color color, VertexShape shape, double x, double y)
+        private MapNodeRenderStyle(VertexShape shape, double x, double y)
         {
             Shape = shape;
-            Color = color;
             X = x;
             Y = y;
         }
@@ -40,11 +30,11 @@ namespace DiplomacyLib.Visualize
             switch (node.Territory.TerritoryType)
             {
                 case TerritoryType.Sea:
-                    return new MapNodeRenderStyle(Colors.Blue, VertexShape.Ellipse, x, y);
+                    return new MapNodeRenderStyle(VertexShape.Ellipse, x, y);
                 case TerritoryType.Coast:
-                    return new MapNodeRenderStyle(Colors.Green, VertexShape.Rectangle, x, y);
+                    return new MapNodeRenderStyle(VertexShape.Rectangle, x, y);
                 case TerritoryType.Inland:
-                    return new MapNodeRenderStyle(Colors.Brown, VertexShape.Rectangle, x, y);
+                    return new MapNodeRenderStyle(VertexShape.Rectangle, x, y);
                 default:
                     throw new Exception($"Unknown TerritoryType: {node.Territory.TerritoryType}");
             }
