@@ -1,4 +1,5 @@
-﻿using QuickGraph;
+﻿using DiplomacyLib.Analysis;
+using QuickGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,12 @@ namespace DiplomacyLib.Models
 
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
         public Dictionary<Powers, ISet<MapNode>> OwnedSupplyCenters { get; protected set; }
+
+        internal void GetMeasurements(FeatureTool tool, FeatureMeasurementCollection result)
+        {
+            if (result == null) throw new ArgumentNullException("result");
+            tool.MeasureBoard(this, result);
+        }
 
         public bool IsOccupied(Territory t) => IsOccupied(t, OccupiedMapNodes);
         public bool IsUnoccupied(Territory t) => !IsOccupied(t, OccupiedMapNodes);
