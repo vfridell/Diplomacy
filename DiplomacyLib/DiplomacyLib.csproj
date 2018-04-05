@@ -53,7 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AI\Alliance.cs" />
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
