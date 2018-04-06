@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DiplomacyWpfControls.Drawing
 {
-    class DiplomacyGXLogicCore : GXLogicCore<DrawnMapNode, DrawnEdge, BidirectionalGraph<DrawnMapNode, DrawnEdge>>
+    class DiplomacyGXLogicCore : GXLogicCore<DrawnMapNode, DrawnMapEdge, BidirectionalGraph<DrawnMapNode, DrawnMapEdge>>
     {
     }
 }

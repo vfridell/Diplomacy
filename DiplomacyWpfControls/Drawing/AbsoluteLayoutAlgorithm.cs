@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DiplomacyWpfControls.Drawing
 {
-    public class AbsoluteLayoutAlgorithm : IExternalLayout<DrawnMapNode, DrawnEdge>
+    public class AbsoluteLayoutAlgorithm : IExternalLayout<DrawnMapNode, DrawnMapEdge>
     {
         private DrawnMap _map;
         private Dictionary<DrawnMapNode, Point> _vertexPositions;
@@ -28,7 +28,7 @@ namespace DiplomacyWpfControls.Drawing
             }
         }
 
-        public void ResetGraph(IEnumerable<DrawnMapNode> vertices, IEnumerable<DrawnEdge> edges)
+        public void ResetGraph(IEnumerable<DrawnMapNode> vertices, IEnumerable<DrawnMapEdge> edges)
         {
             // ??
         }
