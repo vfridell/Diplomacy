@@ -1,6 +1,6 @@
-﻿using DiplomacyLib;
-using DiplomacyLib.Models;
+﻿using DiplomacyLib.AI;
 using DiplomacyWpfControls.Drawing;
+using DiplomacyLib.Models;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Common.Models;
 using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
@@ -18,32 +18,49 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 
 namespace DiplomacyWpfControls
 {
     /// <summary>
-    /// Interaction logic for BoardViewer.xaml
+    /// Interaction logic for AllianceScenarioGraphControl.xaml
     /// </summary>
-    public partial class BoardViewer : UserControl
+    public partial class AllianceScenarioGraphControl : UserControl
     {
-        private bool _executing = false;
+        private bool _executing;
 
-        public BoardViewer()
+        public AllianceScenarioGraphControl()
         {
             InitializeComponent();
         }
 
-        public void Draw(Board board)
+        public void Draw(AllianceScenario allianceScenario, Powers focus)
         {
             try
             {
                 _executing = true;
-                DrawnMap drawnMap = new DrawnMap();
-                drawnMap.Populate(board);
 
-                var logicCore = new DiplomacyGXLogicCore();
-                logicCore.Graph = drawnMap;
-                logicCore.ExternalLayoutAlgorithm = new AbsoluteLayoutAlgorithm(drawnMap);
+                var logicCore = new AllianceScenarioGXLogicCore();
+                var drawnAllianceScenario = new DrawnAllianceScenario();
+                drawnAllianceScenario.FocusPower = focus;
+                drawnAllianceScenario.Populate(allianceScenario);
+                logicCore.Graph = drawnAllianceScenario;
+
+                /*
+                logicCore.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.FR;
+                logicCore.DefaultLayoutAlgorithmParams = logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.FR);
+                ((FreeFRLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).IdealEdgeLength = 100;
+                ((FreeFRLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).RepulsiveMultiplier = 1.5;
+                ((FreeFRLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).Seed = 23423423;
+                */
+                
+                
+                logicCore.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.KK;
+                logicCore.DefaultLayoutAlgorithmParams = logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.KK);
+                ((KKLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).Width = 1000;
+                ((KKLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).Height = 1000;
+                ((KKLayoutParameters)logicCore.DefaultLayoutAlgorithmParams).AdjustForGravity = true;
+                
 
                 ////Setup optional params
                 logicCore.DefaultOverlapRemovalAlgorithmParams =
@@ -60,7 +77,8 @@ namespace DiplomacyWpfControls
                 logicCore.AsyncAlgorithmCompute = false;
 
                 logicCore.EdgeCurvingEnabled = true;
-                logicCore.EnableParallelEdges = false;
+                logicCore.EnableParallelEdges = true;
+                logicCore.ParallelEdgeDistance = 50;
 
                 //Finally assign logic core to GraphArea object
                 GraphArea.LogicCore = logicCore;
@@ -75,37 +93,5 @@ namespace DiplomacyWpfControls
             }
         }
 
-        public void SaveGraph()
-        {
-            List<GraphSerializationData> serializationData = GraphArea.ExtractSerializationData();
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter($"DrawnMapNodePositions_{DateTime.Now.ToString("MMddyyyyhhmmss")}.txt"))
-            {
-                foreach(GraphSerializationData graphPiece in serializationData)
-                {
-                    if(graphPiece.Data is DrawnMapNode)
-                    {
-                        DrawnMapNode node = (DrawnMapNode)graphPiece.Data;
-                        writer.WriteLine(
-                            "{ MapNodes.Get(\"" + 
-                            node.MapNode.ShortName + 
-                            "\"), MapNodeRenderStyle.Get(\"" + 
-                            node.MapNode.ShortName + 
-                            $"\",{graphPiece.Position.X},{graphPiece.Position.Y}" + 
-                            ")},"
-                        );
-                    }
-                    else if (graphPiece.Data is DrawnMapEdge)
-                    {
-                        DrawnMapEdge edge = (DrawnMapEdge)graphPiece.Data;
-                    }
-                }
-                
-
-            }
-        }
-
-        public void LoadGraph(string filename)
-        {
-        }
     }
 }

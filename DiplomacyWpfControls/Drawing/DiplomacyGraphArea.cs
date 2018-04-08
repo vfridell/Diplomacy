@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DiplomacyWpfControls.Drawing
 {
-    public class DiplomacyGraphArea : GraphArea<DrawnMapNode, DrawnEdge, BidirectionalGraph<DrawnMapNode, DrawnEdge>>
+    public class DiplomacyGraphArea : GraphArea<DrawnMapNode, DrawnMapEdge, BidirectionalGraph<DrawnMapNode, DrawnMapEdge>>
     {
     }
 }

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DiplomacyWpfControls.Drawing
 {
-    public class DrawnEdge : EdgeBase<DrawnMapNode>
+    public class DrawnMapEdge : EdgeBase<DrawnMapNode>
     {
-        public DrawnEdge(DrawnMapNode source, DrawnMapNode target)
+        public DrawnMapEdge(DrawnMapNode source, DrawnMapNode target)
             :base(source, target)
         {
             ID = (source.MapNode.SequenceNumber * 1000) + target.MapNode.SequenceNumber;
@@ -18,12 +18,12 @@ namespace DiplomacyWpfControls.Drawing
 
         public override bool Equals(object obj)
         {
-            var otherEdge = obj as DrawnEdge;
+            var otherEdge = obj as DrawnMapEdge;
             if (null == otherEdge) return false;
             return Equals(otherEdge);
         }
 
-        public bool Equals(DrawnEdge other)
+        public bool Equals(DrawnMapEdge other)
         {
             return ID == other.ID;
         }

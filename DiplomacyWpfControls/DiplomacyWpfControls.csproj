@@ -68,15 +68,23 @@
     <Compile Include="AllianceScenarioControl.xaml.cs">
       <DependentUpon>AllianceScenarioControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AllianceScenarioGraphControl.xaml.cs">
+      <DependentUpon>AllianceScenarioGraphControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="BoardViewer.xaml.cs">
       <DependentUpon>BoardViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Drawing\AbsoluteLayoutAlgorithm.cs" />
+    <Compile Include="Drawing\AllianceScenarioGraphArea.cs" />
+    <Compile Include="Drawing\AllianceScenarioGXLogicCore.cs" />
     <Compile Include="Drawing\DiplomacyGraphArea.cs" />
     <Compile Include="Drawing\DiplomacyGXLogicCore.cs" />
+    <Compile Include="Drawing\DrawnAllianceScenario.cs" />
+    <Compile Include="Drawing\DrawnAnimosityEdge.cs" />
     <Compile Include="Drawing\DrawnEdge.cs" />
     <Compile Include="Drawing\DrawnMap.cs" />
     <Compile Include="Drawing\DrawnMapNode.cs" />
+    <Compile Include="Drawing\DrawnPowerNode.cs" />
     <Compile Include="Drawing\Hexagon.cs" />
     <Compile Include="Drawing\MapNodeRenderStyle.cs" />
     <Compile Include="Drawing\MapNodeStyles.cs" />
@@ -84,6 +92,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AllianceScenarioGraphControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="AllianceScenarioControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

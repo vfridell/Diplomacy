@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DiplomacyWpfControls.Drawing
 {
-    public class DrawnMap : BidirectionalGraph<DrawnMapNode, DrawnEdge>
+    public class DrawnMap : BidirectionalGraph<DrawnMapNode, DrawnMapEdge>
     {
         public void Populate(Board board)
         {
@@ -18,8 +18,8 @@ namespace DiplomacyWpfControls.Drawing
                 Unit unit2 = board.OccupiedMapNodes.FirstOrDefault(kvp => kvp.Key.Territory.ShortName == edge.Target.ShortName).Value;
                 Powers owningPower2 = board.OwnedSupplyCenters.Where(kvp => kvp.Value.Any(mn => mn.Territory.ShortName == edge.Target.Territory.ShortName)).FirstOrDefault().Key;
                 DrawnMapNode to = GetDrawnMapNode(edge.Target, unit2, owningPower2);
-                DrawnEdge drawnEdge = new DrawnEdge(from, to);
-                DrawnEdge drawnEdgeInverse = new DrawnEdge(to, from);
+                DrawnMapEdge drawnEdge = new DrawnMapEdge(from, to);
+                DrawnMapEdge drawnEdgeInverse = new DrawnMapEdge(to, from);
                 if (!ContainsVertex(from)) AddVertex(from);
                 if (!ContainsVertex(to)) AddVertex(to);
                 if (!ContainsEdge(drawnEdge) && !ContainsEdge(drawnEdgeInverse)) AddEdge(drawnEdge);
