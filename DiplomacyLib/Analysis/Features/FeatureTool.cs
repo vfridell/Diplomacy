@@ -1,7 +1,7 @@
 ﻿using System;
 using DiplomacyLib.Models;
 
-namespace DiplomacyLib.Analysis
+namespace DiplomacyLib.Analysis.Features
 {
     public class FeatureTool
     {

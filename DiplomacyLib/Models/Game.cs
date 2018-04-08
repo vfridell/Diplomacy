@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DiplomacyLib.Analysis;
+using DiplomacyLib.Analysis.Features;
 
 namespace DiplomacyLib.Models
 {

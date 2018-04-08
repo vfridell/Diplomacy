@@ -56,8 +56,10 @@
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
+    <Compile Include="Analysis\Features\MapEdgesControlled.cs" />
+    <Compile Include="Analysis\Features\UnitCount.cs" />
     <Compile Include="Analysis\Features\OwnedSupplyCenters.cs" />
-    <Compile Include="Analysis\FeatureTool.cs" />
+    <Compile Include="Analysis\Features\FeatureTool.cs" />
     <Compile Include="Analysis\FeatureToolCollection.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />
     <Compile Include="Maps.cs" />

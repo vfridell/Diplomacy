@@ -7,13 +7,13 @@ using DiplomacyLib.Models;
 
 namespace DiplomacyLib.Analysis.Features
 {
-    public class OwnedSupplyCenters : FeatureTool
+    public class UnitCount : FeatureTool
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
-            foreach(var g in board.OwnedSupplyCenters)
+            foreach (var g in board.OccupiedMapNodes.GroupBy(kvp => kvp.Value.Power))
             {
-                result.Add(new FeatureMeasurement(nameof(OwnedSupplyCenters), g.Key, null, null, g.Value.Count()));
+                result.Add(new FeatureMeasurement(nameof(UnitCount), g.Key, null, null, g.Count()));
             }
         }
     }

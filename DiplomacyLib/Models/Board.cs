@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.Analysis;
+using DiplomacyLib.Analysis.Features;
 using QuickGraph;
 using System;
 using System.Collections.Generic;

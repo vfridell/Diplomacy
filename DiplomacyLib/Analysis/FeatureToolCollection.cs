@@ -1,4 +1,5 @@
-﻿using DiplomacyLib.Models;
+﻿using DiplomacyLib.Analysis.Features;
+using DiplomacyLib.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
