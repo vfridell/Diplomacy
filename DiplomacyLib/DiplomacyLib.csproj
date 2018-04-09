@@ -57,6 +57,7 @@
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
     <Compile Include="Analysis\Features\MapEdgesControlled.cs" />
+    <Compile Include="Analysis\Features\MapNodeStrengths.cs" />
     <Compile Include="Analysis\Features\UnitCount.cs" />
     <Compile Include="Analysis\Features\OwnedSupplyCenters.cs" />
     <Compile Include="Analysis\Features\FeatureTool.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Models\Map.cs" />
     <Compile Include="Models\MapNode.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\PowersDictionary.cs" />
     <Compile Include="Models\Season.cs" />
     <Compile Include="Models\Seasons.cs" />
     <Compile Include="Models\Territory.cs" />

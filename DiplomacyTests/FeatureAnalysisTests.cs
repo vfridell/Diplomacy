@@ -52,5 +52,16 @@ namespace DiplomacyTests
             Assert.AreEqual(3, measurements.Where(m => m.Power == Powers.Russia).Single().Value);
         }
 
+        [TestMethod]
+        public void MapNodeStrengthsAtStart()
+        {
+            Board board = Board.GetInitialBoard();
+
+            FeatureToolCollection toolCollection = new FeatureToolCollection();
+            toolCollection.Add(new MapNodeStrengths());
+            FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
+
+            //todo finish me
+        }
     }
 }
