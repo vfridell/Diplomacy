@@ -21,6 +21,7 @@
                             <ContentControl Content="{Binding GeometryShape}" Width="{Binding GeometryShape.Width}" Height="{Binding GeometryShape.Height}"/>
                             <TextBlock Text="{Binding Text}" FontSize="24" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center"/>
                             <ContentControl Content="{Binding OccupationShape}" Width="{Binding OccupationShape.Width}" Height="{Binding OccupationShape.Height}" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="5,5,5,5"/>
+                            <TextBlock Text="{Binding FeatureValueText}" FontSize="18" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Bottom"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>

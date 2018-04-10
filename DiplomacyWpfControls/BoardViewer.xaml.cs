@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib;
+using DiplomacyLib.Analysis;
 using DiplomacyLib.Models;
 using DiplomacyWpfControls.Drawing;
 using GraphX.PCL.Common.Enums;
@@ -33,13 +34,13 @@ namespace DiplomacyWpfControls
             InitializeComponent();
         }
 
-        public void Draw(Board board)
+        public void Draw(Board board, FeatureMeasurementCollection featureMeasurementCollection = null)
         {
             try
             {
                 _executing = true;
                 DrawnMap drawnMap = new DrawnMap();
-                drawnMap.Populate(board);
+                drawnMap.Populate(board, featureMeasurementCollection);
 
                 var logicCore = new DiplomacyGXLogicCore();
                 logicCore.Graph = drawnMap;

@@ -7,39 +7,38 @@ using DiplomacyLib.Models;
 
 namespace DiplomacyLib.Analysis.Features
 {
-    public class MapNodeStrengths : FeatureTool
+    public class TerritoryStrengths : FeatureTool
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
             IEnumerable<UnitMove> unitMoves = BoardFutures.GetUnitMoves(board);
-            _mapNodeStrengths.Clear();
+            _territoryStrengths.Clear();
             foreach (UnitMove move in unitMoves)
             {
                 if (move.IsDisband) continue;
-                if (!_mapNodeStrengths.ContainsKey(move.Edge.Target))
-                    _mapNodeStrengths.Add(move.Edge.Target, new PowersDictionary<int>() { { move.Unit.Power, 1 } });
+                if (!_territoryStrengths.ContainsKey(move.Edge.Target.Territory))
+                    _territoryStrengths.Add(move.Edge.Target.Territory, new PowersDictionary<int>() { { move.Unit.Power, 1 } });
                 else
                 {
-                    if (!_mapNodeStrengths[move.Edge.Target].ContainsKey(move.Unit.Power))
-                        _mapNodeStrengths[move.Edge.Target].Add(move.Unit.Power, 1);
+                    if (!_territoryStrengths[move.Edge.Target.Territory].ContainsKey(move.Unit.Power))
+                        _territoryStrengths[move.Edge.Target.Territory].Add(move.Unit.Power, 1);
                     else
-                        _mapNodeStrengths[move.Edge.Target][move.Unit.Power]++;
+                        _territoryStrengths[move.Edge.Target.Territory][move.Unit.Power]++;
                 }
             }
 
-            foreach(var mapNodeStrength in _mapNodeStrengths)
+            foreach(var territoryStrength in _territoryStrengths)
             {
-                foreach (KeyValuePair<Powers, int> t in mapNodeStrength.Value)
+                foreach (KeyValuePair<Powers, int> t in territoryStrength.Value)
                 {
-                    result.Add(new FeatureMeasurement("RawMapNodeStrength", t.Key, null, mapNodeStrength.Key, t.Value));
-                    int adjustedStrength = t.Value - mapNodeStrength.Value.Where(kvp => kvp.Key != t.Key)?.Sum(kvp => kvp.Value) ?? 0;
+                    //result.Add(new FeatureMeasurement("RawTerritoryStrength", t.Key, null, territoryStrength.Key, t.Value));
+                    int adjustedStrength = t.Value - territoryStrength.Value.Where(kvp => kvp.Key != t.Key)?.Sum(kvp => kvp.Value) ?? 0;
                     //todo adjust for units cutting support
-                    result.Add(new FeatureMeasurement("AdjustedMapNodeStrength", t.Key, null, mapNodeStrength.Key, adjustedStrength));
+                    result.Add(new FeatureMeasurement("AdjustedTerritoryStrength", t.Key, null, territoryStrength.Key, adjustedStrength));
                 }
             }
-
         }
 
-        private Dictionary<MapNode, PowersDictionary<int>> _mapNodeStrengths = new Dictionary<MapNode, PowersDictionary<int>>();
+        private Dictionary<Territory, PowersDictionary<int>> _territoryStrengths = new Dictionary<Territory, PowersDictionary<int>>();
     }
 }

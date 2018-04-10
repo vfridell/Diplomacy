@@ -1,4 +1,5 @@
-﻿using DiplomacyLib.Models;
+﻿using DiplomacyLib.Analysis;
+using DiplomacyLib.Models;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Common.Models;
@@ -21,6 +22,7 @@ namespace DiplomacyWpfControls.Drawing
         public Shape GeometryShape { get; protected set; }
         public Shape OccupationShape { get; protected set; }
         public string Text { get; protected set; }
+        public string FeatureValueText { get; set; }
         public double OccupationSize { get; protected set; }
         public double GeometrySize { get; protected set; }
 
@@ -37,7 +39,6 @@ namespace DiplomacyWpfControls.Drawing
             {
                 AddOccupyingUnit(occupyingUnit);
             }
-
         }
 
         public override bool Equals(object obj)

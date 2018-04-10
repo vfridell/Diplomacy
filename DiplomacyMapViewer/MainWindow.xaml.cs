@@ -1,4 +1,6 @@
 ﻿using DiplomacyLib;
+using DiplomacyLib.Analysis;
+using DiplomacyLib.Analysis.Features;
 using DiplomacyLib.Models;
 using System;
 using System.Collections.Generic;
@@ -25,8 +27,12 @@ namespace DiplomacyMapViewer
         public MainWindow()
         {
             InitializeComponent();
-            Board initialBoard = Board.GetInitialBoard();
-            BoardViewer.Draw(initialBoard);
+            Board board = Board.GetInitialBoard();
+            FeatureToolCollection toolCollection = new FeatureToolCollection();
+            toolCollection.Add(new TerritoryStrengths());
+            FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
+
+            BoardViewer.Draw(board, measurements);
         }
 
 

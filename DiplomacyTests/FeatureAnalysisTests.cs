@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DiplomacyLib;
 using DiplomacyLib.Analysis;
 using DiplomacyLib.Analysis.Features;
 using DiplomacyLib.Models;
@@ -58,7 +60,7 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
-            toolCollection.Add(new MapNodeStrengths());
+            toolCollection.Add(new TerritoryStrengths());
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             //todo finish me
