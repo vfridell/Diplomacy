@@ -46,9 +46,10 @@ namespace DiplomacyTests
         {
             MapNode munich = MapNodes.Get("mun");
             Unit germanUnit = Army.Get(Powers.Germany);
+            var edge = Maps.BuildMap.AdjacentOutEdges(MapNodes.Get("build")).First(e => e.Target == munich);
 
-            UnitBuild uBuild = new UnitBuild(germanUnit, munich);
-            Assert.IsNotNull(uBuild);
+            UnitMove uBuild = new UnitMove(germanUnit, edge);
+            Assert.IsTrue(uBuild.IsBuild);
         }
 
         [TestMethod]
@@ -223,6 +224,60 @@ namespace DiplomacyTests
             Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Germany].Count);
             Assert.AreEqual(2, board.OwnedSupplyCenters[Powers.France].Count);
             Assert.AreEqual(22, board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None).SelectMany(kvp => kvp.Value).Count());
+        }
+
+        [TestMethod]
+        public void BuildUnitMoves()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            moves.Add(board.GetMove("kie", "den"));
+            moves.Add(board.GetMove("ber", "kie"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
+            board.EndTurn();
+
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
+
+            moves.Clear();
+            moves.Add(board.GetMove("kie", "hol"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Germany].Count);
+            board.EndTurn();
+
+            Assert.AreEqual(5, board.OwnedSupplyCenters[Powers.Germany].Count);
+            Assert.AreEqual(24, board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None).SelectMany(kvp => kvp.Value).Count());
+
+            var unitMoves = board.GetUnitMoves();
+            Assert.AreEqual(4, unitMoves.Count(um => um.IsBuild));
+        }
+
+        [TestMethod]
+        public void DisbandWinterUnitMoves()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            moves.Add(board.GetMove("tri", "ven"));
+            moves.Add(board.GetMove("ven", "pie"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+
+            moves.Clear();
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+            Assert.AreEqual(2, board.OwnedSupplyCenters[Powers.Italy].Count);
+            Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Austria].Count);
+            Assert.AreEqual(22, board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None).SelectMany(kvp => kvp.Value).Count());
+
+            var unitMoves = board.GetUnitMoves();
+            Assert.AreEqual(2, unitMoves.Count(um => um.IsBuild));
+            Assert.AreEqual(3, unitMoves.Count(um => um.IsDisband));
         }
     }
 }

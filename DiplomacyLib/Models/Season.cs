@@ -12,11 +12,13 @@ namespace DiplomacyLib.Models
         public abstract int Ordinal { get; }
 
         public abstract IEnumerable<Board> GetFutures(Board board);
+        public abstract IEnumerable<UnitMove> GetUnitMoves(Board board);
     }
 
     public abstract class FallSpring : Season
     {
         public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetMoves(board);
+        public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetUnitMoves(board);
     }
 
     public class Fall : FallSpring
@@ -37,5 +39,6 @@ namespace DiplomacyLib.Models
         public override int Ordinal => 3;
 
         public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetBuildsAndDisbands(board);
+        public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
     }
 }

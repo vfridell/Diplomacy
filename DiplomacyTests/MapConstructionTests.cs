@@ -13,13 +13,13 @@ namespace DiplomacyTests
         [TestMethod]
         public void CountMapNodes()
         {
-            Assert.AreEqual(156, MapNodes.AsReadOnlyList.Count);
+            Assert.AreEqual(157, MapNodes.AsReadOnlyList.Count);
         }
 
         [TestMethod]
         public void CountTerritories()
         {
-            Assert.AreEqual(75, Territories.AsReadOnlyList.Count);
+            Assert.AreEqual(76, Territories.AsReadOnlyList.Count);
         }
 
         [TestMethod]
@@ -29,6 +29,7 @@ namespace DiplomacyTests
             Assert.AreEqual(64, Maps.Fleet.VertexCount);
             Assert.AreEqual(56, Maps.Army.VertexCount);
             Assert.AreEqual(94, Maps.ConvoyMap.VertexCount);
+            Assert.AreEqual(24, Maps.BuildMap.VertexCount);
         }
 
         [TestMethod]

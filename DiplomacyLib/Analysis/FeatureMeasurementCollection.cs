@@ -13,9 +13,9 @@ namespace DiplomacyLib.Analysis
         Dictionary<Territory, List<FeatureMeasurement>> _territoryDictionary = new Dictionary<Territory, List<FeatureMeasurement>>();
         Dictionary<Powers, List<FeatureMeasurement>> _powersDictionary = new Dictionary<Powers, List<FeatureMeasurement>>();
 
-        public IEnumerable<FeatureMeasurement> this[string n] { get => _nameDictionary[n]; protected set { } }
-        public IEnumerable<FeatureMeasurement> this[Territory t] { get => _territoryDictionary[t]; protected set { } }
-        public IEnumerable<FeatureMeasurement> this[Powers p] { get => _powersDictionary[p]; protected set { } }
+        public IEnumerable<FeatureMeasurement> this[string n] => ByName(n);
+        public IEnumerable<FeatureMeasurement> this[Territory t] => ByTerritory(t);
+        public IEnumerable<FeatureMeasurement> this[Powers p] => ByPower(p);
 
         public int Count => _list.Count;
 

@@ -14,6 +14,7 @@ namespace DiplomacyLib
         public static readonly Map Fleet;
         public static readonly Map Army;
         public static readonly Map ConvoyMap;
+        public static readonly Map BuildMap;
 
         static Maps()
         {
@@ -21,6 +22,7 @@ namespace DiplomacyLib
             Fleet = CreateGraph(MapAdjacencyStrings.FleetMap);
             Army = CreateGraph(MapAdjacencyStrings.ArmyMap);
             ConvoyMap = CreateGraph(MapAdjacencyStrings.ConvoyMap);
+            BuildMap = CreateGraph(MapAdjacencyStrings.BuildMap);
         }
 
         private static Map CreateGraph(Dictionary<string, List<string>> adjacencyDict)

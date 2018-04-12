@@ -239,6 +239,20 @@ namespace DiplomacyLib
 };
 
 
+        public static Dictionary<string, List<string>> BuildMap = new Dictionary<string, List<string>>()
+        {
+            { "build", new List<string>()
+                {
+                    "mun", "kie", "ber", //germany
+                    "vie", "bud", "tri", //austria
+                    "ven", "rom", "nap", //italy
+                    "bre", "par", "mar", //france
+                    "edi", "lvp", "lon", //england
+                    "stp_nc", "stp_sc", "mos", "sev", "war", //russia
+                    "con", "ank", "smy" //turkey
+                }
+            },
+        };
 
 
 

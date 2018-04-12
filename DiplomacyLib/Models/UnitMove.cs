@@ -14,6 +14,7 @@ namespace DiplomacyLib.Models
         public readonly List<MapNode> ConvoyRoute;
         public bool IsHold => !IsDisband && Edge.Source == Edge.Target;
         public bool IsDisband => null == Edge.Target;
+        public bool IsBuild => Edge.Source.Territory.TerritoryType == TerritoryType.BuildSource;
 
         public bool IsConvoy => ConvoyRoute?.Count > 0;
 

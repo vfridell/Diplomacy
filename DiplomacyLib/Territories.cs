@@ -23,6 +23,9 @@ namespace DiplomacyLib
         static Territories()
         {
             _territories = new Dictionary<string, Territory>() {
+
+            { "build", new Territory("build", "build", false, Powers.None, TerritoryType.BuildSource) },
+
             // Sea Territories
             {"adr", new Territory("Adriatic Sea", "adr", false, Powers.None, TerritoryType.Sea) },
             {"aeg", new Territory("Aegean Sea", "aeg", false, Powers.None, TerritoryType.Sea) },

@@ -58,6 +58,7 @@ namespace DiplomacyTests
             Assert.IsInstanceOfType(initialBoard.Season, typeof(Spring));
             Assert.IsInstanceOfType(initialBoard.Season.NextSeason, typeof(Fall));
             Assert.IsInstanceOfType(initialBoard.Season.NextSeason.NextSeason, typeof(Winter));
+            Assert.IsInstanceOfType(initialBoard.Season.NextSeason.NextSeason.NextSeason, typeof(Spring));
         }
 
         [TestMethod]

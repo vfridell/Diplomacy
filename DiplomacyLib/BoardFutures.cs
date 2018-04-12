@@ -84,6 +84,38 @@ namespace DiplomacyLib
             }
         }
 
+        public static IEnumerable<UnitMove> GetWinterUnitMoves(Board board)
+        {
+            List<UnitMove> allMoves = new List<UnitMove>();
+            PowersDictionary<IEnumerable<MapNode>> buildMapNodes = board.GetBuildMapNodes();
+            PowersDictionary<int> differences = board.GetSupplyCenterToUnitDifferences();
+            // get empty home centers owned by the home power
+            foreach (var kvp in differences)
+            {
+                if (kvp.Key == Powers.None) continue;
+                if(kvp.Value > 0)
+                {
+                    // build
+                    foreach(var mn in buildMapNodes[kvp.Key])
+                    {
+                        if (Fleet.Get(kvp.Key).TerritoryCompatible(mn.Territory))
+                            allMoves.Add(new UnitMove(Fleet.Get(kvp.Key), new UndirectedEdge<MapNode>(MapNodes.Get("build"), mn)));
+                        if (Army.Get(kvp.Key).TerritoryCompatible(mn.Territory))
+                            allMoves.Add(new UnitMove(Army.Get(kvp.Key), new UndirectedEdge<MapNode>(MapNodes.Get("build"), mn)));
+                    }
+                }
+                else if(kvp.Value < 0)
+                {
+                    // disband
+                    foreach(var disbandKvp in board.OccupiedMapNodes.Where(p => p.Value.Power == kvp.Key))
+                    {
+                        allMoves.Add(new UnitMove(disbandKvp.Value, new UndirectedEdge<MapNode>(disbandKvp.Key, null)));
+                    }
+                }
+            }
+            return allMoves;
+        }
+
         public static IEnumerable<UnitMove> GetUnitMoves(Board board)
         {
             List<UnitMove> allMoves = new List<UnitMove>();
@@ -135,5 +167,6 @@ namespace DiplomacyLib
 
             return convoyMoves;
         }
+
     }
 }

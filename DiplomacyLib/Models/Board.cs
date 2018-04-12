@@ -18,7 +18,7 @@ namespace DiplomacyLib.Models
         public int Turn => ((Year - 1901) * 3) + Season.Ordinal;
 
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
-        public Dictionary<Powers, ISet<MapNode>> OwnedSupplyCenters { get; protected set; }
+        public Dictionary<Powers, ISet<Territory>> OwnedSupplyCenters { get; protected set; }
 
         internal void GetMeasurements(FeatureTool tool, FeatureMeasurementCollection result)
         {
@@ -43,6 +43,7 @@ namespace DiplomacyLib.Models
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
         public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
+        public IEnumerable<UnitMove> GetUnitMoves() => Season.GetUnitMoves(this);
 
         public UnitMove GetMove(string sourceMapNodeName, string targetMapNodeName)
         {
@@ -59,9 +60,17 @@ namespace DiplomacyLib.Models
                 foreach (UnitMove move in boardMove)
                 {
                     if (move.IsDisband || move.IsHold) continue;
-                    if (OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
-                    if (move.ConvoyRoute == null && !move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
-                    // todo add convoy check here
+                    if (move.IsBuild)
+                    {
+                        if (OccupiedMapNodes.ContainsKey(move.Edge.Target)) throw new Exception($"Cannot build {move.Unit} at {move.Edge.Target} because a unit is already there");
+                        if (move.Edge.Target.Territory.HomeSupplyPower != move.Unit.Power) throw new Exception($"Cannot build {move.Unit} at {move.Edge.Target} because it is not a home supply for {move.Unit.Power}");
+                    }
+                    else
+                    {
+                        if (OccupiedMapNodes[move.Edge.Source] != move.Unit) throw new Exception($"{move.Unit} is not in {move.Edge.Source}");
+                        if (move.ConvoyRoute == null && !move.Unit.MyMap.AdjacentOutEdges(move.Edge.Source).Contains(move.Edge)) throw new Exception($"{move.Edge} is not a valid edge for {move.Unit}");
+                        // todo add convoy check here
+                    }
                 }
             }
 
@@ -97,22 +106,50 @@ namespace DiplomacyLib.Models
 
         protected void UpdateOwnedSupplyCenters()
         {
+
             foreach (var kvp in OccupiedMapNodes.Where(kvp => kvp.Key.Territory.IsSupplyCenter))
             {
-                Powers currentOwner = OwnedSupplyCenters.Single(o => o.Value.Contains(kvp.Key)).Key;
+                Powers currentOwner = OwnedSupplyCenters.First(o => o.Value.Contains(kvp.Key.Territory)).Key;
                 if(currentOwner == kvp.Value.Power) continue;
 
-                OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key);
-                OwnedSupplyCenters[currentOwner].Remove(kvp.Key);
+                OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key.Territory);
+                OwnedSupplyCenters[currentOwner].Remove(kvp.Key.Territory);
             }
+        }
+
+        public PowersDictionary<IEnumerable<MapNode>> GetBuildMapNodes()
+        {
+            PowersDictionary<IEnumerable <MapNode>> buildMapNodes = new PowersDictionary<IEnumerable<MapNode>>();
+
+            foreach (KeyValuePair<Powers, ISet<Territory>> kvp in OwnedSupplyCenters)
+            {
+                if (kvp.Key == Powers.None) continue;
+                // get empty home centers owned by the home power
+                IEnumerable<Territory> buildTerritories = kvp.Value.Where(sc => sc.HomeSupplyPower == kvp.Key && IsUnoccupied(sc));
+                IEnumerable<MapNode> mapNodes = Maps.BuildMap.Vertices.Where(mn => buildTerritories.Contains(mn.Territory));
+                buildMapNodes.Add(kvp.Key, mapNodes);
+            }
+            return buildMapNodes;
+        }
+
+        public PowersDictionary<int> GetSupplyCenterToUnitDifferences()
+        {
+            PowersDictionary<int> differences = new PowersDictionary<int>();
+            // get empty home centers owned by the home power
+            foreach (var kvp in OwnedSupplyCenters)
+            {
+                if (kvp.Key == Powers.None) continue;
+                differences.Add(kvp.Key, kvp.Value.Count - UnitCount(kvp.Key));
+            }
+            return differences;
         }
 
         public Board Clone()
         {
             Board clone = new Board();
             clone.OccupiedMapNodes = new Dictionary<MapNode, Unit>(OccupiedMapNodes);
-            clone.OwnedSupplyCenters = new Dictionary<Powers, ISet<MapNode>>();
-            foreach(var kvp in OwnedSupplyCenters) clone.OwnedSupplyCenters[kvp.Key] = new HashSet<MapNode>(kvp.Value);
+            clone.OwnedSupplyCenters = new Dictionary<Powers, ISet<Territory>>();
+            foreach(var kvp in OwnedSupplyCenters) clone.OwnedSupplyCenters[kvp.Key] = new HashSet<Territory>(kvp.Value);
 
             clone.Year = Year;
             clone.Season = Season;
@@ -156,25 +193,25 @@ namespace DiplomacyLib.Models
                 { MapNodes.Get("war"), Army.Get(Powers.Russia) },
             };
 
-            board.OwnedSupplyCenters = new Dictionary<Powers, ISet<MapNode>>()
+            board.OwnedSupplyCenters = new Dictionary<Powers, ISet<Territory>>()
             {
-                { Powers.England, new HashSet<MapNode>() },
-                { Powers.Germany, new HashSet<MapNode>() },
-                { Powers.France, new HashSet<MapNode>() },
-                { Powers.Italy, new HashSet<MapNode>() },
-                { Powers.Austria, new HashSet<MapNode>() },
-                { Powers.Turkey, new HashSet<MapNode>() },
-                { Powers.Russia, new HashSet<MapNode>() },
-                { Powers.None, new HashSet<MapNode>() },
+                { Powers.England, new HashSet<Territory>() },
+                { Powers.Germany, new HashSet<Territory>() },
+                { Powers.France, new HashSet<Territory>() },
+                { Powers.Italy, new HashSet<Territory>() },
+                { Powers.Austria, new HashSet<Territory>() },
+                { Powers.Turkey, new HashSet<Territory>() },
+                { Powers.Russia, new HashSet<Territory>() },
+                { Powers.None, new HashSet<Territory>() },
             };
 
             foreach(var kvp in board.OccupiedMapNodes)
-                board.OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key);
+                board.OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key.Territory);
 
             foreach (var mapNode in Maps.Full.Vertices)
             {
                 if (board.OccupiedMapNodes.Keys.Contains(mapNode)) continue;
-                if (mapNode.Territory.IsSupplyCenter) board.OwnedSupplyCenters[Powers.None].Add(mapNode);
+                if (mapNode.Territory.IsSupplyCenter) board.OwnedSupplyCenters[Powers.None].Add(mapNode.Territory);
             }
 
             return board;
