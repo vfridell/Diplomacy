@@ -11,14 +11,61 @@ namespace DiplomacyLib
 {
     public static class BoardFutures
     {
-        public static IEnumerable<Board> GetBuildsAndDisbands(Board board)
+        public static IEnumerable<Board> GetWinterBuildsAndDisbands(Board board)
         {
-            throw new NotImplementedException();
+            List<BoardMove> completedBoardMoves = new List<BoardMove>();
+            IEnumerable<UnitMove> winterUnitMoves = GetWinterUnitMoves(board);
+            PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
+            int minMoves = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
+            int maxMoves = minMoves + buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
+            var powerGroups = winterUnitMoves.ToLookup(um => um.Unit.Power);
+            //foreach (var move in powerGroups.First())
+            //{
+            //    BoardMove workingBoardMove = new BoardMove();
+            //    workingBoardMove.Add(move);
+            //    GetWinterBoardMovesRecursive(board, workingBoardMove, winterUnitMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+            //}
+
+            return ApplyAllBoardMoves(board, completedBoardMoves);
         }
 
-        public static IEnumerable<Board> GetMoves(Board board)
+        public static IEnumerable<BoardMove> GetBoardMovesWinter(Board board)
         {
-            IEnumerable<UnitMove> allUnitMoves = GetUnitMoves(board);
+            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
+            IEnumerable<UnitMove> winterUnitMoves = GetWinterUnitMoves(board);
+            PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
+            int minMoves = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
+            int maxMoves = minMoves + buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
+            BoardMove workingBoardMove = new BoardMove();
+            GetWinterBoardMovesRecursive(board, workingBoardMove, winterUnitMoves, completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+
+            return completedBoardMoves;
+        }
+
+        private static void GetWinterBoardMovesRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int minMoves, int maxMoves)
+        {
+            if (workingBoardMove.Count(um => um.IsDisband) >= minMoves)
+            {
+                completedBoardMoves.Add(workingBoardMove.Clone());
+                if (workingBoardMove.Count == maxMoves)
+                    return;
+            }
+
+            if (availableMoves.Count() == 0) return;
+
+            UnitMove move = availableMoves.First();
+            if (workingBoardMove.CurrentlyAllowsWinter(move, buildDisbandCounts[move.Unit.Power]))
+            {
+                workingBoardMove.Add(move);
+                GetWinterBoardMovesRecursive(originalBoard, workingBoardMove, availableMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+                workingBoardMove.Remove(move);
+            }
+            GetWinterBoardMovesRecursive(originalBoard, workingBoardMove, availableMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+        }
+
+        public static IEnumerable<Board> GetFallSpringMoves(Board board)
+        {
+            IEnumerable<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board);
             ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.ToLookup(um => um.Edge.Source);
 
             List<BoardMove> completedBoardMoves = new List<BoardMove>();
@@ -28,7 +75,7 @@ namespace DiplomacyLib
                 if (move.IsConvoy || move.IsDisband) continue;
                 BoardMove workingBoardMove = new BoardMove();
                 workingBoardMove.Add(move);
-                GetBoardMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                GetBoardMovesFallSpringRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
             }
 
             return ApplyAllBoardMoves(board, completedBoardMoves);
@@ -46,9 +93,9 @@ namespace DiplomacyLib
             return futureBoards;
         }
 
-        public static IEnumerable<BoardMove> GetBoardMoves(Board board, IEnumerable<MapNode> mapNodeSources)
+        public static IEnumerable<BoardMove> GetBoardMovesFallSpring(Board board, IEnumerable<MapNode> mapNodeSources)
         {
-            IEnumerable<UnitMove> allUnitMoves = GetUnitMoves(board);
+            IEnumerable<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board);
             ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.Where(um => mapNodeSources.Contains(um.Edge.Source)).ToLookup(um => um.Edge.Source);
 
             List<BoardMove> completedBoardMoves = new List<BoardMove>();
@@ -58,13 +105,13 @@ namespace DiplomacyLib
                 if (move.IsConvoy || move.IsDisband) continue;
                 BoardMove workingBoardMove = new BoardMove();
                 workingBoardMove.Add(move);
-                GetBoardMovesRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                GetBoardMovesFallSpringRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
             }
 
             return completedBoardMoves;
         }
 
-        private static void GetBoardMovesRecursive(Board originalBoard, BoardMove workingBoardMove, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
+        private static void GetBoardMovesFallSpringRecursive(Board originalBoard, BoardMove workingBoardMove, ILookup<MapNode, UnitMove> sourceNodeGroups, List<BoardMove> completedBoardMoves, int depth)
         {
             if (workingBoardMove.Count == sourceNodeGroups.Count)
             {
@@ -75,10 +122,10 @@ namespace DiplomacyLib
             MapNode node = sourceNodeGroups.First(n => !workingBoardMove.Sources.Contains(n.Key)).Key;
             foreach (UnitMove move in sourceNodeGroups[node])
             {
-                if (workingBoardMove.CurrentlyAllows(move))
+                if (workingBoardMove.CurrentlyAllowsFallSpring(move))
                 {
                     workingBoardMove.Add(move);
-                    GetBoardMovesRecursive(originalBoard, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                    GetBoardMovesFallSpringRecursive(originalBoard, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
                     workingBoardMove.Remove(move);
                 }
             }
@@ -98,9 +145,9 @@ namespace DiplomacyLib
                     // build
                     foreach(var mn in buildMapNodes[kvp.Key])
                     {
-                        if (Fleet.Get(kvp.Key).TerritoryCompatible(mn.Territory))
+                        if (Fleet.Get(kvp.Key).TerritoryCompatible(mn.Territory) && Maps.Fleet.Vertices.Contains(mn))
                             allMoves.Add(new UnitMove(Fleet.Get(kvp.Key), new UndirectedEdge<MapNode>(MapNodes.Get("build"), mn)));
-                        if (Army.Get(kvp.Key).TerritoryCompatible(mn.Territory))
+                        if (Army.Get(kvp.Key).TerritoryCompatible(mn.Territory) && Maps.Army.Vertices.Contains(mn))
                             allMoves.Add(new UnitMove(Army.Get(kvp.Key), new UndirectedEdge<MapNode>(MapNodes.Get("build"), mn)));
                     }
                 }
@@ -116,7 +163,7 @@ namespace DiplomacyLib
             return allMoves;
         }
 
-        public static IEnumerable<UnitMove> GetUnitMoves(Board board)
+        public static IEnumerable<UnitMove> GetFallSpringUnitMoves(Board board)
         {
             List<UnitMove> allMoves = new List<UnitMove>();
             foreach(var kvp in board.OccupiedMapNodes)

@@ -248,7 +248,7 @@ namespace DiplomacyLib
                     "ven", "rom", "nap", //italy
                     "bre", "par", "mar", //france
                     "edi", "lvp", "lon", //england
-                    "stp_nc", "stp_sc", "mos", "sev", "war", //russia
+                    "stp_nc", "stp_sc", "stp", "mos", "sev", "war", //russia
                     "con", "ank", "smy" //turkey
                 }
             },

@@ -29,7 +29,7 @@ namespace DiplomacyTests
             Assert.AreEqual(64, Maps.Fleet.VertexCount);
             Assert.AreEqual(56, Maps.Army.VertexCount);
             Assert.AreEqual(94, Maps.ConvoyMap.VertexCount);
-            Assert.AreEqual(24, Maps.BuildMap.VertexCount);
+            Assert.AreEqual(25, Maps.BuildMap.VertexCount);
         }
 
         [TestMethod]

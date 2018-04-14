@@ -17,8 +17,8 @@ namespace DiplomacyLib.Models
 
     public abstract class FallSpring : Season
     {
-        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetMoves(board);
-        public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetUnitMoves(board);
+        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetFallSpringMoves(board);
+        public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetFallSpringUnitMoves(board);
     }
 
     public class Fall : FallSpring
@@ -38,7 +38,7 @@ namespace DiplomacyLib.Models
         public override Season NextSeason => Seasons.Spring;
         public override int Ordinal => 3;
 
-        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetBuildsAndDisbands(board);
+        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetWinterBuildsAndDisbands(board);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
     }
 }

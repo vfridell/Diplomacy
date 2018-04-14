@@ -57,6 +57,7 @@ namespace DiplomacyLib.Models
             if (!Unit.Equals(other.Unit)) return false;
             if (Edge.Source != other.Edge.Source) return false;
             if (IsDisband != other.IsDisband) return false;
+            if (IsBuild != other.IsBuild) return false;
             if (!IsDisband && !other.IsDisband && Edge.Target != other.Edge.Target) return false;
             if (IsConvoy && other.IsConvoy)
             {
@@ -81,6 +82,7 @@ namespace DiplomacyLib.Models
                 if (!IsHold) result += 100;
                 if (IsConvoy) result += 1000;
                 if (IsDisband) result += 10000;
+                if (IsBuild) result += 100000;
                 return result + Edge.Source.SequenceNumber;
             }
         }

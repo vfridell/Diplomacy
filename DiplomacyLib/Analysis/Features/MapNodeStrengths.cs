@@ -11,7 +11,7 @@ namespace DiplomacyLib.Analysis.Features
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
-            IEnumerable<UnitMove> unitMoves = BoardFutures.GetUnitMoves(board);
+            IEnumerable<UnitMove> unitMoves = BoardFutures.GetFallSpringUnitMoves(board);
             _territoryStrengths.Clear();
             foreach (UnitMove move in unitMoves)
             {

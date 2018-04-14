@@ -11,8 +11,11 @@ namespace DiplomacyLib.Models
         public IEnumerable<MapNode> Sources => this.Select(u => u.Edge.Source);
         public IEnumerable<MapNode> Targets => this.Select(u => u.Edge.Target);
         public IEnumerable<Territory> TargetTerritories => this.Select(u => u.Edge.Target?.Territory);
+        public IEnumerable<Territory> SourceTerritories => this.Select(u => u.Edge.Source.Territory);
         public IEnumerable<UnitMove> Holds => this.Where(u => u.IsHold);
-        public IEnumerable<UnitMove> Moving => this.Where(u => !(u.IsHold || u.IsDisband));
+        public IEnumerable<UnitMove> Builds => this.Where(u => u.IsBuild);
+        public IEnumerable<UnitMove> Disbands => this.Where(u => u.IsDisband);
+        public IEnumerable<UnitMove> Moving => this.Where(u => !(u.IsHold || u.IsDisband || u.IsBuild));
         public IEnumerable<Territory> HoldTerritories => Holds.Select(u => u.Edge.Target.Territory);
         public IEnumerable<MapNode> MissingSources(Board board) => board.OccupiedMapNodes.Keys.Except(Sources);
 
@@ -24,7 +27,7 @@ namespace DiplomacyLib.Models
             }
         }
 
-        internal bool CurrentlyAllows(UnitMove move)
+        internal bool CurrentlyAllowsFallSpring(UnitMove move)
         {
             // does not check pre-conditions like "is the proper unit in the edge.source"
             // we rely on the UnitMove generator to check these and only generate valid possible moves
@@ -59,6 +62,27 @@ namespace DiplomacyLib.Models
             }
         }
 
+        internal bool CurrentlyAllowsWinter(UnitMove move, int delta)
+        {
+            if(move.IsBuild)
+            {
+                if (TargetTerritories.Contains(move.Edge.Target.Territory)) return false;
+                if (this.Count(um => um.Unit.Power == move.Unit.Power) == Math.Abs(delta)) return false;
+                return true;
+            }
+            else if(move.IsDisband)
+            {
+                if (SourceTerritories.Contains(move.Edge.Source.Territory)) return false;
+                if (this.Count(um => um.Unit.Power == move.Unit.Power) == Math.Abs(delta)) return false;
+                return true;
+            }
+            else
+            {
+                throw new Exception("Invalid move.  Can only build or disband in Winter");
+            }
+        }
+
+
         public BoardMove Clone()
         {
             var clone = new BoardMove();
@@ -82,7 +106,9 @@ namespace DiplomacyLib.Models
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            int result = 0;
+            foreach (UnitMove m in this) result += m.GetHashCode();
+            return result;
         }
     }
 }

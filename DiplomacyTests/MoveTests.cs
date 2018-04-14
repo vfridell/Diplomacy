@@ -133,28 +133,28 @@ namespace DiplomacyTests
             moves1.FillHolds(board);
             board.ApplyMoves(moves1);
 
-            var moves = BoardFutures.GetUnitMoves(board);
+            var moves = BoardFutures.GetFallSpringUnitMoves(board);
             Assert.AreEqual(9, moves.Count(m => m.IsConvoy));
         }
 
         [TestMethod]
         public void NoInitialConvoyUnitMoves()
         {
-            var moves = BoardFutures.GetUnitMoves(initialBoard);
+            var moves = BoardFutures.GetFallSpringUnitMoves(initialBoard);
             Assert.AreEqual(0, moves.Count(m => m.IsConvoy));
         }
 
         [TestMethod]
         public void NoInitialDisbandUnitMoves()
         {
-            var moves = BoardFutures.GetUnitMoves(initialBoard);
+            var moves = BoardFutures.GetFallSpringUnitMoves(initialBoard);
             Assert.AreEqual(0, moves.Count(m => m.IsDisband));
         }
 
         [TestMethod]
         public void UnitMovesSort()
         {
-            var moves = BoardFutures.GetUnitMoves(initialBoard).ToList();
+            var moves = BoardFutures.GetFallSpringUnitMoves(initialBoard).ToList();
             moves.Sort();
         }
 
@@ -168,7 +168,7 @@ namespace DiplomacyTests
             moves1.FillHolds(board);
             board.ApplyMoves(moves1);
 
-            var moves = BoardFutures.GetUnitMoves(board);
+            var moves = BoardFutures.GetFallSpringUnitMoves(board);
             Assert.AreEqual(3, moves.Count(m => m.IsDisband));
         }
 
@@ -252,6 +252,42 @@ namespace DiplomacyTests
 
             var unitMoves = board.GetUnitMoves();
             Assert.AreEqual(4, unitMoves.Count(um => um.IsBuild));
+        }
+
+        [TestMethod]
+        public void BuildUnitMovesArmyNoNcSc()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            moves.Add(board.GetMove("tri", "ven"));
+            moves.Add(board.GetMove("ven", "pie"));
+            moves.Add(board.GetMove("ber", "kie"));
+            moves.Add(board.GetMove("kie", "den"));
+            moves.Add(board.GetMove("mun", "ruh"));
+            moves.Add(board.GetMove("stp_sc", "bot"));
+            moves.Add(board.GetMove("sev", "rum"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+
+            moves.Clear();
+            moves.Add(board.GetMove("bot", "swe"));
+            moves.Add(board.GetMove("kie", "hol"));
+            moves.Add(board.GetMove("ruh", "bel"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+            Assert.AreEqual(6, board.OwnedSupplyCenters[Powers.Germany].Count);
+            Assert.AreEqual(6, board.OwnedSupplyCenters[Powers.Russia].Count);
+            Assert.AreEqual(2, board.OwnedSupplyCenters[Powers.Italy].Count);
+            Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Austria].Count);
+
+            var unitMoves = BoardFutures.GetWinterUnitMoves(board);
+            Assert.IsFalse(unitMoves.Any(um => um.IsBuild 
+                                         && um.Unit.UnitType == UnitType.Army 
+                                         && um.Edge.Target.ShortName.Contains("_nc")));
         }
 
         [TestMethod]
