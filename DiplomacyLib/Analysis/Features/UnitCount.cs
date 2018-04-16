@@ -16,5 +16,6 @@ namespace DiplomacyLib.Analysis.Features
                 result.Add(new FeatureMeasurement(nameof(UnitCount), g.Key, null, null, g.Count()));
             }
         }
+
     }
 }

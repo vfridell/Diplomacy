@@ -12,5 +12,6 @@ namespace DiplomacyLib.Analysis.Features
         internal virtual void MeasureGame(Game game, FeatureMeasurementCollection result)
         {
         }
+
     }
 }
