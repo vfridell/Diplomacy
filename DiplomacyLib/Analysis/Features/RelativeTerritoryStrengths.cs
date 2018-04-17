@@ -7,7 +7,7 @@ using DiplomacyLib.Models;
 
 namespace DiplomacyLib.Analysis.Features
 {
-    public class TerritoryStrengths : FeatureTool
+    public class RelativeTerritoryStrengths : FeatureTool
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
@@ -34,7 +34,7 @@ namespace DiplomacyLib.Analysis.Features
                     //result.Add(new FeatureMeasurement("RawTerritoryStrength", t.Key, null, territoryStrength.Key, t.Value));
                     int adjustedStrength = t.Value - territoryStrength.Value.Where(kvp => kvp.Key != t.Key)?.Sum(kvp => kvp.Value) ?? 0;
                     //todo adjust for units cutting support
-                    result.Add(new FeatureMeasurement(nameof(TerritoryStrengths), t.Key, null, territoryStrength.Key, adjustedStrength));
+                    result.Add(new FeatureMeasurement(nameof(RelativeTerritoryStrengths), t.Key, null, territoryStrength.Key, adjustedStrength));
                 }
             }
         }

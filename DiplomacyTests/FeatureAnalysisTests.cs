@@ -18,7 +18,7 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
-            toolCollection.Add(new OwnedSupplyCenters());
+            toolCollection.Add(new OwnedSupplyCentersPercentage());
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             Assert.AreEqual(8, measurements.Count);
@@ -33,7 +33,7 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
-            toolCollection.Add(new UnitCount());
+            toolCollection.Add(new UnitCountPercentage());
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             Assert.AreEqual(7, measurements.Count);
@@ -60,10 +60,21 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
-            toolCollection.Add(new TerritoryStrengths());
+            toolCollection.Add(new RelativeTerritoryStrengths());
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             //todo finish me
+        }
+
+        [TestMethod]
+        public void TerritoryThreatPercentageStart()
+        {
+            Board board = Board.GetInitialBoard();
+
+            FeatureToolCollection toolCollection = new FeatureToolCollection();
+            toolCollection.Add(new TerritoryThreatPercentage());
+            FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
+            Assert.AreEqual(7, measurements.Count);
         }
     }
 }

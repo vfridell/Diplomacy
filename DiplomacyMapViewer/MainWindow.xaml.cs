@@ -52,7 +52,7 @@ namespace DiplomacyMapViewer
             board.EndTurn();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
-            toolCollection.Add(new TerritoryStrengths());
+            toolCollection.Add(new RelativeTerritoryStrengths());
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             BoardViewer.Draw(board, measurements);

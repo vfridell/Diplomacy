@@ -38,7 +38,6 @@ namespace DiplomacyTests
                 Board newBoard = board.Clone();
                 newBoard.ApplyMoves(boardMove);
                 score.GetScore(newBoard);
-                score.PowerScores;
             }
         }
     }

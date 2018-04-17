@@ -8,5 +8,14 @@ namespace DiplomacyLib.Models
 {
     public class PowersDictionary<T> : Dictionary<Powers, T>
     {
+        public void Init(T val, bool includeNonePower = false)
+        {
+            int start = includeNonePower ? 0 : 1;
+
+            for(int i = start; i< 8; i++)
+            {
+                Add((Powers)i, val);
+            }
+        }
     }
 }

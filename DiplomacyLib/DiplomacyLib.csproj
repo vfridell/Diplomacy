@@ -59,11 +59,13 @@
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
     <Compile Include="Analysis\Features\MapEdgesControlled.cs" />
-    <Compile Include="Analysis\Features\TerritoryStrengths.cs" />
+    <Compile Include="Analysis\Features\TerritoryThreatPercentage.cs" />
+    <Compile Include="Analysis\Features\RelativeTerritoryStrengths.cs" />
     <Compile Include="Analysis\Features\UnitCount.cs" />
     <Compile Include="Analysis\Features\OwnedSupplyCenters.cs" />
     <Compile Include="Analysis\Features\FeatureTool.cs" />
     <Compile Include="Analysis\FeatureToolCollection.cs" />
+    <Compile Include="Analysis\FeatureWeightGroup.cs" />
     <Compile Include="Analysis\Score.cs" />
     <Compile Include="Analysis\Scorer.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />

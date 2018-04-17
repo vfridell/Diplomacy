@@ -7,13 +7,14 @@ using DiplomacyLib.Models;
 
 namespace DiplomacyLib.Analysis.Features
 {
-    public class UnitCount : FeatureTool
+    public class UnitCountPercentage : FeatureTool
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
+            double total = board.OccupiedMapNodes.Count();
             foreach (var g in board.OccupiedMapNodes.GroupBy(kvp => kvp.Value.Power))
             {
-                result.Add(new FeatureMeasurement(nameof(UnitCount), g.Key, null, null, g.Count()));
+                result.Add(new FeatureMeasurement(nameof(UnitCountPercentage), g.Key, null, null, g.Count() / total));
             }
         }
 
