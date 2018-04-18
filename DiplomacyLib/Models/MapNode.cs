@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiplomacyLib.Models
 {
-    public class MapNode : IEquatable<MapNode>
+    public class MapNode : IEquatable<MapNode>, IComparable<MapNode>
     {
         public readonly string Name;
         public readonly string ShortName;
@@ -19,6 +19,11 @@ namespace DiplomacyLib.Models
             ShortName = shortName;
             Territory = territory;
             SequenceNumber = sequenceNumber;
+        }
+
+        public int CompareTo(MapNode other)
+        {
+            return SequenceNumber - other.SequenceNumber;
         }
 
         public override bool Equals(object obj)

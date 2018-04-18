@@ -27,6 +27,44 @@ namespace DiplomacyLib.Models
             }
         }
 
+        public static List<BoardMove> CombineFallSpringPartialMoveLists(List<BoardMove> boardList)
+        {
+            List<BoardMove> resultList = CombineFallSpringMoveListsRecursive(boardList.First(), boardList.Skip(1));
+            return resultList;
+        }
+
+        private static List<BoardMove> CombineFallSpringMoveListsRecursive(BoardMove boardMove, IEnumerable<BoardMove> boardList)
+        {
+            var result = new List<BoardMove>();
+            bool empty = true;
+            foreach(BoardMove move in boardList)
+            {
+                empty = false;
+                BoardMove combinedBoardMove;
+                if (TryCombineFallSpring(boardMove, move, out combinedBoardMove)) result.Add(combinedBoardMove);
+            }
+
+            if (!empty) result.AddRange(CombineFallSpringMoveListsRecursive(boardList.First(), boardList.Skip(1)));
+            
+            return result;
+        }
+
+        public static bool TryCombineFallSpring(BoardMove first, BoardMove second, out BoardMove result)
+        {
+            foreach(UnitMove move in first)
+            {
+                if (!second.CurrentlyAllowsFallSpring(move))
+                {
+                    result = null;
+                    return false;
+                }
+            }
+            result = new BoardMove();
+            result.AddRange(first);
+            result.AddRange(second);
+            return true;
+        }
+
         internal bool CurrentlyAllowsFallSpring(UnitMove move)
         {
             // does not check pre-conditions like "is the proper unit in the edge.source"

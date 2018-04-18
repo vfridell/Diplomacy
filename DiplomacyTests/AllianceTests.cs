@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DiplomacyLib;
 using DiplomacyLib.AI;
 using DiplomacyLib.Analysis;
@@ -32,12 +33,13 @@ namespace DiplomacyTests
             {
                  futureMoves.AddRange(BoardFutures.GetBoardMovesFallSpring(board, group));
             }
-            foreach(BoardMove boardMove in futureMoves)
+
+            // this does not work because I'm back to combinatorial explosion of boards
+            List<BoardMove> combinedMoves = BoardMove.CombineFallSpringPartialMoveLists(futureMoves);
+
+            foreach(BoardMove boardMove in combinedMoves)
             {
-                boardMove.FillHolds(board);
-                Board newBoard = board.Clone();
-                newBoard.ApplyMoves(boardMove);
-                score.GetScore(newBoard);
+                score.Calculate(board, boardMove);
             }
         }
     }
