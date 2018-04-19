@@ -55,10 +55,12 @@
   <ItemGroup>
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="AI\OccupiedMapNodeGroups.cs" />
+    <Compile Include="AI\UnitTargetCalculator.cs" />
     <Compile Include="Analysis\BasicScorer.cs" />
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
     <Compile Include="Analysis\Features\MapEdgesControlled.cs" />
+    <Compile Include="Analysis\AllianceTerritoryStrengths.cs" />
     <Compile Include="Analysis\Features\TerritoryThreatPercentage.cs" />
     <Compile Include="Analysis\Features\RelativeTerritoryStrengths.cs" />
     <Compile Include="Analysis\Features\UnitCount.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="BoardFutures.cs" />
     <Compile Include="Models\BoardMove.cs" />
+    <Compile Include="Models\Coalition.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\Map.cs" />

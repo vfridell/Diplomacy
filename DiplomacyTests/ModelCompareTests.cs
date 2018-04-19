@@ -130,5 +130,25 @@ namespace DiplomacyTests
             boardMove4.Add(new UnitMove(Army.Get(Powers.Germany), new QuickGraph.UndirectedEdge<MapNode>(MapNodes.Get("mar"), MapNodes.Get("tus")), new List<MapNode> { MapNodes.Get("lyo"), MapNodes.Get("wes"), MapNodes.Get("tys"), }));
             Assert.AreNotEqual(boardMove1, boardMove4);
         }
+
+
+        [TestMethod]
+        public void CoalitionEquality()
+        {
+            List<Powers> p1 = new List<Powers>() { Powers.Austria, Powers.Germany, Powers.Turkey };
+            List<Powers> p2 = new List<Powers>() { Powers.Austria, Powers.Germany, Powers.Turkey };
+            List<Powers> p3 = new List<Powers>() { Powers.Austria, Powers.Germany, Powers.Russia};
+            List<Powers> p4 = new List<Powers>() { Powers.Russia, Powers.England, Powers.France};
+
+            Coalition c1 = new Coalition(p1);
+            Coalition c2 = new Coalition(p2);
+            Coalition c3 = new Coalition(p3);
+            Coalition c4 = new Coalition(p4);
+
+            Assert.AreEqual(c1, c2);
+            Assert.AreNotEqual(c1, c3);
+            Assert.AreNotEqual(c2, c3);
+            Assert.AreNotEqual(c1, c4);
+        }
     }
 }
