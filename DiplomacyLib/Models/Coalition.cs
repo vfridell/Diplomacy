@@ -29,6 +29,8 @@ namespace DiplomacyLib.Models
         }
 
         public int MemberCount => this.Count(p => p.Value);
+        public IEnumerable<Powers> Members => this.Where(kvp => kvp.Value).Select(kvp => kvp.Key);
+        public bool IsMember(Powers p) => this[p];
 
         public override bool Equals(object obj)
         {

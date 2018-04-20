@@ -60,7 +60,7 @@
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />
     <Compile Include="Analysis\Features\MapEdgesControlled.cs" />
-    <Compile Include="Analysis\AllianceTerritoryStrengths.cs" />
+    <Compile Include="Analysis\TerritoryStrengths.cs" />
     <Compile Include="Analysis\Features\TerritoryThreatPercentage.cs" />
     <Compile Include="Analysis\Features\RelativeTerritoryStrengths.cs" />
     <Compile Include="Analysis\Features\UnitCount.cs" />

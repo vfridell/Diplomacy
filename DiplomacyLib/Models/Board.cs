@@ -28,6 +28,8 @@ namespace DiplomacyLib.Models
 
         public bool IsOccupied(Territory t) => IsOccupied(t, OccupiedMapNodes);
         public bool IsUnoccupied(Territory t) => !IsOccupied(t, OccupiedMapNodes);
+        public bool SupplyCenterIsOwnedBy(Territory t, Powers p) => t.IsSupplyCenter ? OwnedSupplyCenters[p].Contains(t) : false;
+        public bool SupplyCenterIsOwnedBy(Territory t, Coalition c) => c.Members.Any(p => SupplyCenterIsOwnedBy(t, p));
 
         protected bool IsOccupied(Territory t, Dictionary<MapNode, Unit> occupiedMapNodes)
         {

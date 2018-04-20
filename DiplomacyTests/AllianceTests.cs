@@ -64,5 +64,13 @@ namespace DiplomacyTests
             }
             Assert.AreEqual(120, hsc.Count);
         }
+
+        [TestMethod]
+        public void PossibleCoalitions()
+        {
+            AllianceScenario allianceScenario = new AllianceScenario();
+            PowersDictionary<Coalition> possibleCoalitions = allianceScenario.GetPossibleCoalitions();
+            Assert.AreEqual(7, possibleCoalitions.Count);
+        }
     }
 }
