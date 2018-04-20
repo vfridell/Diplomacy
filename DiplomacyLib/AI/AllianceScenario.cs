@@ -39,30 +39,30 @@ namespace DiplomacyLib.AI
             GetAllianceType = DefaultGetAllianceType;
         }
 
-        public List<Coalition> GetCoalitions()
-        {
-            for(int i = 1; i<=7; i++)
-            {
-                for(int j = 1; j<=7; j++)
-                {
-                    if(AllianceType.Friend == GetAllianceType((Powers)i, (Powers)j))
-                    {
-                        // this is hard.  Ex:
-                        // A -> B Friends
-                        // B -> C Friends
-                        // A -> C Enemies
-                        // Coalitions are (A, B), (B, C)
-                        // BUT 
-                        // A -> B Friends
-                        // B -> C Friends
-                        // A -> C Friends
-                        // Coalition is (A,B,C)
+        //public List<Coalition> GetCoalitions()
+        //{
+        //    for(int i = 1; i<=7; i++)
+        //    {
+        //        for(int j = 1; j<=7; j++)
+        //        {
+        //            if(AllianceType.Friend == GetAllianceType((Powers)i, (Powers)j))
+        //            {
+        //                // this is hard.  Ex:
+        //                // A -> B Friends
+        //                // B -> C Friends
+        //                // A -> C Enemies
+        //                // Coalitions are (A, B), (B, C)
+        //                // BUT 
+        //                // A -> B Friends
+        //                // B -> C Friends
+        //                // A -> C Friends
+        //                // Coalition is (A,B,C)
 
-                    }
-                }
+        //            }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         public Func<Powers, Powers, AllianceType> GetAllianceType;
 

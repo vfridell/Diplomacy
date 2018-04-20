@@ -42,5 +42,27 @@ namespace DiplomacyTests
                 score.Calculate(board, boardMove);
             }
         }
+
+        [TestMethod]
+        public void AllCoalitions()
+        {
+            Assert.AreEqual(120, Coalitions.AllCoalitions.Count);
+
+            int i = 1;
+            foreach(Coalition c in Coalitions.AllCoalitions)
+            {
+                foreach(Coalition c2 in Coalitions.AllCoalitions.Skip(i++))
+                {
+                    Assert.AreNotEqual(c, c2);
+                }
+            }
+
+            HashSet<Coalition> hsc = new HashSet<Coalition>();
+            foreach (Coalition c in Coalitions.AllCoalitions)
+            {
+                hsc.Add(c);
+            }
+            Assert.AreEqual(120, hsc.Count);
+        }
     }
 }

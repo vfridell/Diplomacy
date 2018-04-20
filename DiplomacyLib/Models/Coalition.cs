@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,21 @@ namespace DiplomacyLib.Models
             Init(false);
             foreach (Powers p in powers) this[p] = true;
         }
+
+        public Coalition(bool init)
+        {
+            Init(init);
+        }
+
+        public Coalition(BitArray ba2)
+        {
+            for(int i = 0; i<7; i++)
+            {
+                this[(Powers)i + 1] = ba2[i];
+            }
+        }
+
+        public int MemberCount => this.Count(p => p.Value);
 
         public override bool Equals(object obj)
         {
@@ -38,6 +54,11 @@ namespace DiplomacyLib.Models
                 hash += (kvp.Key.GetHashCode() * 397) ^ kvp.Value.GetHashCode();
             }
             return hash;
+        }
+
+        public override string ToString()
+        {
+            return this.Where(kvp => kvp.Value).Aggregate("", (s, kvp) => $"{kvp.Key}, {s}");
         }
 
     }

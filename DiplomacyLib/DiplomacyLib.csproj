@@ -70,6 +70,7 @@
     <Compile Include="Analysis\FeatureWeightGroup.cs" />
     <Compile Include="Analysis\Score.cs" />
     <Compile Include="Analysis\Scorer.cs" />
+    <Compile Include="Coalitions.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="MapNodes.cs" />
