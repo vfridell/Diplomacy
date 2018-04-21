@@ -60,6 +60,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AITests.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="MapConstructionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

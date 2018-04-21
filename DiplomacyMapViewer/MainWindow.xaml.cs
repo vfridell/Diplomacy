@@ -31,25 +31,25 @@ namespace DiplomacyMapViewer
 
             Board board = Board.GetInitialBoard();
             BoardMove moves = new BoardMove();
-            moves.Add(board.GetMove("tri", "ven"));
-            moves.Add(board.GetMove("ven", "pie"));
-            moves.Add(board.GetMove("ber", "kie"));
-            moves.Add(board.GetMove("kie", "den"));
-            moves.Add(board.GetMove("mun", "ruh"));
-            moves.Add(board.GetMove("stp_sc", "bot"));
-            moves.Add(board.GetMove("sev", "rum"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            board.EndTurn();
+            //moves.Add(board.GetMove("tri", "ven"));
+            //moves.Add(board.GetMove("ven", "pie"));
+            //moves.Add(board.GetMove("ber", "kie"));
+            //moves.Add(board.GetMove("kie", "den"));
+            //moves.Add(board.GetMove("mun", "ruh"));
+            //moves.Add(board.GetMove("stp_sc", "bot"));
+            //moves.Add(board.GetMove("sev", "rum"));
+            //moves.FillHolds(board);
+            //board.ApplyMoves(moves);
+            //board.EndTurn();
 
 
-            moves.Clear();
-            moves.Add(board.GetMove("bot", "swe"));
-            moves.Add(board.GetMove("kie", "hol"));
-            moves.Add(board.GetMove("ruh", "bel"));
-            moves.FillHolds(board);
-            board.ApplyMoves(moves);
-            board.EndTurn();
+            //moves.Clear();
+            //moves.Add(board.GetMove("bot", "swe"));
+            //moves.Add(board.GetMove("kie", "hol"));
+            //moves.Add(board.GetMove("ruh", "bel"));
+            //moves.FillHolds(board);
+            //board.ApplyMoves(moves);
+            //board.EndTurn();
 
             FeatureToolCollection toolCollection = new FeatureToolCollection();
             toolCollection.Add(new RelativeTerritoryStrengths());

@@ -11,12 +11,7 @@ namespace DiplomacyLib.AI
 {
     public class UnitTargetCalculator
     {
-        public UnitTargetCalculator()
-        {
-            WeightFunction = DefaultWeightFunction;
-        }
-
-        private Board _currentBoard;
+        public UnitTargetCalculator() { }
 
         public MapNode GetUnitTarget(Board board, MapNode source, AllianceScenario allianceScenario)
         {
@@ -29,9 +24,12 @@ namespace DiplomacyLib.AI
 
             Func<UndirectedEdge<MapNode>, double> WeightFunction = (edge) =>
             {
-                int strength = territoryStrengths.GetCoalitionStrength(edge.Target.Territory, myCoalition);
-                territoryStrengths.GetPowerCount()
-                return 1;
+                double powerCount = territoryStrengths.GetPowerCount(edge.Target.Territory, unit.Power);
+                double totalAnimosity = allianceScenario.OutEdges(unit.Power)
+                                                        .Where(e => territoryStrengths.GetStrength(edge.Target.Territory, e.Target) > 0)
+                                                        .Sum(e => e.Animosity);
+
+                return 1 + (powerCount - totalAnimosity);
             };
 
             var alg = new QuickGraph.Algorithms.ShortestPath.UndirectedDijkstraShortestPathAlgorithm<MapNode, UndirectedEdge<MapNode>>(unit.MyMap, WeightFunction);
@@ -39,11 +37,10 @@ namespace DiplomacyLib.AI
             alg.Compute();
 
             List<KeyValuePair<MapNode, double>> orderedDistances = alg.Distances
-                                                                     .Where(kvp2 => board.OccupiedMapNodes.ContainsKey(kvp2.Key))
+                                                                     //.Where(kvp2 => board.OccupiedMapNodes.ContainsKey(kvp2.Key))
                                                                      .OrderBy(kvp2 => kvp2.Value).ToList();
             MapNode target = orderedDistances.Select(kvp => kvp.Key).First(mn => mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition));
             return target;
         }
-
     }
 }

@@ -42,11 +42,11 @@ namespace DiplomacyLib.Analysis
             }
         }
 
-        public int GetPowerCount(Territory t, Powers powerToIgnore)
+        public int GetPowerCount(Territory t, Powers powerToIgnore = Powers.None)
         {
             if (Strengths.Count == 0) throw new Exception("Must call Init first");
             if (!Strengths.ContainsKey(t)) return 0;
-            return Strengths[t].Count(kvp => kvp.Key != powerToIgnore);
+            return Strengths[t].Count(kvp => kvp.Key != powerToIgnore && kvp.Value > 0);
         }
 
         public int GetCoalitionStrength(Territory t, Coalition coalition)
