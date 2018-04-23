@@ -13,7 +13,7 @@ namespace Profiler
         {
             Board board = Board.GetInitialBoard();
             //Board board = Board.GetTinyInitialBoard();
-            List<Board> futureBoards = board.GetFutures().ToList();
+            //List<Board> futureBoards = board.GetFutures().ToList();
         }
     }
 }

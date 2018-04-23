@@ -1,4 +1,5 @@
-﻿using DiplomacyLib.Models;
+﻿using DiplomacyLib.AI;
+using DiplomacyLib.Models;
 using QuickGraph;
 using QuickGraph.Algorithms.RankedShortestPath;
 using System;
@@ -13,20 +14,8 @@ namespace DiplomacyLib
     {
         public static IEnumerable<Board> GetWinterBuildsAndDisbands(Board board)
         {
-            List<BoardMove> completedBoardMoves = new List<BoardMove>();
-            IEnumerable<UnitMove> winterUnitMoves = GetWinterUnitMoves(board);
-            PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
-            int minMoves = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
-            int maxMoves = minMoves + buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
-            var powerGroups = winterUnitMoves.ToLookup(um => um.Unit.Power);
-            //foreach (var move in powerGroups.First())
-            //{
-            //    BoardMove workingBoardMove = new BoardMove();
-            //    workingBoardMove.Add(move);
-            //    GetWinterBoardMovesRecursive(board, workingBoardMove, winterUnitMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
-            //}
-
-            return ApplyAllBoardMoves(board, completedBoardMoves);
+            List<BoardMove> allBoardMoves = GetBoardMovesWinter(board).ToList();
+            return ApplyAllBoardMoves(board, allBoardMoves);
         }
 
         public static IEnumerable<BoardMove> GetBoardMovesWinter(Board board)
@@ -63,25 +52,51 @@ namespace DiplomacyLib
             GetWinterBoardMovesRecursive(originalBoard, workingBoardMove, availableMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
         }
 
-        public static IEnumerable<Board> GetFallSpringMoves(Board board)
+        public static IEnumerable<Board> GetFallSpringMoves(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator)
         {
-            IEnumerable<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board);
-            ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.ToLookup(um => um.Edge.Source);
-
-            List<BoardMove> completedBoardMoves = new List<BoardMove>();
-            int depth = 0;
-            foreach (UnitMove move in sourceNodeGroups.First())
+            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
+            List<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board).ToList();
+            foreach (var kvp in board.OccupiedMapNodes)
             {
-                if (move.IsConvoy || move.IsDisband) continue;
                 BoardMove workingBoardMove = new BoardMove();
-                workingBoardMove.Add(move);
-                GetBoardMovesFallSpringRecursive(board, workingBoardMove, sourceNodeGroups, completedBoardMoves, depth + 1);
+                List<MapNode> path = unitTargetCalculator.GetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove);
+                MapNode moveTarget = path.Count > 1 ? path[1] : path[0];
+                UnitMove currentMove = allUnitMoves.FirstOrDefault(um => um.Edge.Source == kvp.Key && um.Edge.Target == moveTarget);
+                if (currentMove != null)
+                {
+                    workingBoardMove.Add(currentMove);
+                }
+                else
+                {
+                    throw new Exception("Will this ever happen?");
+                }
+                GetFallSpringMovesRemaining(board, allUnitMoves, allianceScenario, unitTargetCalculator, workingBoardMove, completedBoardMoves);
             }
 
             return ApplyAllBoardMoves(board, completedBoardMoves);
         }
 
-        public static IEnumerable<Board> ApplyAllBoardMoves(Board board, List<BoardMove> boardMoves)
+        private static void GetFallSpringMovesRemaining(Board board, List<UnitMove> allUnitMoves, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
+        {
+            foreach (var kvp in board.OccupiedMapNodes.Where(kvp2 => !workingBoardMove.Sources.Contains(kvp2.Key)))
+            {
+                List<MapNode> path = unitTargetCalculator.GetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove);
+                MapNode moveTarget = path.Count > 1 ? path[1] : path[0];
+                UnitMove currentMove = allUnitMoves.FirstOrDefault(um => um.Edge.Source == kvp.Key && um.Edge.Target == moveTarget);
+                if (currentMove != null)
+                {
+                    workingBoardMove.Add(currentMove);
+                }
+                else
+                {
+                    throw new Exception("Will this ever happen?");
+                }
+            }
+            completedBoardMoves.Add(workingBoardMove.Clone());
+            return;
+        }
+
+        public static IEnumerable<Board> ApplyAllBoardMoves(Board board, IEnumerable<BoardMove> boardMoves)
         {
             List<Board> futureBoards = new List<Board>();
             foreach(BoardMove boardMove in boardMoves)

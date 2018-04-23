@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiplomacyLib.AI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,13 +12,13 @@ namespace DiplomacyLib.Models
         public abstract Season NextSeason { get; }
         public abstract int Ordinal { get; }
 
-        public abstract IEnumerable<Board> GetFutures(Board board);
+        public abstract IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator);
         public abstract IEnumerable<UnitMove> GetUnitMoves(Board board);
     }
 
     public abstract class FallSpring : Season
     {
-        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetFallSpringMoves(board);
+        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator) => BoardFutures.GetFallSpringMoves(board, allianceScenario, unitTargetCalculator);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetFallSpringUnitMoves(board);
     }
 
@@ -38,7 +39,7 @@ namespace DiplomacyLib.Models
         public override Season NextSeason => Seasons.Spring;
         public override int Ordinal => 3;
 
-        public override IEnumerable<Board> GetFutures(Board board) => BoardFutures.GetWinterBuildsAndDisbands(board);
+        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator) => BoardFutures.GetWinterBuildsAndDisbands(board);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
     }
 }

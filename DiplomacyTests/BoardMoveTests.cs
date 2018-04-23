@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DiplomacyLib;
+using DiplomacyLib.AI;
 using DiplomacyLib.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,12 +13,14 @@ namespace DiplomacyTests
     {
 
 
-        //[TestMethod]
-        //public void GenerateAllInitialMoves()
-        //{
-        //    Board board = Board.GetInitialBoard();
-        //    List<Board> futureBoards = board.GetFutures().ToList();
-        //}
+        [TestMethod]
+        public void GenerateAllInitialMoves()
+        {
+            Board board = Board.GetInitialBoard();
+            AllianceScenario allianceScenario = new AllianceScenario();
+            UnitTargetCalculator unitTargetCalculator = new UnitTargetCalculator();
+            IEnumerable<Board> allFutureBoards = board.GetFutures(allianceScenario, unitTargetCalculator);
+        }
 
         [TestMethod]
         public void GenerateAllInitialMovesSingleUnit()

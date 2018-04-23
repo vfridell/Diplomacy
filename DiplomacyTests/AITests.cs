@@ -7,6 +7,7 @@ using DiplomacyLib.Analysis;
 using DiplomacyLib.Analysis.Features;
 using DiplomacyLib.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QuickGraph;
 
 namespace DiplomacyTests
 {
@@ -19,10 +20,10 @@ namespace DiplomacyTests
             AllianceScenario allianceScenario = new AllianceScenario();
             UnitTargetCalculator unitTargetCalculator = new UnitTargetCalculator();
             Board board = Board.GetInitialBoard();
-            var targets = new Dictionary<MapNode, MapNode>();
+            var targets = new Dictionary<MapNode, List<MapNode>>();
             foreach(var kvp in board.OccupiedMapNodes)
             {
-                targets.Add(kvp.Key, unitTargetCalculator.GetUnitTarget(board, kvp.Key, allianceScenario));
+                targets.Add(kvp.Key, unitTargetCalculator.GetUnitTargetPath(board, kvp.Key, allianceScenario));
             }
 
         }

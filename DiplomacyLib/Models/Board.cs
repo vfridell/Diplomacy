@@ -1,4 +1,5 @@
-﻿using DiplomacyLib.Analysis;
+﻿using DiplomacyLib.AI;
+using DiplomacyLib.Analysis;
 using DiplomacyLib.Analysis.Features;
 using QuickGraph;
 using System;
@@ -44,7 +45,7 @@ namespace DiplomacyLib.Models
 
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
-        public IEnumerable<Board> GetFutures() => Season.GetFutures(this);
+        public IEnumerable<Board> GetFutures(AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator) => Season.GetFutures(this, allianceScenario, unitTargetCalculator);
         public IEnumerable<UnitMove> GetUnitMoves() => Season.GetUnitMoves(this);
 
         public UnitMove GetMove(string sourceMapNodeName, string targetMapNodeName)
