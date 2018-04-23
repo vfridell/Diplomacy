@@ -11,8 +11,18 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <diplomacyWpf:BoardViewer Name="BoardViewer" Grid.Column="0"></diplomacyWpf:BoardViewer>
-        <diplomacyWpf:AllianceScenarioGraphControl Name="AllianceScenarioGraphControl" Grid.Column="1"></diplomacyWpf:AllianceScenarioGraphControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <diplomacyWpf:BoardViewer Name="BoardViewer" Grid.Column="0" Grid.RowSpan="2"></diplomacyWpf:BoardViewer>
+        <diplomacyWpf:AllianceScenarioGraphControl Name="AllianceScenarioGraphControl" Grid.Column="1" Grid.Row="0"></diplomacyWpf:AllianceScenarioGraphControl>
+        <Button Name="SaveGraphButton" Grid.Column="0" Grid.RowSpan="2" Content="Next" Click="NextButton_Click" Margin="10,0,0,10" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="82"/>
+        <TextBlock Name="DetailsTextBlock" Grid.Column="1" Grid.Row="1">Hello!</TextBlock>
+        <ScrollViewer Name="BoardsScrollViewer" Grid.Column="2" Grid.RowSpan="2">
+            <ListView Name="BoardsListView" SelectionChanged="BoardsListView_SelectionChanged" ></ListView>
+        </ScrollViewer>
     </Grid>
 </Window>

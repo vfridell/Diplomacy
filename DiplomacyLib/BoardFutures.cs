@@ -103,6 +103,7 @@ namespace DiplomacyLib
             {
                 Board newBoard = board.Clone();
                 newBoard.ApplyMoves(boardMove);
+                newBoard.EndTurn();
                 futureBoards.Add(newBoard);
             }
             return futureBoards;
