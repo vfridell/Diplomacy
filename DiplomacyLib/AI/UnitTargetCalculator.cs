@@ -31,10 +31,39 @@ namespace DiplomacyLib.AI
             List<KeyValuePair<MapNode, double>> orderedDistances = GetWeightedMapNodeDistances(board, source, allianceScenario)
                                                                      .OrderBy(kvp2 => kvp2.Value).ToList();
 
-            IEnumerable<Territory> targetTerritories = boardMove == null ? Enumerable.Empty<Territory>() : boardMove.TargetTerritories;
+
+            List<MapNode> path = GetPath(board, source, boardMove, orderedDistances, (mn) => 
+            {
+                return mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition);
+            });
+            if (path != null) return path;
+
+            path = GetPath(board, source, boardMove, orderedDistances, (mn) => 
+            {
+                return mn.Territory != source.Territory; 
+            });
+            if (path != null) return path;
+            path = GetPath(board, source, boardMove, orderedDistances, (mn) =>
+            {
+                return mn.Territory == source.Territory;
+            });
+            if (path != null) return path;
+
+            var allMoves = board.GetUnitMoves();
+            UnitMove lastResort = allMoves.FirstOrDefault(um => um.Edge.Source == source && boardMove.CurrentlyAllowsFallSpring(um));
+            if (lastResort != null) return new List<MapNode>() { lastResort.Edge.Target };
+
+
+            // couldn't find anything
+            // FIXME this is caused by picking moves that lead to a contradiction.  Convert to a TryGet... and force the caller to deal?  Perhaps with a hold on all affected?
+            throw new Exception("couldn't find anything");
+        }
+
+        private List<MapNode> GetPath(Board board, MapNode source, BoardMove boardMove, List<KeyValuePair<MapNode, double>> orderedDistances, Func<MapNode, bool> predicate)
+        {
             var allMoves = board.GetUnitMoves();
             foreach (MapNode currentTarget in orderedDistances.Select(kvp => kvp.Key)
-                                                 .Where(mn => mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition)))
+                                     .Where(predicate))
             {
                 IEnumerable<UndirectedEdge<MapNode>> rawPath;
                 if (!_predecessorObserver.TryGetPath(currentTarget, out rawPath))
@@ -51,7 +80,7 @@ namespace DiplomacyLib.AI
             }
 
             // couldn't find anything
-            return new List<MapNode>() { source };
+            return null;
         }
 
         private Dictionary<MapNode,double> GetWeightedMapNodeDistances(Board board, MapNode source, AllianceScenario allianceScenario)

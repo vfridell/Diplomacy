@@ -19,9 +19,9 @@ namespace DiplomacyLib.Analysis
 
         public void Init(Board board)
         {
+            if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
             Strengths.Clear();
-            IEnumerable<UnitMove> unitMoves = BoardFutures.GetFallSpringUnitMoves(board);
-            Strengths.Clear();
+            IEnumerable<UnitMove> unitMoves = board.GetUnitMoves();
             foreach (UnitMove move in unitMoves)
             {
                 if (move.IsDisband) continue;

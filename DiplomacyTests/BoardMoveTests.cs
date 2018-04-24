@@ -59,7 +59,7 @@ namespace DiplomacyTests
         }
 
         [TestMethod]
-        public void GenerateWinterMoves()
+        public void GenerateWinterMovesNoEmptyBuilds()
         {
             Board board = Board.GetInitialBoard();
             BoardMove moves = new BoardMove();
@@ -89,7 +89,11 @@ namespace DiplomacyTests
             Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Austria].Count);
 
             var boardMoves = BoardFutures.GetBoardMovesWinter(board);
-            Assert.AreEqual(1944, boardMoves.Count());
+            Assert.IsTrue(boardMoves.All(bm => null != bm.FirstOrDefault(um => um.Edge.Target == MapNodes.Get("mun"))));
+            Assert.AreEqual(144, boardMoves.Count());
+            
+            //this is the total for when empty builds are included
+            //Assert.AreEqual(1944, boardMoves.Count());
         }
 
     }

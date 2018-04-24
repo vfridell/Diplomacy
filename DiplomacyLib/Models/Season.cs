@@ -26,12 +26,15 @@ namespace DiplomacyLib.Models
     {
         public override Season NextSeason => Seasons.Winter;
         public override int Ordinal => 2;
+        public override string ToString() => "Fall";
+            
     }
 
     public class Spring : FallSpring
     {
         public override Season NextSeason => Seasons.Fall;
         public override int Ordinal => 1;
+        public override string ToString() => "Spring";
     }
 
     public class Winter : Season
@@ -41,5 +44,6 @@ namespace DiplomacyLib.Models
 
         public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator) => BoardFutures.GetWinterBuildsAndDisbands(board);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
+        public override string ToString() => "Winter";
     }
 }

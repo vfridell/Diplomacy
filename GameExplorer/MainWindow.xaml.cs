@@ -46,7 +46,6 @@ namespace GameExplorer
             BoardsListView.ItemsSource = allFutureBoards;
         }
 
-        int _num = 1;
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             if (BoardsListView.SelectedItem != null)

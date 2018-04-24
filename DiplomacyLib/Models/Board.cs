@@ -12,6 +12,11 @@ namespace DiplomacyLib.Models
 {
     public class Board
     {
+        private List<UnitMove> _unitMoves;
+        private bool _movesDirty = true;
+        private List<Board> _futureBoards;
+        private bool _futureBoardsDirty = true;
+
         protected Board() { }
 
         public int Year { get; protected set; }
@@ -45,8 +50,25 @@ namespace DiplomacyLib.Models
 
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
-        public IEnumerable<Board> GetFutures(AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator) => Season.GetFutures(this, allianceScenario, unitTargetCalculator);
-        public IEnumerable<UnitMove> GetUnitMoves() => Season.GetUnitMoves(this);
+        public List<Board> GetFutures(AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator)
+        {
+            if (_futureBoardsDirty)
+            {
+                _futureBoards = Season.GetFutures(this, allianceScenario, unitTargetCalculator).ToList();
+                _futureBoardsDirty = false;
+            }
+            return _futureBoards;
+        }
+
+        public List<UnitMove> GetUnitMoves()
+        {
+            if (_movesDirty)
+            {
+                _unitMoves = Season.GetUnitMoves(this).ToList();
+                _movesDirty = false;
+            }
+            return _unitMoves;
+        }
 
         public UnitMove GetMove(string sourceMapNodeName, string targetMapNodeName)
         {
@@ -102,6 +124,8 @@ namespace DiplomacyLib.Models
 
         public void EndTurn()
         {
+            _futureBoardsDirty = true;
+            _movesDirty = true;
             Season = Season.NextSeason;
             if (Season is Spring) Year++;
             if (Season is Winter) UpdateOwnedSupplyCenters();

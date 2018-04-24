@@ -20,42 +20,96 @@ namespace DiplomacyLib
 
         public static IEnumerable<BoardMove> GetBoardMovesWinter(Board board)
         {
-            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
-            IEnumerable<UnitMove> winterUnitMoves = GetWinterUnitMoves(board);
-            PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
-            int minMoves = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
-            int maxMoves = minMoves + buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
-            BoardMove workingBoardMove = new BoardMove();
-            GetWinterBoardMovesRecursive(board, workingBoardMove, winterUnitMoves, completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+            if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
+            IEnumerable<UnitMove> winterUnitMoves = board.GetUnitMoves();
+            if (!winterUnitMoves.Any()) return Enumerable.Empty<BoardMove>();
 
+            HashSet<BoardMove> disbandBoardMoves = new HashSet<BoardMove>();
+            HashSet<BoardMove> buildBoardMoves = new HashSet<BoardMove>();
+            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
+            PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
+            int disbandCount = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
+            int buildCount = buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
+            int maxMoves = disbandCount + buildCount;
+            BoardMove workingBoardMove = new BoardMove();
+
+            if (winterUnitMoves.Any(um => um.IsDisband))
+            {
+                GetWinterBoardMovesDisbandsOnlyRecursive(board, workingBoardMove, winterUnitMoves.Where(um => um.IsDisband), disbandBoardMoves, buildDisbandCounts, disbandCount);
+            }
+
+            if (winterUnitMoves.Any(um => um.IsBuild))
+            {
+                // this does not enumerate winter moves that refrain from building.
+                // But I really don't care that much.  It's very rare to *not* build when one is available
+                GetWinterBoardMovesFullBuildsOnlyRecursive(board, workingBoardMove, winterUnitMoves.Where(um => um.IsBuild), buildBoardMoves, buildDisbandCounts, buildCount);
+            }
+
+            if(disbandBoardMoves.Any() && buildBoardMoves.Any())
+            {
+                foreach(BoardMove disbandBoardMove in disbandBoardMoves)
+                {
+                    foreach (BoardMove buildBoardMove in buildBoardMoves)
+                    {
+                        BoardMove combinedMove = buildBoardMove.Clone();
+                        combinedMove.AddRange(disbandBoardMove);
+                        completedBoardMoves.Add(combinedMove);
+                    }
+                }
+            }
+            else
+            {
+                foreach (BoardMove buildBoardMove in buildBoardMoves) completedBoardMoves.Add(buildBoardMove);
+                foreach (BoardMove disbandBoardMove in disbandBoardMoves) completedBoardMoves.Add(disbandBoardMove);
+            }
+
+            foreach (BoardMove boardMove in completedBoardMoves) boardMove.FillHolds(board);
             return completedBoardMoves;
         }
 
-        private static void GetWinterBoardMovesRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int minMoves, int maxMoves)
+        private static void GetWinterBoardMovesDisbandsOnlyRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int minMoves)
         {
-            if (workingBoardMove.Count(um => um.IsDisband) >= minMoves)
+            if (workingBoardMove.Count == minMoves)
             {
                 completedBoardMoves.Add(workingBoardMove.Clone());
-                if (workingBoardMove.Count == maxMoves)
-                    return;
+                return;
             }
 
-            if (availableMoves.Count() == 0) return;
-
-            UnitMove move = availableMoves.First();
-            if (workingBoardMove.CurrentlyAllowsWinter(move, buildDisbandCounts[move.Unit.Power]))
+            var moveGrouping = availableMoves.ToLookup(um => um.Unit.Power);
+            Powers power = availableMoves.First().Unit.Power;
+            IEnumerable<UnitMove> remainingMoves = availableMoves.Where(um => um.Unit.Power != power);
+            foreach (UnitMove unitMove in moveGrouping[power])
             {
-                workingBoardMove.Add(move);
-                GetWinterBoardMovesRecursive(originalBoard, workingBoardMove, availableMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
-                workingBoardMove.Remove(move);
+                BoardMove newBoardMove = workingBoardMove.Clone();
+                newBoardMove.Add(unitMove);
+                GetWinterBoardMovesFullBuildsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, minMoves);
             }
-            GetWinterBoardMovesRecursive(originalBoard, workingBoardMove, availableMoves.Skip(1), completedBoardMoves, buildDisbandCounts, minMoves, maxMoves);
+        }
+
+        private static void GetWinterBoardMovesFullBuildsOnlyRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int maxMoves)
+        {
+            if (workingBoardMove.Count == maxMoves)
+            {
+                completedBoardMoves.Add(workingBoardMove.Clone());
+                return;
+            }
+
+            var moveGrouping = availableMoves.ToLookup(um => um.Edge.Target.Territory);
+            Territory groupTerritory = availableMoves.First().Edge.Target.Territory;
+            IEnumerable<UnitMove> remainingMoves = availableMoves.Where(um => um.Edge.Target.Territory != groupTerritory);
+            foreach (UnitMove unitMove in moveGrouping[groupTerritory])
+            {
+                BoardMove newBoardMove = workingBoardMove.Clone();
+                newBoardMove.Add(unitMove);
+                GetWinterBoardMovesFullBuildsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, maxMoves);
+            }
         }
 
         public static IEnumerable<Board> GetFallSpringMoves(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator)
         {
             HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
-            List<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board).ToList();
+            if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
+            List<UnitMove> allUnitMoves = board.GetUnitMoves();
             foreach (var kvp in board.OccupiedMapNodes)
             {
                 BoardMove workingBoardMove = new BoardMove();
@@ -111,7 +165,8 @@ namespace DiplomacyLib
 
         public static IEnumerable<BoardMove> GetBoardMovesFallSpring(Board board, IEnumerable<MapNode> mapNodeSources)
         {
-            IEnumerable<UnitMove> allUnitMoves = GetFallSpringUnitMoves(board);
+            if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
+            List<UnitMove> allUnitMoves = board.GetUnitMoves();
             ILookup<MapNode, UnitMove> sourceNodeGroups = allUnitMoves.Where(um => mapNodeSources.Contains(um.Edge.Source)).ToLookup(um => um.Edge.Source);
 
             List<BoardMove> completedBoardMoves = new List<BoardMove>();
@@ -203,6 +258,7 @@ namespace DiplomacyLib
             return allMoves;
         }
 
+        // TODO avoid generating convoy moves where source == target
         private static IEnumerable<UnitMove> GetConvoyMoves(Board board)
         {
             List<UnitMove> convoyMoves = new List<UnitMove>();
