@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.Analysis;
 using DiplomacyLib.Models;
 using QuickGraph;
 using System;
@@ -62,8 +63,14 @@ namespace GameExplorer
 
         private void UpdateDetailsTextBlock(Board board)
         {
-            DetailsTextBlock.Text = $"{board.Season} {board.Year}\n";
-            DetailsTextBlock.Text += $"{board.GetHashCode()}";
+            BasicScorer basicScorer = new BasicScorer();
+            PowersDictionary<double> scores = basicScorer.GetScore(board);
+
+            DetailsTextBlock.Text = $"{board.Season} {board.Year}\t({board.GetHashCode()})\n";
+            foreach(var kvp in scores)
+            {
+                DetailsTextBlock.Text += $"{kvp.Key}\t\t: {kvp.Value:.###}\n";
+            }
         }
 
         private void BoardsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -19,6 +19,16 @@ namespace DiplomacyLib.Models
         public IEnumerable<Territory> HoldTerritories => Holds.Select(u => u.Edge.Target.Territory);
         public IEnumerable<MapNode> MissingSources(Board board) => board.OccupiedMapNodes.Keys.Except(Sources);
 
+        public List<UnitMove> GetAvailableFallSpringMovesForMapNode(Board board, MapNode source)
+        {
+            List<UnitMove> returnList = new List<UnitMove>();
+            foreach(UnitMove move in board.GetUnitMoves().Where(um => um.Edge.Source == source))
+            {
+                if (CurrentlyAllowsFallSpring(move)) returnList.Add(move);
+            }
+            return returnList;
+        }
+
         public void FillHolds(Board board)
         {
             foreach(MapNode mapNode in MissingSources(board))

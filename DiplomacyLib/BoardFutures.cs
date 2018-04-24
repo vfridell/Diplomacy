@@ -77,18 +77,22 @@ namespace DiplomacyLib
 
             var moveGrouping = availableMoves.ToLookup(um => um.Unit.Power);
             Powers power = availableMoves.First().Unit.Power;
-            IEnumerable<UnitMove> remainingMoves = availableMoves.Where(um => um.Unit.Power != power);
+            IEnumerable<UnitMove> remainingMoves;
             foreach (UnitMove unitMove in moveGrouping[power])
             {
+                if (workingBoardMove.Count(um => um.Unit.Power == power) == Math.Abs(buildDisbandCounts[power]))
+                    remainingMoves = availableMoves.Where(um => um.Unit.Power != power);
+                else
+                    remainingMoves = availableMoves.Where(um => um != unitMove);
                 BoardMove newBoardMove = workingBoardMove.Clone();
                 newBoardMove.Add(unitMove);
-                GetWinterBoardMovesFullBuildsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, minMoves);
+                GetWinterBoardMovesDisbandsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, minMoves);
             }
         }
 
         private static void GetWinterBoardMovesFullBuildsOnlyRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int maxMoves)
         {
-            if (workingBoardMove.Count == maxMoves)
+            if (!availableMoves.Any() || workingBoardMove.Count == maxMoves)
             {
                 completedBoardMoves.Add(workingBoardMove.Clone());
                 return;
@@ -96,9 +100,13 @@ namespace DiplomacyLib
 
             var moveGrouping = availableMoves.ToLookup(um => um.Edge.Target.Territory);
             Territory groupTerritory = availableMoves.First().Edge.Target.Territory;
-            IEnumerable<UnitMove> remainingMoves = availableMoves.Where(um => um.Edge.Target.Territory != groupTerritory);
+            IEnumerable<UnitMove> remainingMoves;
             foreach (UnitMove unitMove in moveGrouping[groupTerritory])
             {
+                if (workingBoardMove.Count(um => um.Unit.Power == unitMove.Unit.Power) == buildDisbandCounts[unitMove.Unit.Power])
+                    remainingMoves = availableMoves.Where(um => um.Unit.Power != unitMove.Unit.Power);
+                else
+                    remainingMoves = availableMoves.Where(um => um.Edge.Target.Territory != unitMove.Edge.Target.Territory);
                 BoardMove newBoardMove = workingBoardMove.Clone();
                 newBoardMove.Add(unitMove);
                 GetWinterBoardMovesFullBuildsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, maxMoves);
@@ -113,16 +121,15 @@ namespace DiplomacyLib
             foreach (var kvp in board.OccupiedMapNodes)
             {
                 BoardMove workingBoardMove = new BoardMove();
-                List<MapNode> path = unitTargetCalculator.GetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove);
-                MapNode moveTarget = path.Count > 1 ? path[1] : path[0];
-                UnitMove currentMove = allUnitMoves.FirstOrDefault(um => um.Edge.Source == kvp.Key && um.Edge.Target == moveTarget);
-                if (currentMove != null)
+                List<MapNode> path;
+                UnitMove currentMove;
+                if(unitTargetCalculator.TryGetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
                 {
                     workingBoardMove.Add(currentMove);
                 }
                 else
                 {
-                    throw new Exception("Will this ever happen?");
+                    throw new Exception("Failed to add the very first move? Really!?");
                 }
                 GetFallSpringMovesRemaining(board, allUnitMoves, allianceScenario, unitTargetCalculator, workingBoardMove, completedBoardMoves);
             }
@@ -134,16 +141,16 @@ namespace DiplomacyLib
         {
             foreach (var kvp in board.OccupiedMapNodes.Where(kvp2 => !workingBoardMove.Sources.Contains(kvp2.Key)))
             {
-                List<MapNode> path = unitTargetCalculator.GetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove);
-                MapNode moveTarget = path.Count > 1 ? path[1] : path[0];
-                UnitMove currentMove = allUnitMoves.FirstOrDefault(um => um.Edge.Source == kvp.Key && um.Edge.Target == moveTarget);
-                if (currentMove != null)
-                {
+                List<MapNode> path;
+                UnitMove currentMove;
+                if(unitTargetCalculator.TryGetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
+                { 
                     workingBoardMove.Add(currentMove);
                 }
                 else
                 {
-                    throw new Exception("Will this ever happen?");
+                    // uh oh, contradiction
+                    return;
                 }
             }
             completedBoardMoves.Add(workingBoardMove.Clone());

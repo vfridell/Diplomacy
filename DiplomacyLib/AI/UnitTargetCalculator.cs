@@ -17,14 +17,26 @@ namespace DiplomacyLib.AI
 
         public UnitTargetCalculator() { }
 
-        public List<MapNode> GetUnitTargetPath(Board board, MapNode source, AllianceScenario allianceScenario)
+        public bool TryGetUnitTargetPath(Board board, MapNode source, AllianceScenario allianceScenario, out List<MapNode> path, out UnitMove move)
         {
-            return GetUnitTargetPathBoardMoveConsistant(board, source, allianceScenario, null);
+            return TryGetUnitTargetPathBoardMoveConsistant(board, source, allianceScenario, null, out path, out move);
         }
 
-        public List<MapNode> GetUnitTargetPathBoardMoveConsistant(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove)
+        public bool TryGetUnitTargetPathBoardMoveConsistant(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove, out List<MapNode> path, out UnitMove move)
         {
             if (!board.OccupiedMapNodes.ContainsKey(source)) throw new Exception($"No unit occupies {source} in the given board");
+
+            var movesAvailableForSource = boardMove.GetAvailableFallSpringMovesForMapNode(board, source);
+            if (movesAvailableForSource.Count == 0)
+            {
+                // couldn't find anything.
+                // this is caused by picking moves that lead to a contradiction.  
+                // Force the caller to deal, perhaps with a hold on all affected...
+                path = null;
+                move = null;
+                return false;
+            }
+
             Unit unit = board.OccupiedMapNodes[source];
             Coalition myCoalition = allianceScenario.GetPossibleCoalitions()[unit.Power];
 
@@ -32,31 +44,28 @@ namespace DiplomacyLib.AI
                                                                      .OrderBy(kvp2 => kvp2.Value).ToList();
 
 
-            List<MapNode> path = GetPath(board, source, boardMove, orderedDistances, (mn) => 
+            List<Func<MapNode, bool>> predicateList = new List<Func<MapNode, bool>>()
             {
-                return mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition);
-            });
-            if (path != null) return path;
+                (mn) => { return mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition); },
+                (mn) => { return mn.Territory != source.Territory; },
+                (mn) => { return mn.Territory == source.Territory; },
+            };
 
-            path = GetPath(board, source, boardMove, orderedDistances, (mn) => 
+            foreach (var predicate in predicateList)
             {
-                return mn.Territory != source.Territory; 
-            });
-            if (path != null) return path;
-            path = GetPath(board, source, boardMove, orderedDistances, (mn) =>
-            {
-                return mn.Territory == source.Territory;
-            });
-            if (path != null) return path;
+                path = GetPath(board, source, boardMove, orderedDistances, predicate);
+                if (path != null)
+                {
+                    MapNode moveTarget = path[1];
+                    move = board.GetUnitMoves().FirstOrDefault(um => um.Edge.Source == source && um.Edge.Target == moveTarget);
+                    return true;
+                }
+            }
 
-            var allMoves = board.GetUnitMoves();
-            UnitMove lastResort = allMoves.FirstOrDefault(um => um.Edge.Source == source && boardMove.CurrentlyAllowsFallSpring(um));
-            if (lastResort != null) return new List<MapNode>() { lastResort.Edge.Target };
-
-
-            // couldn't find anything
-            // FIXME this is caused by picking moves that lead to a contradiction.  Convert to a TryGet... and force the caller to deal?  Perhaps with a hold on all affected?
-            throw new Exception("couldn't find anything");
+            UnitMove lastResort = movesAvailableForSource.First();
+            path = new List<MapNode>() { lastResort.Edge.Target };
+            move = lastResort;
+            return true;
         }
 
         private List<MapNode> GetPath(Board board, MapNode source, BoardMove boardMove, List<KeyValuePair<MapNode, double>> orderedDistances, Func<MapNode, bool> predicate)
