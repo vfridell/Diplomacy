@@ -98,6 +98,24 @@ namespace DiplomacyLib
                 return;
             }
 
+            foreach (Powers currentPower in buildDisbandCounts.Where(kvp => kvp.Value > 0).Select(kvp => kvp.Key))
+            {
+                int buildMovesForPower = Math.Min(buildDisbandCounts[currentPower], availableMoves.Count(um => um.Unit.Power == currentPower));
+                if (buildDisbandCounts[currentPower] >= buildMovesForPower)
+                {
+                    workingBoardMove.AddRange(availableMoves.Where(um => um.Unit.Power == currentPower));
+
+                }
+                else // buildDisbandCounts[currentPower] < buildMovesForPower
+                {
+
+                }
+            }
+            
+
+                //workingBoardMove.GroupBy(um => um.Unit.Power)
+                //                                      .Where(g => g.Count() < buildDisbandCounts[g.Key])
+                //                                      .Select(g => g.Key).ToList();
             var moveGrouping = availableMoves.ToLookup(um => um.Edge.Target.Territory);
             Territory groupTerritory = availableMoves.First().Edge.Target.Territory;
             IEnumerable<UnitMove> remainingMoves;
