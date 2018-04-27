@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Analysis;
 using DiplomacyLib.Models;
 using QuickGraph;
@@ -33,7 +34,7 @@ namespace GameExplorer
         Board initialBoard;
         List<Board> allFutureBoards;
         AllianceScenario allianceScenario = new AllianceScenario();
-        UnitTargetCalculator unitTargetCalculator = new UnitTargetCalculator();
+        SupplyCenterTargeter unitTargetCalculator = new SupplyCenterTargeter();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

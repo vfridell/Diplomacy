@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Analysis;
 using DiplomacyLib.Analysis.Features;
 using QuickGraph;
@@ -50,7 +51,7 @@ namespace DiplomacyLib.Models
 
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
-        public List<Board> GetFutures(AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator)
+        public List<Board> GetFutures(AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
         {
             if (_futureBoardsDirty)
             {

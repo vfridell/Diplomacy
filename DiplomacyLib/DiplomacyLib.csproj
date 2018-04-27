@@ -55,7 +55,8 @@
   <ItemGroup>
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="AI\OccupiedMapNodeGroups.cs" />
-    <Compile Include="AI\UnitTargetCalculator.cs" />
+    <Compile Include="AI\Targeting\Targeter.cs" />
+    <Compile Include="AI\Targeting\SupplyCenterTargeter.cs" />
     <Compile Include="Analysis\BasicScorer.cs" />
     <Compile Include="Analysis\FeatureMeasurement.cs" />
     <Compile Include="Analysis\FeatureMeasurementCollection.cs" />

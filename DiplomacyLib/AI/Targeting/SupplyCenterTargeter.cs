@@ -9,20 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiplomacyLib.AI
+namespace DiplomacyLib.AI.Targeting
 {
-    public class UnitTargetCalculator
+    public class SupplyCenterTargeter : ITargeter
     {
         private UndirectedVertexPredecessorRecorderObserver<MapNode, UndirectedEdge<MapNode>> _predecessorObserver = new UndirectedVertexPredecessorRecorderObserver<MapNode, UndirectedEdge<MapNode>>();
 
-        public UnitTargetCalculator() { }
+        public SupplyCenterTargeter() { }
 
-        public bool TryGetUnitTargetPath(Board board, MapNode source, AllianceScenario allianceScenario, out List<MapNode> path, out UnitMove move)
+        public bool TryGetTarget(Board board, MapNode source, AllianceScenario allianceScenario, out List<MapNode> path, out UnitMove move)
         {
-            return TryGetUnitTargetPathBoardMoveConsistant(board, source, allianceScenario, null, out path, out move);
+            return TryGetTargetValidateWithBoardMove(board, source, allianceScenario, null, out path, out move);
         }
 
-        public bool TryGetUnitTargetPathBoardMoveConsistant(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove, out List<MapNode> path, out UnitMove move)
+        public bool TryGetTargetValidateWithBoardMove(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove, out List<MapNode> path, out UnitMove move)
         {
             if (!board.OccupiedMapNodes.ContainsKey(source)) throw new Exception($"No unit occupies {source} in the given board");
 
@@ -43,7 +43,17 @@ namespace DiplomacyLib.AI
             List<KeyValuePair<MapNode, double>> orderedDistances = GetWeightedMapNodeDistances(board, source, allianceScenario)
                                                                      .OrderBy(kvp2 => kvp2.Value).ToList();
 
-
+            // are we sitting on a supplycenter that we want?  If so, hold
+            if (source.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(source.Territory, myCoalition))
+            {
+                UnitMove holdMove = new UnitMove(unit, source);
+                if (boardMove == null || boardMove.CurrentlyAllowsFallSpring(holdMove))
+                {
+                    path = new List<MapNode>() { source };
+                    move = holdMove;
+                    return true;
+                }
+            }
             List<Func<MapNode, bool>> predicateList = new List<Func<MapNode, bool>>()
             {
                 (mn) => { return mn.Territory.IsSupplyCenter && !board.SupplyCenterIsOwnedBy(mn.Territory, myCoalition); },
@@ -91,6 +101,8 @@ namespace DiplomacyLib.AI
             // couldn't find anything
             return null;
         }
+
+
 
         private Dictionary<MapNode,double> GetWeightedMapNodeDistances(Board board, MapNode source, AllianceScenario allianceScenario)
         {

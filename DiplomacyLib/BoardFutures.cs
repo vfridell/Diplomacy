@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Models;
 using QuickGraph;
 using QuickGraph.Algorithms.RankedShortestPath;
@@ -122,7 +123,7 @@ namespace DiplomacyLib
             }
         }
 
-        public static IEnumerable<Board> GetFallSpringMoves(Board board, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator)
+        public static IEnumerable<Board> GetFallSpringMoves(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
         {
             HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
             if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
@@ -132,7 +133,7 @@ namespace DiplomacyLib
                 BoardMove workingBoardMove = new BoardMove();
                 List<MapNode> path;
                 UnitMove currentMove;
-                if(unitTargetCalculator.TryGetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
+                if(unitTargetCalculator.TryGetTargetValidateWithBoardMove(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
                 {
                     workingBoardMove.Add(currentMove);
                 }
@@ -146,13 +147,13 @@ namespace DiplomacyLib
             return ApplyAllBoardMoves(board, completedBoardMoves);
         }
 
-        private static void GetFallSpringMovesRemaining(Board board, List<UnitMove> allUnitMoves, AllianceScenario allianceScenario, UnitTargetCalculator unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
+        private static void GetFallSpringMovesRemaining(Board board, List<UnitMove> allUnitMoves, AllianceScenario allianceScenario, ITargeter unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
         {
             foreach (var kvp in board.OccupiedMapNodes.Where(kvp2 => !workingBoardMove.Sources.Contains(kvp2.Key)))
             {
                 List<MapNode> path;
                 UnitMove currentMove;
-                if(unitTargetCalculator.TryGetUnitTargetPathBoardMoveConsistant(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
+                if(unitTargetCalculator.TryGetTargetValidateWithBoardMove(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
                 { 
                     workingBoardMove.Add(currentMove);
                 }
