@@ -36,7 +36,7 @@ namespace DiplomacyTests
         {
             Board board = Board.GetInitialBoard();
             IEnumerable<BoardMove> futureMoves = BoardFutures.GetBoardMovesFallSpring(board, board.OccupiedMapNodes.Where(kvp => kvp.Value.Power == Powers.Germany).Select(kvp => kvp.Key));
-            Assert.AreEqual(194, futureMoves.Count());
+            Assert.AreEqual(183, futureMoves.Count());
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
             List<Powers> powersList = new List<Powers>() { Powers.Germany, Powers.Austria };
             IEnumerable<BoardMove> futureMoves = BoardFutures.GetBoardMovesFallSpring(board, board.OccupiedMapNodes.Where(kvp => powersList.Contains(kvp.Value.Power)).Select(kvp => kvp.Key));
-            Assert.AreEqual(21604, futureMoves.Count());
+            Assert.AreEqual(19620, futureMoves.Count());
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace DiplomacyTests
             Board board = Board.GetInitialBoard();
             List<Powers> powersList = new List<Powers>() { Powers.Germany, Powers.England, Powers.Austria };
             IEnumerable<BoardMove> futureMoves = BoardFutures.GetBoardMovesFallSpring(board, board.OccupiedMapNodes.Where(kvp => powersList.Contains(kvp.Value.Power)).Select(kvp => kvp.Key));
-            Assert.AreEqual(1987568, futureMoves.Count());
+            Assert.AreEqual(1805040, futureMoves.Count());
         }
 
         [TestMethod]
