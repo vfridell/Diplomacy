@@ -71,6 +71,7 @@
     <Compile Include="Analysis\Score.cs" />
     <Compile Include="Analysis\Scorer.cs" />
     <Compile Include="Coalitions.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MapAdjacencyStrings.cs" />
     <Compile Include="Maps.cs" />
     <Compile Include="MapNodes.cs" />

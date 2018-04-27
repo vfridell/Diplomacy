@@ -21,12 +21,12 @@ namespace DiplomacyLib
         public static IEnumerable<BoardMove> GetBoardMovesWinter(Board board)
         {
             if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
-            IEnumerable<UnitMove> winterUnitMoves = board.GetUnitMoves();
+            List<UnitMove> winterUnitMoves = board.GetUnitMoves();
             if (!winterUnitMoves.Any()) return Enumerable.Empty<BoardMove>();
 
-            HashSet<BoardMove> disbandBoardMoves = new HashSet<BoardMove>();
-            HashSet<BoardMove> buildBoardMoves = new HashSet<BoardMove>();
-            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
+            var disbandBoardMoves = new HashSet<BoardMove>();
+            var buildBoardMoves = new List<BoardMove>();
+            var completedBoardMoves = new List<BoardMove>();
             PowersDictionary<int> buildDisbandCounts = board.GetSupplyCenterToUnitDifferences();
             int disbandCount = buildDisbandCounts.Where(kvp => kvp.Value < 0).Sum(kvp => Math.Abs(kvp.Value));
             int buildCount = buildDisbandCounts.Where(kvp => kvp.Value > 0).Sum(kvp => kvp.Value);
@@ -42,7 +42,7 @@ namespace DiplomacyLib
             {
                 // this does not enumerate winter moves that refrain from building.
                 // But I really don't care that much.  It's very rare to *not* build when one is available
-                GetWinterBoardMovesFullBuildsOnlyRecursive(board, workingBoardMove, winterUnitMoves.Where(um => um.IsBuild), buildBoardMoves, buildDisbandCounts, buildCount);
+                GetWinterBoardMovesFullBuildsOnly(winterUnitMoves.Where(um => um.IsBuild), buildBoardMoves, buildDisbandCounts);
             }
 
             if(disbandBoardMoves.Any() && buildBoardMoves.Any())
@@ -90,44 +90,35 @@ namespace DiplomacyLib
             }
         }
 
-        private static void GetWinterBoardMovesFullBuildsOnlyRecursive(Board originalBoard, BoardMove workingBoardMove, IEnumerable<UnitMove> availableMoves, HashSet<BoardMove> completedBoardMoves, PowersDictionary<int> buildDisbandCounts, int maxMoves)
+        private static void GetWinterBoardMovesFullBuildsOnly(IEnumerable<UnitMove> availableMoves, List<BoardMove> buildBoardMoves, PowersDictionary<int> buildDisbandCounts)
         {
-            if (!availableMoves.Any() || workingBoardMove.Count == maxMoves)
-            {
-                completedBoardMoves.Add(workingBoardMove.Clone());
-                return;
-            }
-
+            var allPowersMoveCombos = new List<List<UnitMove>>();
+            int powerCount = 0;
             foreach (Powers currentPower in buildDisbandCounts.Where(kvp => kvp.Value > 0).Select(kvp => kvp.Key))
             {
-                int buildMovesForPower = Math.Min(buildDisbandCounts[currentPower], availableMoves.Count(um => um.Unit.Power == currentPower));
-                if (buildDisbandCounts[currentPower] >= buildMovesForPower)
-                {
-                    workingBoardMove.AddRange(availableMoves.Where(um => um.Unit.Power == currentPower));
+                powerCount++;
+                int buildMovesForPower = buildDisbandCounts[currentPower];
+                int territoryBuildCount = availableMoves.Where(um => um.Unit.Power == currentPower).GroupBy(um => um.Edge.Target.Territory).Count();
+                int buildCount = Math.Min(buildMovesForPower, territoryBuildCount);
 
-                }
-                else // buildDisbandCounts[currentPower] < buildMovesForPower
-                {
-
-                }
+                List<List<UnitMove>> singlePowerMoveCombos;
+                Helpers.GetAllCombinations(availableMoves.Where(um => um.Unit.Power == currentPower).ToList(), buildCount, out singlePowerMoveCombos);
+                singlePowerMoveCombos.RemoveAll(ul => ul.GroupBy(um => um.Edge.Target.Territory).Count() != buildCount);
+                allPowersMoveCombos.AddRange(singlePowerMoveCombos);
             }
-            
-
-                //workingBoardMove.GroupBy(um => um.Unit.Power)
-                //                                      .Where(g => g.Count() < buildDisbandCounts[g.Key])
-                //                                      .Select(g => g.Key).ToList();
-            var moveGrouping = availableMoves.ToLookup(um => um.Edge.Target.Territory);
-            Territory groupTerritory = availableMoves.First().Edge.Target.Territory;
-            IEnumerable<UnitMove> remainingMoves;
-            foreach (UnitMove unitMove in moveGrouping[groupTerritory])
+            var boardMoveLists = new List<List<List<UnitMove>>>();
+            Helpers.GetAllCombinations(allPowersMoveCombos, powerCount, out boardMoveLists);
+            boardMoveLists.RemoveAll(ll => ll.GroupBy(l2 => l2.First().Unit.Power).Count() < powerCount);
+            foreach(List<List<UnitMove>> ll in boardMoveLists)
             {
-                if (workingBoardMove.Count(um => um.Unit.Power == unitMove.Unit.Power) == buildDisbandCounts[unitMove.Unit.Power])
-                    remainingMoves = availableMoves.Where(um => um.Unit.Power != unitMove.Unit.Power);
-                else
-                    remainingMoves = availableMoves.Where(um => um.Edge.Target.Territory != unitMove.Edge.Target.Territory);
-                BoardMove newBoardMove = workingBoardMove.Clone();
-                newBoardMove.Add(unitMove);
-                GetWinterBoardMovesFullBuildsOnlyRecursive(originalBoard, newBoardMove, remainingMoves, completedBoardMoves, buildDisbandCounts, maxMoves);
+                BoardMove workingBoardMove = new BoardMove();
+                foreach (UnitMove move in ll.SelectMany(l => l))
+                {
+                    if (!workingBoardMove.CurrentlyAllowsWinter(move, buildDisbandCounts[move.Unit.Power]))
+                        throw new Exception($"Bad combination when building winter board move: {move}.  {move.Unit.Power} allowed {buildDisbandCounts[move.Unit.Power]}");
+                    workingBoardMove.Add(move);
+                }
+                buildBoardMoves.Add(workingBoardMove);
             }
         }
 
