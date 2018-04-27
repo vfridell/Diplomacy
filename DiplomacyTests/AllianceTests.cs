@@ -27,20 +27,22 @@ namespace DiplomacyTests
             var score = new Score<BasicScorer>();
 
             Board board = Board.GetInitialBoard();
-            OccupiedMapNodeGroups groups = OccupiedMapNodeGroups.Get(board);
+            int groupSize = 6;
+            OccupiedMapNodeGroups groups = OccupiedMapNodeGroups.Get(board, groupSize);
             List<BoardMove> futureMoves = new List<BoardMove>();
             foreach (var group in groups)
             {
                  futureMoves.AddRange(BoardFutures.GetBoardMovesFallSpring(board, group));
             }
+            Assert.AreEqual(board.OccupiedMapNodes.Count, groups.Count);
+            Assert.IsTrue(groups.All(g => g.Count == groupSize));
 
             // this does not work because I'm back to combinatorial explosion of boards
-            List<BoardMove> combinedMoves = BoardMove.CombineFallSpringPartialMoveLists(futureMoves);
-
-            foreach(BoardMove boardMove in combinedMoves)
-            {
-                score.Calculate(board, boardMove);
-            }
+            //List<BoardMove> combinedMoves = BoardMove.CombineFallSpringPartialMoveLists(futureMoves);
+            //foreach(BoardMove boardMove in combinedMoves)
+            //{
+            //    score.Calculate(board, boardMove);
+            //}
         }
 
         [TestMethod]

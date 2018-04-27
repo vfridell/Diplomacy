@@ -255,6 +255,18 @@ namespace DiplomacyTests
         }
 
         [TestMethod]
+        public void NoTerritorySwappingAllowed()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            UnitMove move1 = board.GetMove("tri", "ven");
+            UnitMove move2 = board.GetMove("ven", "tri");
+            Assert.IsTrue(moves.CurrentlyAllowsFallSpring(move1));
+            moves.Add(move1);
+            Assert.IsFalse(moves.CurrentlyAllowsFallSpring(move2));
+        }
+
+        [TestMethod]
         public void BuildUnitMovesArmyNoNcSc()
         {
             Board board = Board.GetInitialBoard();

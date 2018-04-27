@@ -22,9 +22,10 @@ namespace DiplomacyTests
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             Assert.AreEqual(8, measurements.Count);
-            Assert.AreEqual(4, measurements.Where(m => m.Power == Powers.Russia).Single().Value);
-            Assert.AreEqual(18, measurements.Where(m => m.Power != Powers.Russia && m.Power != Powers.None).Sum(m => m.Value));
-            Assert.AreEqual(13, measurements.Where(m => m.Power == Powers.None).Single().Value);
+            // terrible
+            Assert.AreEqual(1, Math.Round(measurements.Sum(v => v.Value)));
+            Assert.AreEqual(18d/34d, measurements.Where(m => m.Power != Powers.Russia && m.Power != Powers.None).Sum(m => m.Value));
+            Assert.AreEqual(13d/34d, measurements.Where(m => m.Power == Powers.None).Single().Value);
         }
 
         [TestMethod]
@@ -37,8 +38,9 @@ namespace DiplomacyTests
             FeatureMeasurementCollection measurements = toolCollection.GetMeasurements(board);
 
             Assert.AreEqual(7, measurements.Count);
-            Assert.AreEqual(4, measurements.Where(m => m.Power == Powers.Russia).Single().Value);
-            Assert.AreEqual(18, measurements.Where(m => m.Power != Powers.Russia).Sum(m => m.Value));
+            // terrible
+            Assert.AreEqual(4d/22d, measurements.Where(m => m.Power == Powers.Russia).Single().Value);
+            Assert.AreEqual(Math.Round(18d/22d, 5), Math.Round(measurements.Where(m => m.Power != Powers.Russia).Sum(m => m.Value), 5));
         }
 
         [TestMethod]

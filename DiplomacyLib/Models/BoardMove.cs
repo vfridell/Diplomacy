@@ -75,7 +75,7 @@ namespace DiplomacyLib.Models
             return true;
         }
 
-        internal bool CurrentlyAllowsFallSpring(UnitMove move)
+        public bool CurrentlyAllowsFallSpring(UnitMove move)
         {
             // does not check pre-conditions like "is the proper unit in the edge.source"
             // we rely on the UnitMove generator to check these and only generate valid possible moves
@@ -106,11 +106,12 @@ namespace DiplomacyLib.Models
             else
             {
                 bool targetTerritoryEmpty = !TargetTerritories.Contains(move.Edge.Target.Territory);
-                return targetTerritoryEmpty;
+                bool noSwap = !this.Any(um => um.Edge.Source.Territory == move.Edge.Target.Territory && um.Edge.Target.Territory == move.Edge.Source.Territory);
+                return targetTerritoryEmpty && noSwap;
             }
         }
 
-        internal bool CurrentlyAllowsWinter(UnitMove move, int delta)
+        public bool CurrentlyAllowsWinter(UnitMove move, int delta)
         {
             if(move.IsBuild)
             {
@@ -126,7 +127,7 @@ namespace DiplomacyLib.Models
             }
             else
             {
-                throw new Exception("Invalid move.  Can only build or disband in Winter");
+                return false;
             }
         }
 

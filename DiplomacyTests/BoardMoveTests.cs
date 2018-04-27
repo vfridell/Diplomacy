@@ -163,5 +163,44 @@ namespace DiplomacyTests
             //this is the total for when empty builds are included
             //Assert.AreEqual(1944, boardMoves.Count());
         }
+
+
+        [TestMethod]
+        public void GenerateWinterMovesAustriaOut1902()
+        {
+            Board board = Board.GetInitialBoard();
+            BoardMove moves = new BoardMove();
+            moves.Add(board.GetMove("mun", "boh"));
+            moves.Add(board.GetMove("ven", "tri"));
+            moves.Add(board.GetMove("vie", "tyr"));
+            moves.Add(board.GetMove("bud", "gal"));
+            moves.Add(board.GetMove("tri", "alb"));
+            moves.Add(board.GetMove("rom", "ven"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+
+            moves.Clear();
+            moves.Add(board.GetMove("ven", "tri"));
+            moves.Add(board.GetMove("tri", "bud"));
+            moves.Add(board.GetMove("boh", "vie"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves);
+            board.EndTurn();
+
+            Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Germany].Count);
+            Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Russia].Count);
+            Assert.AreEqual(5, board.OwnedSupplyCenters[Powers.Italy].Count);
+            Assert.AreEqual(0, board.OwnedSupplyCenters[Powers.Austria].Count);
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.Turkey].Count);
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.England].Count);
+            Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.France].Count);
+
+            var boardMoves = BoardFutures.GetBoardMovesWinter(board);
+            Assert.IsTrue(boardMoves.All(bm => null != bm.FirstOrDefault(um => um.Edge.Target == MapNodes.Get("mun"))));
+            Assert.IsTrue(boardMoves.All(bm => bm.Where(um => um.Unit.Power == Powers.Austria).All(um => um.IsDisband)));
+            Assert.AreEqual(4, boardMoves.Count());
+        }
     }
 }

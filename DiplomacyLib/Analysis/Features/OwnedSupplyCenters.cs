@@ -11,8 +11,8 @@ namespace DiplomacyLib.Analysis.Features
     {
         internal override void MeasureBoard(Board board, FeatureMeasurementCollection result)
         {
-            double total = board.OwnedSupplyCenters.Count(kvp => kvp.Key != Powers.None);
-            foreach(var g in board.OwnedSupplyCenters.Where(kvp => kvp.Key != Powers.None))
+            double total = Maps.Full.Vertices.Count(mn => mn.Territory.IsSupplyCenter);
+            foreach(var g in board.OwnedSupplyCenters)
             {
                 result.Add(new FeatureMeasurement(nameof(OwnedSupplyCentersPercentage), g.Key, null, null, g.Value.Count() / total ));
             }

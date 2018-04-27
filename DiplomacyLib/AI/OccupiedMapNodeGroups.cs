@@ -12,7 +12,7 @@ namespace DiplomacyLib.AI
     {
         protected OccupiedMapNodeGroups() { }
 
-        public static OccupiedMapNodeGroups Get(Board board)
+        public static OccupiedMapNodeGroups Get(Board board, int groupSize = 6)
         {
             OccupiedMapNodeGroups groups = new OccupiedMapNodeGroups();
             foreach(var kvp in board.OccupiedMapNodes)
@@ -26,7 +26,7 @@ namespace DiplomacyLib.AI
                                                                          .OrderBy(kvp2 => kvp2.Value).ToList();
 
                 var group = new OccupiedMapNodeGroup();
-                group.AddRange(orderedDistances.Take(6).Select(kvp2 => kvp2.Key));
+                group.AddRange(orderedDistances.Take(groupSize).Select(kvp2 => kvp2.Key));
                 groups.Add(group);
             }
             return groups;
