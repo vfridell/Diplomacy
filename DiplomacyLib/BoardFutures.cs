@@ -13,13 +13,26 @@ namespace DiplomacyLib
 {
     public static class BoardFutures
     {
-        public static IEnumerable<Board> GetWinterBuildsAndDisbands(Board board)
+        public static IEnumerable<Board> GetWinterBuildsAndDisbands(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
         {
-            List<BoardMove> allBoardMoves = GetBoardMovesWinter(board).ToList();
+            List<BoardMove> allBoardMoves = GetAllBoardMovesWinter(board).ToList();
             return ApplyAllBoardMoves(board, allBoardMoves);
         }
 
-        public static IEnumerable<BoardMove> GetBoardMovesWinter(Board board)
+        private static IEnumerable<BoardMove> GetTargetedBoardMovesWinter(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
+        {
+            if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
+            List<UnitMove> winterUnitMoves = board.GetUnitMoves();
+            if (!winterUnitMoves.Any()) return Enumerable.Empty<BoardMove>();
+
+            foreach(UnitMove unitMove in winterUnitMoves)
+            {
+
+            }
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<BoardMove> GetAllBoardMovesWinter(Board board)
         {
             if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
             List<UnitMove> winterUnitMoves = board.GetUnitMoves();

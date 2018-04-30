@@ -55,6 +55,8 @@
   <ItemGroup>
     <Compile Include="AI\AllianceScenario.cs" />
     <Compile Include="AI\OccupiedMapNodeGroups.cs" />
+    <Compile Include="AI\Targeting\ProbabilisticBuildsTargeter.cs" />
+    <Compile Include="AI\Targeting\SeasonSpecificTargeter.cs" />
     <Compile Include="AI\Targeting\Targeter.cs" />
     <Compile Include="AI\Targeting\SupplyCenterTargeter.cs" />
     <Compile Include="Analysis\BasicScorer.cs" />

@@ -43,7 +43,7 @@ namespace DiplomacyLib.Models
         public override Season NextSeason => Seasons.Spring;
         public override int Ordinal => 3;
 
-        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator) => BoardFutures.GetWinterBuildsAndDisbands(board);
+        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator) => BoardFutures.GetWinterBuildsAndDisbands(board, allianceScenario, unitTargetCalculator);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
         public override string ToString() => "Winter";
     }

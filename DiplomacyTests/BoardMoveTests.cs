@@ -89,7 +89,7 @@ namespace DiplomacyTests
             Assert.AreEqual(2, board.OwnedSupplyCenters[Powers.Italy].Count);
             Assert.AreEqual(4, board.OwnedSupplyCenters[Powers.Austria].Count);
 
-            var boardMoves = BoardFutures.GetBoardMovesWinter(board);
+            var boardMoves = BoardFutures.GetAllBoardMovesWinter(board);
             Assert.IsTrue(boardMoves.All(bm => null != bm.FirstOrDefault(um => um.Edge.Target == MapNodes.Get("mun"))));
             Assert.AreEqual(144, boardMoves.Count());
             
@@ -152,7 +152,7 @@ namespace DiplomacyTests
             Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.England].Count);
             Assert.AreEqual(5, board.OwnedSupplyCenters[Powers.France].Count);
 
-            var boardMoves = BoardFutures.GetBoardMovesWinter(board);
+            var boardMoves = BoardFutures.GetAllBoardMovesWinter(board);
             Assert.IsTrue(boardMoves.All(bm => bm.Count(um => um.Unit.Power == Powers.Germany) == 6));
             Assert.IsTrue(boardMoves.All(bm => bm.Count(um => um.Unit.Power == Powers.Russia) == 6));
             Assert.IsTrue(boardMoves.All(bm => bm.Count(um => um.Unit.Power == Powers.Italy) == 4));
@@ -198,7 +198,7 @@ namespace DiplomacyTests
             Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.England].Count);
             Assert.AreEqual(3, board.OwnedSupplyCenters[Powers.France].Count);
 
-            var boardMoves = BoardFutures.GetBoardMovesWinter(board);
+            var boardMoves = BoardFutures.GetAllBoardMovesWinter(board);
             Assert.IsTrue(boardMoves.All(bm => null != bm.FirstOrDefault(um => um.Edge.Target == MapNodes.Get("mun"))));
             Assert.IsTrue(boardMoves.All(bm => bm.Where(um => um.Unit.Power == Powers.Austria).All(um => um.IsDisband)));
             Assert.AreEqual(4, boardMoves.Count());

@@ -13,6 +13,42 @@ namespace ConvoyMap
     {
         static void Main(string[] args)
         {
+
+            using (StreamWriter streamWriter = new StreamWriter(File.Open("DisbandTerritories.txt", FileMode.Create)))
+            {
+
+                streamWriter.WriteLine("\tprivate static List<Territory> _disbandOrder = new List<Territory>() {\n{");
+
+                foreach (var territory in Maps.Full.Vertices.OrderBy(v => v.SequenceNumber).Select(v => v.Territory).Distinct())
+                {
+                        streamWriter.Write($"Territories.Get(\"{ territory.ShortName}\"),\n");
+                }
+
+                streamWriter.WriteLine("};");
+            }
+
+
+            using (StreamWriter streamWriter = new StreamWriter(File.Open("BuildTerritories.txt", FileMode.Create)))
+            {
+
+                streamWriter.WriteLine("\tprivate static Dictionary<Territory, double> _armyBuildProbs = new Dictionary<Territory, double>() {\n{");
+
+                foreach (var territory in Territories.AsReadOnlyList.Where(t => t.IsSupplyCenter))
+                {
+                    if (territory.TerritoryType == TerritoryType.Inland)
+                    {
+                        streamWriter.Write($"{{ Territories.Get(\"{ territory.ShortName}\"), 1.0d }},\n");
+                    }
+                    else
+                    {
+                        streamWriter.Write($"{{ Territories.Get(\"{ territory.ShortName}\"), 0.5d }},\n");
+                    }
+                }
+
+                streamWriter.WriteLine("};");
+            }
+
+
             using (StreamWriter streamWriter = new StreamWriter(File.Open("ConvoyMap.txt", FileMode.Truncate)))
             {
 
