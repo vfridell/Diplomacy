@@ -225,7 +225,6 @@ namespace DiplomacyLib
             return allMoves;
         }
 
-        // TODO avoid generating convoy moves where source == target
         private static IEnumerable<UnitMove> GetConvoyMoves(Board board)
         {
             List<UnitMove> convoyMoves = new List<UnitMove>();
@@ -240,6 +239,7 @@ namespace DiplomacyLib
                 {
                     foreach (MapNode target in currentConvoyMap.Vertices.Where(mn => mn.Territory.TerritoryType == TerritoryType.Coast))
                     {
+                        if (source.ConvoyParent().Equals(target.ConvoyParent())) continue;
                         alg.SetRootVertex(source);
                         alg.SetGoalVertex(target);
                         alg.Compute();

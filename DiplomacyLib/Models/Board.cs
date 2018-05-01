@@ -26,6 +26,7 @@ namespace DiplomacyLib.Models
         public int Turn => ((Year - 1901) * 3) + Season.Ordinal;
 
         public Dictionary<MapNode, Unit> OccupiedMapNodes { get; protected set; }
+        public Dictionary<Territory, Unit> OccupiedTerritories { get; protected set; }
         public Dictionary<Powers, ISet<Territory>> OwnedSupplyCenters { get; protected set; }
 
         internal void GetMeasurements(FeatureTool tool, FeatureMeasurementCollection result)
@@ -34,21 +35,10 @@ namespace DiplomacyLib.Models
             tool.MeasureBoard(this, result);
         }
 
-        public bool IsOccupied(Territory t) => IsOccupied(t, OccupiedMapNodes);
-        public bool IsUnoccupied(Territory t) => !IsOccupied(t, OccupiedMapNodes);
+        public bool IsOccupied(Territory t) => OccupiedTerritories.ContainsKey(t);
+        public bool IsUnoccupied(Territory t) => !IsOccupied(t);
         public bool SupplyCenterIsOwnedBy(Territory t, Powers p) => t.IsSupplyCenter ? OwnedSupplyCenters[p].Contains(t) : false;
         public bool SupplyCenterIsOwnedBy(Territory t, Coalition c) => c.Members.Any(p => SupplyCenterIsOwnedBy(t, p));
-
-        protected bool IsOccupied(Territory t, Dictionary<MapNode, Unit> occupiedMapNodes)
-        {
-            int occupiedCount = 0;
-            foreach (var mapNode in MapNodes.GetMapNodes(t))
-            {
-                if (occupiedMapNodes.ContainsKey(mapNode)) occupiedCount++;
-            }
-            if (occupiedCount > 1) throw new Exception($"Multiple units cannot occupy multiple map nodes for a single territory: {t}");
-            return 1 == occupiedCount;
-        }
 
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
@@ -102,18 +92,20 @@ namespace DiplomacyLib.Models
             }
 
             OccupiedMapNodes.Clear();
+            OccupiedTerritories.Clear();
             foreach (UnitMove move in boardMove)
             {
                 if (move.IsDisband) continue;
-                if (validate && IsOccupied(move.Edge.Target.Territory, OccupiedMapNodes)) throw new Exception($"Territory {move.Edge.Target} has already been moved into during this BoardMove");
+                if (validate && IsOccupied(move.Edge.Target.Territory)) throw new Exception($"Territory {move.Edge.Target} has already been moved into during this BoardMove");
                 OccupiedMapNodes.Add(move.Edge.Target, move.Unit);
+                OccupiedTerritories.Add(move.Edge.Target.Territory, move.Unit);
             }
         }
 
         public Map GetCurrentConvoyMap()
         {
             Map convoy = Maps.ConvoyMap.Clone();
-            convoy.RemoveVertexIf(v => v.Territory.TerritoryType == TerritoryType.Sea && !OccupiedMapNodes.Keys.Select(mn => mn.Territory).Contains(v.Territory) );
+            convoy.RemoveVertexIf(v => v.Territory.TerritoryType == TerritoryType.Sea && IsUnoccupied(v.Territory) );
             return convoy;
         }
 
@@ -197,6 +189,7 @@ namespace DiplomacyLib.Models
         {
             Board clone = new Board();
             clone.OccupiedMapNodes = new Dictionary<MapNode, Unit>(OccupiedMapNodes);
+            clone.OccupiedTerritories = new Dictionary<Territory, Unit>(OccupiedTerritories);
             clone.OwnedSupplyCenters = new Dictionary<Powers, ISet<Territory>>();
             foreach(var kvp in OwnedSupplyCenters) clone.OwnedSupplyCenters[kvp.Key] = new HashSet<Territory>(kvp.Value);
 
@@ -254,8 +247,12 @@ namespace DiplomacyLib.Models
                 { Powers.None, new HashSet<Territory>() },
             };
 
-            foreach(var kvp in board.OccupiedMapNodes)
+            board.OccupiedTerritories = new Dictionary<Territory, Unit>();
+            foreach (var kvp in board.OccupiedMapNodes)
+            {
                 board.OwnedSupplyCenters[kvp.Value.Power].Add(kvp.Key.Territory);
+                board.OccupiedTerritories[kvp.Key.Territory] = kvp.Value;
+            }
 
             foreach (var mapNode in Maps.Full.Vertices)
             {
