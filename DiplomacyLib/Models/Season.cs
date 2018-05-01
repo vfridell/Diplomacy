@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Algorithms;
 using DiplomacyLib.AI.Targeting;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,13 @@ namespace DiplomacyLib.Models
         public abstract Season NextSeason { get; }
         public abstract int Ordinal { get; }
 
-        public abstract IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator);
+        public abstract IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, IFuturesAlgorithm futuresAlgorithm);
         public abstract IEnumerable<UnitMove> GetUnitMoves(Board board);
     }
 
     public abstract class FallSpring : Season
     {
-        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator) => BoardFutures.GetFallSpringMoves(board, allianceScenario, unitTargetCalculator);
+        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, IFuturesAlgorithm futuresAlgorithm) => futuresAlgorithm.GetFallSpringBoardFutures(board, allianceScenario);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetFallSpringUnitMoves(board);
     }
 
@@ -43,7 +44,7 @@ namespace DiplomacyLib.Models
         public override Season NextSeason => Seasons.Spring;
         public override int Ordinal => 3;
 
-        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator) => BoardFutures.GetWinterBuildsAndDisbands(board, allianceScenario, unitTargetCalculator);
+        public override IEnumerable<Board> GetFutures(Board board, AllianceScenario allianceScenario, IFuturesAlgorithm futuresAlgorithm) => futuresAlgorithm.GetWinterBoardFutures(board, allianceScenario);
         public override IEnumerable<UnitMove> GetUnitMoves(Board board) => BoardFutures.GetWinterUnitMoves(board);
         public override string ToString() => "Winter";
     }

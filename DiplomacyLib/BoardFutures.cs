@@ -13,25 +13,6 @@ namespace DiplomacyLib
 {
     public static class BoardFutures
     {
-        public static IEnumerable<Board> GetWinterBuildsAndDisbands(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
-        {
-            List<BoardMove> allBoardMoves = GetAllBoardMovesWinter(board).ToList();
-            return ApplyAllBoardMoves(board, allBoardMoves);
-        }
-
-        private static IEnumerable<BoardMove> GetTargetedBoardMovesWinter(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
-        {
-            if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
-            List<UnitMove> winterUnitMoves = board.GetUnitMoves();
-            if (!winterUnitMoves.Any()) return Enumerable.Empty<BoardMove>();
-
-            foreach(UnitMove unitMove in winterUnitMoves)
-            {
-
-            }
-            throw new NotImplementedException();
-        }
-
         public static IEnumerable<BoardMove> GetAllBoardMovesWinter(Board board)
         {
             if (!(board.Season is Winter)) throw new Exception($"Bad season {board.Season}");
@@ -134,50 +115,6 @@ namespace DiplomacyLib
                 }
                 buildBoardMoves.Add(workingBoardMove);
             }
-        }
-
-        public static IEnumerable<Board> GetFallSpringMoves(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
-        {
-            HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
-            if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
-            List<UnitMove> allUnitMoves = board.GetUnitMoves();
-            foreach (var kvp in board.OccupiedMapNodes)
-            {
-                BoardMove workingBoardMove = new BoardMove();
-                List<MapNode> path;
-                UnitMove currentMove;
-                if(unitTargetCalculator.TryGetTargetValidateWithBoardMove(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
-                {
-                    workingBoardMove.Add(currentMove);
-                }
-                else
-                {
-                    throw new Exception("Failed to add the very first move? Really!?");
-                }
-                GetFallSpringMovesRemaining(board, allUnitMoves, allianceScenario, unitTargetCalculator, workingBoardMove, completedBoardMoves);
-            }
-
-            return ApplyAllBoardMoves(board, completedBoardMoves);
-        }
-
-        private static void GetFallSpringMovesRemaining(Board board, List<UnitMove> allUnitMoves, AllianceScenario allianceScenario, ITargeter unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
-        {
-            foreach (var kvp in board.OccupiedMapNodes.Where(kvp2 => !workingBoardMove.Sources.Contains(kvp2.Key)))
-            {
-                List<MapNode> path;
-                UnitMove currentMove;
-                if(unitTargetCalculator.TryGetTargetValidateWithBoardMove(board, kvp.Key, allianceScenario, workingBoardMove, out path, out currentMove))
-                { 
-                    workingBoardMove.Add(currentMove);
-                }
-                else
-                {
-                    // uh oh, contradiction
-                    return;
-                }
-            }
-            completedBoardMoves.Add(workingBoardMove.Clone());
-            return;
         }
 
         public static IEnumerable<Board> ApplyAllBoardMoves(Board board, IEnumerable<BoardMove> boardMoves)

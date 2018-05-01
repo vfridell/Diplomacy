@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DiplomacyLib;
 using DiplomacyLib.AI;
+using DiplomacyLib.AI.Algorithms;
 using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,8 +20,8 @@ namespace DiplomacyTests
         {
             Board board = Board.GetInitialBoard();
             AllianceScenario allianceScenario = new AllianceScenario();
-            SupplyCenterTargeter unitTargetCalculator = new SupplyCenterTargeter();
-            IEnumerable<Board> allFutureBoards = board.GetFutures(allianceScenario, unitTargetCalculator);
+            ProbabilisticFuturesAlgorithm futuresAlgorithm = new ProbabilisticFuturesAlgorithm();
+            IEnumerable<Board> allFutureBoards = board.GetFutures(allianceScenario, futuresAlgorithm);
         }
 
         [TestMethod]

@@ -91,7 +91,7 @@ namespace DiplomacyLib
         {
             { "nao", new List<string>() {"nwg", "cly", "lvp", "mao", "iri"} },
             { "iri", new List<string>() {"lvp", "wal", "eng", "mao", "nao"} },
-            { "nwg", new List<string>() {"bar", "nwy", "nth", "edi", "cly"} },
+            { "nwg", new List<string>() {"bar", "nwy", "nth", "edi", "cly", "nao"} },
             { "bar", new List<string>() {"stp_nc", "nwy", "nwg"} },
             { "mao", new List<string>() {"nao", "iri", "eng", "bre", "gas", "spa_nc", "spa_sc", "por", "wes", "naf"} },
             { "lyo", new List<string>() {"spa_sc", "mar", "pie", "tus", "tys", "wes"} },

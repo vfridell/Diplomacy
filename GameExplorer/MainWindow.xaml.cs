@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Algorithms;
 using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Analysis;
 using DiplomacyLib.Models;
@@ -34,13 +35,13 @@ namespace GameExplorer
         Board initialBoard;
         List<Board> allFutureBoards;
         AllianceScenario allianceScenario = new AllianceScenario();
-        SupplyCenterTargeter unitTargetCalculator = new SupplyCenterTargeter();
+        ProbabilisticFuturesAlgorithm futuresAlgorithm = new ProbabilisticFuturesAlgorithm();
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             initialBoard = Board.GetInitialBoard();
             allFutureBoards = new List<Board>() { initialBoard };
-            allFutureBoards.AddRange(initialBoard.GetFutures(allianceScenario, unitTargetCalculator));
+            allFutureBoards.AddRange(initialBoard.GetFutures(allianceScenario, futuresAlgorithm));
 
             BoardViewer.Draw(initialBoard);
             UpdateDetailsTextBlock(initialBoard);
@@ -54,7 +55,7 @@ namespace GameExplorer
             {
                 Board board = (Board)BoardsListView.SelectedItem;
                 allFutureBoards = new List<Board>() { board };
-                allFutureBoards.AddRange( board.GetFutures(allianceScenario, unitTargetCalculator));
+                allFutureBoards.AddRange( board.GetFutures(allianceScenario, futuresAlgorithm));
                 
                 BoardViewer.Draw(board);
                 UpdateDetailsTextBlock(board);

@@ -1,4 +1,5 @@
 ﻿using DiplomacyLib.AI;
+using DiplomacyLib.AI.Algorithms;
 using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Analysis;
 using DiplomacyLib.Analysis.Features;
@@ -51,11 +52,11 @@ namespace DiplomacyLib.Models
 
         public int UnitCount(Powers power) => OccupiedMapNodes.Where(kvp => kvp.Value.Power == power).Select(kvp => kvp.Value).Count();
 
-        public List<Board> GetFutures(AllianceScenario allianceScenario, ITargeter unitTargetCalculator)
+        public List<Board> GetFutures(AllianceScenario allianceScenario, IFuturesAlgorithm futuresAlgorithm)
         {
             if (_futureBoardsDirty)
             {
-                _futureBoards = Season.GetFutures(this, allianceScenario, unitTargetCalculator).ToList();
+                _futureBoards = Season.GetFutures(this, allianceScenario, futuresAlgorithm).ToList();
                 _futureBoardsDirty = false;
             }
             return _futureBoards;
@@ -170,6 +171,26 @@ namespace DiplomacyLib.Models
                 differences.Add(kvp.Key, kvp.Value.Count - UnitCount(kvp.Key));
             }
             return differences;
+        }
+
+        public PowersDictionary<int> GetBuildAndDisbandCounts()
+        {
+            var buildsAndDisbands = new PowersDictionary<int>();
+            foreach (var kvp in GetSupplyCenterToUnitDifferences())
+            {
+                if (kvp.Value == 0) continue;
+                else if (kvp.Value > 0)
+                {
+                    int buildMovesForPower = kvp.Value;
+                    int territoryBuildCount = GetUnitMoves().Where(um => um.Unit.Power == kvp.Key && um.IsBuild).GroupBy(um => um.Edge.Target.Territory).Count();
+                    buildsAndDisbands.Add(kvp.Key, Math.Min(buildMovesForPower, territoryBuildCount));
+                }
+                else
+                {
+                    buildsAndDisbands.Add(kvp.Key, kvp.Value);
+                }
+            }
+            return buildsAndDisbands;
         }
 
         public Board Clone()

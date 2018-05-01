@@ -17,12 +17,12 @@ namespace DiplomacyLib.AI.Targeting
 
         public SupplyCenterTargeter() { }
 
-        public bool TryGetTarget(Board board, MapNode source, AllianceScenario allianceScenario, out List<MapNode> path, out UnitMove move)
+        public bool TryGetMoveTarget(Board board, MapNode source, AllianceScenario allianceScenario, out List<MapNode> path, out UnitMove move)
         {
-            return TryGetTargetValidateWithBoardMove(board, source, allianceScenario, null, out path, out move);
+            return TryGetMoveTargetValidateWithBoardMove(board, source, allianceScenario, null, out path, out move);
         }
 
-        public bool TryGetTargetValidateWithBoardMove(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove, out List<MapNode> path, out UnitMove move)
+        public bool TryGetMoveTargetValidateWithBoardMove(Board board, MapNode source, AllianceScenario allianceScenario, BoardMove boardMove, out List<MapNode> path, out UnitMove move)
         {
             if (!board.OccupiedMapNodes.ContainsKey(source)) throw new Exception($"No unit occupies {source} in the given board");
 
@@ -104,7 +104,7 @@ namespace DiplomacyLib.AI.Targeting
 
 
 
-        private Dictionary<MapNode,double> GetWeightedMapNodeDistances(Board board, MapNode source, AllianceScenario allianceScenario)
+        private Dictionary<MapNode, double> GetWeightedMapNodeDistances(Board board, MapNode source, AllianceScenario allianceScenario)
         {
             Unit unit = board.OccupiedMapNodes[source];
             TerritoryStrengths territoryStrengths = new TerritoryStrengths();
