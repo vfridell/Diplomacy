@@ -2,7 +2,9 @@
 using DiplomacyLib.AI.Targeting;
 using DiplomacyLib.Models;
 using QuickGraph;
+using QuickGraph.Algorithms.Observers;
 using QuickGraph.Algorithms.RankedShortestPath;
+using QuickGraph.Algorithms.ShortestPath;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -228,24 +230,29 @@ namespace DiplomacyLib
         private static IEnumerable<UnitMove> GetConvoyMoves(Board board)
         {
             List<UnitMove> convoyMoves = new List<UnitMove>();
-            var currentConvoyMap = board.GetCurrentConvoyMapBidirectional();
-            var alg = new HoffmanPavleyRankedShortestPathAlgorithm<MapNode, UndirectedEdge<MapNode>>( currentConvoyMap, n => 1);
+            var currentConvoyMap = board.GetCurrentConvoyMap();
 
             foreach (MapNode source in currentConvoyMap.Vertices.Where(mn => mn.Territory.TerritoryType == TerritoryType.Coast))
             {
                 Unit unit;
                 if (!board.OccupiedMapNodes.TryGetValue(source.ConvoyParent(), out unit)) continue;
-                if (currentConvoyMap.OutDegree(source) > 0)
+                if (currentConvoyMap.AdjacentDegree(source) > 0)
                 {
+                    //var alg = new HoffmanPavleyRankedShortestPathAlgorithm<MapNode, UndirectedEdge<MapNode>>( currentConvoyMap, n => 1);
+                    var alg = new UndirectedDijkstraShortestPathAlgorithm<MapNode, UndirectedEdge<MapNode>>( currentConvoyMap, n => 1);
+                    //alg.SetGoalVertex(target);
+                    var predecessorObserver = new UndirectedVertexPredecessorRecorderObserver<MapNode, UndirectedEdge<MapNode>>();
+                    alg.SetRootVertex(source);
+                    using (var foo = predecessorObserver.Attach(alg))
+                    {
+                        alg.Compute();
+                    }
                     foreach (MapNode target in currentConvoyMap.Vertices.Where(mn => mn.Territory.TerritoryType == TerritoryType.Coast))
                     {
-                        if (source.ConvoyParent().Equals(target.ConvoyParent())) continue;
-                        alg.SetRootVertex(source);
-                        alg.SetGoalVertex(target);
-                        alg.Compute();
-                        var edgeList = alg.ComputedShortestPaths.FirstOrDefault();
-                        if (edgeList == null) continue;
-                        var convoyMove = new UnitMove(unit, new UndirectedEdge<MapNode>(source.ConvoyParent(), target.ConvoyParent()), edgeList.Select(e => e.Target.ConvoyParent()).ToList());
+                        IEnumerable<UndirectedEdge<MapNode>> rawPath;
+                        if(!predecessorObserver.TryGetPath(target, out rawPath)) continue;
+                        List<MapNode> edgeList = MakeConvoyPathList(source, target, rawPath);
+                        var convoyMove = new UnitMove(unit, new UndirectedEdge<MapNode>(source.ConvoyParent(), target.ConvoyParent()), edgeList);
                         convoyMoves.Add(convoyMove);
                     }
                 }
@@ -254,5 +261,22 @@ namespace DiplomacyLib
             return convoyMoves;
         }
 
+        private static List<MapNode> MakeConvoyPathList(MapNode source, MapNode target, IEnumerable<UndirectedEdge<MapNode>> rawPath)
+        {
+            if (rawPath == null) return new List<MapNode>();
+            List<MapNode> path = new List<MapNode>() { };
+            MapNode prevNode = source;
+            foreach (UndirectedEdge<MapNode> edge in rawPath)
+            {
+                if (edge.Target == prevNode)
+                    path.Add(edge.Source.ConvoyParent());
+                else
+                    path.Add(edge.Target.ConvoyParent());
+
+                prevNode = path.Last();
+            }
+            path.RemoveAt(path.Count - 1);
+            return path;
+        }
     }
 }

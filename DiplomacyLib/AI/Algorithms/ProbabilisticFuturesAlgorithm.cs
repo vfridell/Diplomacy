@@ -27,7 +27,6 @@ namespace DiplomacyLib.AI.Algorithms
         {
             HashSet<BoardMove> completedBoardMoves = new HashSet<BoardMove>();
             if (board.Season is Winter) throw new Exception($"Bad season {board.Season}");
-            List<UnitMove> allUnitMoves = board.GetUnitMoves();
             foreach (var kvp in board.OccupiedMapNodes)
             {
                 BoardMove workingBoardMove = new BoardMove();
@@ -41,12 +40,12 @@ namespace DiplomacyLib.AI.Algorithms
                 {
                     throw new Exception("Failed to add the very first move? Really!?");
                 }
-                GetFallSpringMovesRemaining(board, allUnitMoves, allianceScenario, _targeter, workingBoardMove, completedBoardMoves);
+                GetFallSpringMovesRemaining(board, allianceScenario, _targeter, workingBoardMove, completedBoardMoves);
             }
             return completedBoardMoves;
         }
 
-        private void GetFallSpringMovesRemaining(Board board, List<UnitMove> allUnitMoves, AllianceScenario allianceScenario, ITargeter unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
+        private void GetFallSpringMovesRemaining(Board board, AllianceScenario allianceScenario, ITargeter unitTargetCalculator, BoardMove workingBoardMove, HashSet<BoardMove> completedBoardMoves)
         {
             foreach (var kvp in board.OccupiedMapNodes.Where(kvp2 => !workingBoardMove.Sources.Contains(kvp2.Key)))
             {
