@@ -70,6 +70,7 @@
     <Compile Include="ModelCompareTests.cs" />
     <Compile Include="AllianceTests.cs" />
     <Compile Include="FeatureAnalysisTests.cs" />
+    <Compile Include="VotingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

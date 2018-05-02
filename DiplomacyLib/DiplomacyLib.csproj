@@ -95,6 +95,8 @@
     <Compile Include="Models\UnitMove.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Territories.cs" />
+    <Compile Include="Voting\Ballot.cs" />
+    <Compile Include="Voting\Tally.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
