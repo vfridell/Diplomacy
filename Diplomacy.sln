@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AllianceScenarioGraphViewer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameExplorer", "GameExplorer\GameExplorer.csproj", "{6DB55E46-3B7F-4A03-A1C3-5AA96DF2A0CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiplomacyUnity", "DiplomacyUnity\DiplomacyUnity.csproj", "{B2A06EC7-52F8-44E4-A920-840E7527D5BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{6DB55E46-3B7F-4A03-A1C3-5AA96DF2A0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DB55E46-3B7F-4A03-A1C3-5AA96DF2A0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DB55E46-3B7F-4A03-A1C3-5AA96DF2A0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A06EC7-52F8-44E4-A920-840E7527D5BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A06EC7-52F8-44E4-A920-840E7527D5BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A06EC7-52F8-44E4-A920-840E7527D5BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A06EC7-52F8-44E4-A920-840E7527D5BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
