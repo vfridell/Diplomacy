@@ -19,7 +19,7 @@ namespace DiplomacyTests
         public void GenerateAllInitialMoves()
         {
             Board board = Board.GetInitialBoard();
-            AllianceScenario allianceScenario = new AllianceScenario();
+            AllianceScenario allianceScenario = AllianceScenario.GetRandomAllianceScenario();
             ProbabilisticFuturesAlgorithm futuresAlgorithm = new ProbabilisticFuturesAlgorithm();
             IEnumerable<Board> allFutureBoards = board.GetFutures(allianceScenario, futuresAlgorithm);
         }

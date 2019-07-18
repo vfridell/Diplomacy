@@ -14,7 +14,7 @@ namespace Profiler
     {
         static void Main(string[] args)
         {
-            AllianceScenario allianceScenario = new AllianceScenario();
+            AllianceScenario allianceScenario = AllianceScenario.GetRandomAllianceScenario();
             Board board = Board.GetInitialBoard();
             BoardMove moves = new BoardMove();
             moves.Add(board.GetMove("ber", "kie"));

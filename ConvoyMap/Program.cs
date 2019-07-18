@@ -13,7 +13,6 @@ namespace ConvoyMap
     {
         static void Main(string[] args)
         {
-
             using (StreamWriter streamWriter = new StreamWriter(File.Open("DisbandTerritories.txt", FileMode.Create)))
             {
 

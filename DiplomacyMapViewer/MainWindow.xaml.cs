@@ -28,20 +28,51 @@ namespace DiplomacyMapViewer
         {
             InitializeComponent();
 
-
             Board board = Board.GetInitialBoard();
-            BoardMove moves = new BoardMove();
-            //moves.Add(board.GetMove("tri", "ven"));
-            //moves.Add(board.GetMove("ven", "pie"));
-            //moves.Add(board.GetMove("ber", "kie"));
-            //moves.Add(board.GetMove("kie", "den"));
-            //moves.Add(board.GetMove("mun", "ruh"));
-            //moves.Add(board.GetMove("stp_sc", "bot"));
-            //moves.Add(board.GetMove("sev", "rum"));
-            //moves.FillHolds(board);
-            //board.ApplyMoves(moves);
-            //board.EndTurn();
+            //1901 Spring
+            BoardMove moves = new BoardMove();            moves.Add(board.GetMove("bud", "ser"));            moves.Add(board.GetMove("edi", "nth"));            moves.Add(board.GetMove("lvp", "wal"));            moves.Add(board.GetMove("mar", "spa"));            moves.Add(board.GetMove("par", "bur"));            moves.Add(board.GetMove("ber", "kie"));            moves.Add(board.GetMove("kie", "den"));            moves.Add(board.GetMove("mun", "ruh"));            moves.Add(board.GetMove("nap", "ion"));            moves.Add(board.GetMove("rom", "apu"));            //A Ven H ? SUCCEEDS            moves.Add(board.GetMove("mos", "stp"));            moves.Add(board.GetMove("sev", "rum"));            moves.Add(board.GetMove("stp_sc", "fin"));            moves.Add(board.GetMove("war", "lvn"));            moves.Add(board.GetMove("ank", "con"));            moves.Add(board.GetMove("con", "bul"));            //A Smy H ? SUCCEEDS            moves.FillHolds(board);            board.ApplyMoves(moves, true);            board.EndTurn();
 
+            //1901 Fall
+            moves = new BoardMove();
+            moves.Add(board.GetMove("bul", "gre"));
+            moves.Add(board.GetMove("tri", "adr"));
+            moves.Add(board.GetMove("vie", "tri"));
+            moves.Add(board.GetMove("lon", "nth"));
+            moves.Add(board.GetMove("nth", "nwg"));
+            moves.Add(board.GetMove("wal", "yor"));
+            moves.Add(board.GetMove("bre", "mao"));
+            moves.Add(board.GetMove("bur", "bel"));
+            //A Spa H ? SUCCEEDS
+            moves.Add(board.GetMove("den", "swe"));
+            moves.Add(board.GetMove("kie", "mun"));
+            moves.Add(board.GetMove("ruh", "hol"));
+            moves.Add(board.GetConvoyMove("apu", "tun", "ion"));
+            //A Ven H ? SUCCEEDS
+            moves.Add(board.GetMove("fin", "bot"));
+            //A Lvn H ? SUCCEEDS
+            //F Rum H ? SUCCEEDS
+            moves.Add(board.GetMove("stp", "nwy"));
+            moves.Add(board.GetMove("con", "bul_sc"));
+            moves.Add(board.GetMove("smy", "ank"));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves, true);
+            board.EndTurn();
+
+            // 1901 Winter
+            moves = new BoardMove();
+            moves.Add(board.GetBuildMove("vie", UnitType.Army));
+            moves.Add(board.GetBuildMove("bre", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("mar", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("ber", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("kie", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("nap", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("mos", UnitType.Army));
+            moves.Add(board.GetBuildMove("stp_nc", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("smy", UnitType.Fleet));
+            moves.Add(board.GetBuildMove("con", UnitType.Fleet));
+            moves.FillHolds(board);
+            board.ApplyMoves(moves, true);
+            board.EndTurn();
 
             //moves.Clear();
             //moves.Add(board.GetMove("bot", "swe"));

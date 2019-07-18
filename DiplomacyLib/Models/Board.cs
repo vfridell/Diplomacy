@@ -70,6 +70,46 @@ namespace DiplomacyLib.Models
             return unit.GetMove(sourceMapNodeName, targetMapNodeName);
         }
 
+        public UnitMove GetBuildMove(string mapNodeName, UnitType unitType)
+        {
+            Unit unit;
+            MapNode mapNode = MapNodes.Get(mapNodeName);
+            OccupiedMapNodes.TryGetValue(mapNode, out unit);
+            if (unit != null) throw new ArgumentException($"A {unit.Power} {unit.UnitType} unit occupies {mapNodeName} ");
+            if (!mapNode.Territory.IsSupplyCenter) throw new ArgumentException($"Can't build in {mapNode.Territory} because it's not a supply center");
+            if (!OwnedSupplyCenters.Any(kvp => kvp.Value.Contains(mapNode.Territory))) throw new ArgumentException($"No power controls {mapNode.Territory}");
+
+            Powers power = OwnedSupplyCenters.Where(kvp => kvp.Value.Contains(mapNode.Territory)).First().Key;
+            var edge = Maps.BuildMap.AdjacentOutEdges(MapNodes.Get("build")).First(e => e.Target == mapNode);
+
+            if (unitType == UnitType.Army)
+                unit = Army.Get(power);
+            else
+                unit = Fleet.Get(power);
+
+            UnitMove uBuild = new UnitMove(unit, edge);
+            return uBuild;
+        }
+
+        public UnitMove GetConvoyMove(string startMapNodeName, string endMapNodeName, params string[] convoyMapNodes)
+        {
+            Unit unit;
+            MapNode startMapNode = MapNodes.Get(startMapNodeName);
+            MapNode endMapNode = MapNodes.Get(endMapNodeName);
+            OccupiedMapNodes.TryGetValue(startMapNode, out unit);
+            if (unit == null) throw new ArgumentException($"No unit occupies {startMapNodeName} ");
+
+            List<MapNode> convoyRoute = new List<MapNode>();
+            foreach(string convoyMapNode in convoyMapNodes)
+            {
+                convoyRoute.Add(MapNodes.Get(convoyMapNode));
+            }
+
+            UnitMove uConvoy = new UnitMove(unit, new UndirectedEdge<MapNode>(startMapNode, endMapNode), convoyRoute);
+            return uConvoy;
+        }
+
+
         public void ApplyMoves(BoardMove boardMove, bool validate = false)
         {
             if (validate)

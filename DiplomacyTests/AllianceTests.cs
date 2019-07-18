@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DiplomacyLib;
 using DiplomacyLib.AI;
 using DiplomacyLib.Analysis;
@@ -16,7 +17,7 @@ namespace DiplomacyTests
         [TestMethod]
         public void AllianceScenarioInit()
         {
-            AllianceScenario allianceScenario = new AllianceScenario();
+            AllianceScenario allianceScenario = AllianceScenario.GetRandomAllianceScenario();
             Assert.AreEqual(42, allianceScenario.EdgeCount);
             Assert.AreEqual(7, allianceScenario.VertexCount);
         }
@@ -70,9 +71,21 @@ namespace DiplomacyTests
         [TestMethod]
         public void PossibleCoalitions()
         {
-            AllianceScenario allianceScenario = new AllianceScenario();
+            AllianceScenario allianceScenario = AllianceScenario.GetRandomAllianceScenario();
             PowersDictionary<Coalition> possibleCoalitions = allianceScenario.GetPossibleCoalitions();
             Assert.AreEqual(7, possibleCoalitions.Count);
+
+
+            StringBuilder sb = new StringBuilder();
+            foreach(KeyValuePair<Powers, Coalition> kvp in possibleCoalitions)
+            {
+                foreach (KeyValuePair<Powers, bool> kvp2 in kvp.Value)
+                {
+                    if (kvp.Key == kvp2.Key) continue;
+                    sb.AppendLine($"allianceScenario.AddRelationship(Powers.{kvp.Key}, Powers.{kvp2.Key}, .6d, .6d);");
+                }
+            }
+            string s = sb.ToString();
         }
     }
 }

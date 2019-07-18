@@ -11,7 +11,7 @@ namespace AllianceScenarioGraphViewer
         public MainWindow()
         {
             InitializeComponent();
-            AllianceScenario allianceScenario = new AllianceScenario();
+            AllianceScenario allianceScenario = AllianceScenario.GetRandomAllianceScenario();
             AllianceScenarioGraphControl.Draw(allianceScenario, DiplomacyLib.Models.Powers.Italy);
         }
     }

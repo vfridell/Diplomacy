@@ -21,10 +21,11 @@ namespace DiplomacyLib.AI
 
     public class AllianceScenario : BidirectionalGraph<Powers, AllianceEdge>
     {
-        public AllianceScenario()
+        public static AllianceScenario GetRandomAllianceScenario()
         {
+            AllianceScenario scenario = new AllianceScenario();
             Random random = new Random(25422245);
-            for (int i = 1; i < 8; i++) AddVertex((Powers)i);
+            for (int i = 1; i < 8; i++) scenario.AddVertex((Powers)i);
 
             for(int i=1; i<8; i++)
             {
@@ -32,11 +33,39 @@ namespace DiplomacyLib.AI
                 {
                     if (i == j) continue;
                     var edge = new AllianceEdge((Powers)i, (Powers)j, random.NextDouble());
-                    AddEdge(edge);
+                    scenario.AddEdge(edge);
                 }
             }
 
+            scenario.GetAllianceType = scenario.DefaultGetAllianceType;
+            return scenario;
+        }
+
+        public AllianceScenario()
+        {
             GetAllianceType = DefaultGetAllianceType;
+        }
+
+        public void AddRelationship(Powers power1, Powers power2, double power1Animosity, double power2Animosity)
+        {
+            AllianceEdge power1Edge;
+            AllianceEdge power2Edge;
+            if (!TryGetEdge(power1, power2, out power1Edge))
+            {
+                power1Edge = new AllianceEdge(power1, power2, power1Animosity);
+                if (!ContainsVertex(power1)) AddVertex(power1);
+                if (!ContainsVertex(power2)) AddVertex(power2);
+                AddEdge(power1Edge);
+            }
+            if (!TryGetEdge(power2, power1, out power2Edge))
+            {
+                power2Edge = new AllianceEdge(power2, power1, power2Animosity);
+                if (!ContainsVertex(power1)) AddVertex(power1);
+                if (!ContainsVertex(power2)) AddVertex(power2);
+                AddEdge(power2Edge);
+            }
+            power1Edge.Animosity = power1Animosity;
+            power2Edge.Animosity = power2Animosity;
         }
 
         public PowersDictionary<Coalition> GetPossibleCoalitions()
